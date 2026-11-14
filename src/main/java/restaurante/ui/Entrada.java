@@ -28,7 +28,7 @@ public class Entrada extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/restaurant.jpg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/logotipo.png"))); // NOI18N
 
         btnEntra.setText("ENTRAR AL SISTEMA");
         btnEntra.addActionListener(new java.awt.event.ActionListener() {

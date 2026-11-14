@@ -201,10 +201,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
         desktopPane.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(0, 0, 0), new java.awt.Color(0, 0, 0), new java.awt.Color(0, 0, 0), new java.awt.Color(0, 0, 0)));
 
         mnuAdmin.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        mnuAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/admin.jpg"))); // NOI18N
+        mnuAdmin.setIcon(restaurante.ui.util.Iconos.icono("administracion")); // NOI18N
         mnuAdmin.setText("Administrador");
 
-        menuItemAgregaUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/anadirUsuario.jpg"))); // NOI18N
+        menuItemAgregaUsuarios.setIcon(restaurante.ui.util.Iconos.icono("usuarios")); // NOI18N
         menuItemAgregaUsuarios.setText("Usuarios");
         menuItemAgregaUsuarios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,7 +213,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuAdmin.add(menuItemAgregaUsuarios);
 
-        menuItemBDPorDefecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd.jpg"))); // NOI18N
+        menuItemBDPorDefecto.setIcon(restaurante.ui.util.Iconos.icono("datos")); // NOI18N
         menuItemBDPorDefecto.setText("Cargar datos de ejemplo");
         menuItemBDPorDefecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,7 +225,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         menuBar.add(mnuAdmin);
 
         mnuMantenimiento.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        mnuMantenimiento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/mantenimiento.jpg"))); // NOI18N
+        mnuMantenimiento.setIcon(restaurante.ui.util.Iconos.icono("mantenimiento")); // NOI18N
         mnuMantenimiento.setText("Mantenimiento");
         mnuMantenimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,7 +233,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
             }
         });
 
-        menuItemContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/contrato.jpg"))); // NOI18N
+        menuItemContrato.setIcon(restaurante.ui.util.Iconos.icono("contrato")); // NOI18N
         menuItemContrato.setText("Contrato");
         menuItemContrato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,7 +242,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuMantenimiento.add(menuItemContrato);
 
-        menuItemRol.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/rol.jpg"))); // NOI18N
+        menuItemRol.setIcon(restaurante.ui.util.Iconos.icono("rol")); // NOI18N
         menuItemRol.setText("Rol");
         menuItemRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,7 +251,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuMantenimiento.add(menuItemRol);
 
-        menuItemArea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/espacioTrabajo.jpg"))); // NOI18N
+        menuItemArea.setIcon(restaurante.ui.util.Iconos.icono("area")); // NOI18N
         menuItemArea.setText("Área");
         menuItemArea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,7 +260,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuMantenimiento.add(menuItemArea);
 
-        menuItemProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja.jpg"))); // NOI18N
+        menuItemProducto.setIcon(restaurante.ui.util.Iconos.icono("producto")); // NOI18N
         menuItemProducto.setText("Producto");
         menuItemProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -269,7 +269,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuMantenimiento.add(menuItemProducto);
 
-        menuItemInsumo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/herramienta.jpg"))); // NOI18N
+        menuItemInsumo.setIcon(restaurante.ui.util.Iconos.icono("insumo")); // NOI18N
         menuItemInsumo.setText("Insumo");
         menuItemInsumo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -281,10 +281,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
         menuBar.add(mnuMantenimiento);
 
         mnuReportes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        mnuReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reportes.jpg"))); // NOI18N
+        mnuReportes.setIcon(restaurante.ui.util.Iconos.icono("reportes")); // NOI18N
         mnuReportes.setText("Reportes");
 
-        menuItemReporteContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/contrato.jpg"))); // NOI18N
+        menuItemReporteContrato.setIcon(restaurante.ui.util.Iconos.icono("contrato")); // NOI18N
         menuItemReporteContrato.setText("Contratos");
         menuItemReporteContrato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,7 +293,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuReportes.add(menuItemReporteContrato);
 
-        menuItemReporteSimpleArea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/espacioTrabajo.jpg"))); // NOI18N
+        menuItemReporteSimpleArea.setIcon(restaurante.ui.util.Iconos.icono("area")); // NOI18N
         menuItemReporteSimpleArea.setText("Áreas");
         menuItemReporteSimpleArea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,7 +302,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuReportes.add(menuItemReporteSimpleArea);
 
-        menuItemSimpleRol.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/rol.jpg"))); // NOI18N
+        menuItemSimpleRol.setIcon(restaurante.ui.util.Iconos.icono("rol")); // NOI18N
         menuItemSimpleRol.setText("Roles");
         menuItemSimpleRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,7 +311,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuReportes.add(menuItemSimpleRol);
 
-        menuItemSimpleProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja.jpg"))); // NOI18N
+        menuItemSimpleProducto.setIcon(restaurante.ui.util.Iconos.icono("producto")); // NOI18N
         menuItemSimpleProducto.setText("Productos");
         menuItemSimpleProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,7 +320,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         mnuReportes.add(menuItemSimpleProducto);
 
-        menuItemReporteInsumo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/herramienta.jpg"))); // NOI18N
+        menuItemReporteInsumo.setIcon(restaurante.ui.util.Iconos.icono("insumo")); // NOI18N
         menuItemReporteInsumo.setText("Insumos");
         menuItemReporteInsumo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -332,7 +332,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         menuBar.add(mnuReportes);
 
         reportesPorParametros.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        reportesPorParametros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/repParametros.jpg"))); // NOI18N
+        reportesPorParametros.setIcon(restaurante.ui.util.Iconos.icono("parametros")); // NOI18N
         reportesPorParametros.setText("Reportes con parámetros");
         reportesPorParametros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -340,7 +340,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
             }
         });
 
-        menuItemContratoPorFechas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tiempo.jpg"))); // NOI18N
+        menuItemContratoPorFechas.setIcon(restaurante.ui.util.Iconos.icono("calendario")); // NOI18N
         menuItemContratoPorFechas.setText("Contratos por fechas");
         menuItemContratoPorFechas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -349,7 +349,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         reportesPorParametros.add(menuItemContratoPorFechas);
 
-        menuItemPorArea.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/espacioTrabajo.jpg"))); // NOI18N
+        menuItemPorArea.setIcon(restaurante.ui.util.Iconos.icono("area")); // NOI18N
         menuItemPorArea.setText("Contratos por área");
         menuItemPorArea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -358,7 +358,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         reportesPorParametros.add(menuItemPorArea);
 
-        menuItemContratoPorRol.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/rol.jpg"))); // NOI18N
+        menuItemContratoPorRol.setIcon(restaurante.ui.util.Iconos.icono("rol")); // NOI18N
         menuItemContratoPorRol.setText("Contratos por rol");
         menuItemContratoPorRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -367,7 +367,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         reportesPorParametros.add(menuItemContratoPorRol);
 
-        menuItemProductoPorPrecio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/caja.jpg"))); // NOI18N
+        menuItemProductoPorPrecio.setIcon(restaurante.ui.util.Iconos.icono("producto")); // NOI18N
         menuItemProductoPorPrecio.setText("Productos por precio");
         menuItemProductoPorPrecio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -376,7 +376,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         reportesPorParametros.add(menuItemProductoPorPrecio);
 
-        menuItemInsumoPorPrecio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/herramienta.jpg"))); // NOI18N
+        menuItemInsumoPorPrecio.setIcon(restaurante.ui.util.Iconos.icono("insumo")); // NOI18N
         menuItemInsumoPorPrecio.setText("Insumos por precio");
         menuItemInsumoPorPrecio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -388,10 +388,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
         menuBar.add(reportesPorParametros);
 
         TabCruzadas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        TabCruzadas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/tablacruzada.jpg"))); // NOI18N
+        TabCruzadas.setIcon(restaurante.ui.util.Iconos.icono("tabla")); // NOI18N
         TabCruzadas.setText("Tablas cruzadas");
 
-        ProductoTipPlatoCruzado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/plato.jpg"))); // NOI18N
+        ProductoTipPlatoCruzado.setIcon(restaurante.ui.util.Iconos.icono("plato")); // NOI18N
         ProductoTipPlatoCruzado.setText("Productos por tipo de plato");
         ProductoTipPlatoCruzado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -400,7 +400,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         TabCruzadas.add(ProductoTipPlatoCruzado);
 
-        ContratoÁreaCruzado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/contrato.jpg"))); // NOI18N
+        ContratoÁreaCruzado.setIcon(restaurante.ui.util.Iconos.icono("contrato")); // NOI18N
         ContratoÁreaCruzado.setText("Contratos por área");
         ContratoÁreaCruzado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -409,7 +409,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         TabCruzadas.add(ContratoÁreaCruzado);
 
-        TipoUsuarioUbicacionCruzado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/descarga.jpg"))); // NOI18N
+        TipoUsuarioUbicacionCruzado.setIcon(restaurante.ui.util.Iconos.icono("ubicacion")); // NOI18N
         TipoUsuarioUbicacionCruzado.setText("Usuarios por tipo y ubicación");
         TipoUsuarioUbicacionCruzado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -420,10 +420,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
         menuBar.add(TabCruzadas);
 
-        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/correo.jpg"))); // NOI18N
+        jMenu1.setIcon(restaurante.ui.util.Iconos.icono("correo")); // NOI18N
         jMenu1.setText("Correo");
 
-        menuItemGmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/gmail.jpg"))); // NOI18N
+        menuItemGmail.setIcon(restaurante.ui.util.Iconos.icono("enviar")); // NOI18N
         menuItemGmail.setText("Enviar correo...");
         menuItemGmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -434,10 +434,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
         menuBar.add(jMenu1);
 
-        Redes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/redes.jpg"))); // NOI18N
+        Redes.setIcon(restaurante.ui.util.Iconos.icono("redes")); // NOI18N
         Redes.setText("Redes");
 
-        facebook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/facebook.jpg"))); // NOI18N
+        facebook.setIcon(restaurante.ui.util.Iconos.icono("enlace")); // NOI18N
         facebook.setText("FACEBOOK");
         facebook.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,7 +446,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         Redes.add(facebook);
 
-        instagram.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/instagram.jpg"))); // NOI18N
+        instagram.setIcon(restaurante.ui.util.Iconos.icono("enlace")); // NOI18N
         instagram.setText("INSTAGRAM");
         instagram.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -455,7 +455,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         Redes.add(instagram);
 
-        gmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/twitter.jpg"))); // NOI18N
+        gmail.setIcon(restaurante.ui.util.Iconos.icono("enlace")); // NOI18N
         gmail.setText(" TWITTER");
         gmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -466,10 +466,10 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
         menuBar.add(Redes);
 
-        menuTransaccion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/transaccion.jpg"))); // NOI18N
+        menuTransaccion.setIcon(restaurante.ui.util.Iconos.icono("transacciones")); // NOI18N
         menuTransaccion.setText("Transacciones");
 
-        menuItemVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/venta.jpg"))); // NOI18N
+        menuItemVenta.setIcon(restaurante.ui.util.Iconos.icono("venta")); // NOI18N
         menuItemVenta.setText("Venta");
         menuItemVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -478,7 +478,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         });
         menuTransaccion.add(menuItemVenta);
 
-        menuItemOrdenDeVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/inventario.jpg"))); // NOI18N
+        menuItemOrdenDeVenta.setIcon(restaurante.ui.util.Iconos.icono("inventario")); // NOI18N
         menuItemOrdenDeVenta.setText("Control de inventario");
         menuItemOrdenDeVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

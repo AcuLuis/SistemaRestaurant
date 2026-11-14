@@ -21,7 +21,7 @@ import javax.swing.plaf.UIResource;
  */
 public final class Estilo {
 
-    private static final String ICONO = "/imagenes/simbolo.jpg";
+    private static final String ICONO = "/iconos/logotipo-pequeno.png";
 
     private Estilo() {
     }

@@ -16,16 +16,16 @@
                 <BevelBorder/>
               </Border>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/admin.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;administracion&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Administrador"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemAgregaUsuarios">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/anadirUsuario.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;usuarios&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Usuarios"/>
               </Properties>
@@ -35,8 +35,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemBDPorDefecto">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/bd.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;datos&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cargar datos de ejemplo"/>
               </Properties>
@@ -53,8 +53,8 @@
                 <BevelBorder/>
               </Border>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/mantenimiento.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;mantenimiento&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Mantenimiento"/>
           </Properties>
@@ -64,8 +64,8 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemContrato">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/contrato.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;contrato&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contrato"/>
               </Properties>
@@ -75,8 +75,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemRol">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/rol.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;rol&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Rol"/>
               </Properties>
@@ -86,8 +86,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemArea">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/espacioTrabajo.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;area&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xc1;rea"/>
               </Properties>
@@ -97,8 +97,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemProducto">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/caja.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;producto&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Producto"/>
               </Properties>
@@ -108,8 +108,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemInsumo">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/herramienta.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;insumo&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Insumo"/>
               </Properties>
@@ -126,16 +126,16 @@
                 <BevelBorder/>
               </Border>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/reportes.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;reportes&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Reportes"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemReporteContrato">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/contrato.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;contrato&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contratos"/>
               </Properties>
@@ -145,8 +145,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemReporteSimpleArea">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/espacioTrabajo.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;area&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#xc1;reas"/>
               </Properties>
@@ -156,8 +156,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemSimpleRol">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/rol.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;rol&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Roles"/>
               </Properties>
@@ -167,8 +167,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemSimpleProducto">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/caja.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;producto&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Productos"/>
               </Properties>
@@ -178,8 +178,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemReporteInsumo">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/herramienta.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;insumo&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Insumos"/>
               </Properties>
@@ -196,8 +196,8 @@
                 <BevelBorder/>
               </Border>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/repParametros.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;parametros&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Reportes con par&#xe1;metros"/>
           </Properties>
@@ -207,8 +207,8 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemContratoPorFechas">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/tiempo.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;calendario&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contratos por fechas"/>
               </Properties>
@@ -218,8 +218,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemPorArea">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/espacioTrabajo.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;area&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contratos por &#xe1;rea"/>
               </Properties>
@@ -229,8 +229,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemContratoPorRol">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/rol.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;rol&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contratos por rol"/>
               </Properties>
@@ -240,8 +240,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemProductoPorPrecio">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/caja.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;producto&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Productos por precio"/>
               </Properties>
@@ -251,8 +251,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemInsumoPorPrecio">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/herramienta.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;insumo&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Insumos por precio"/>
               </Properties>
@@ -269,16 +269,16 @@
                 <BevelBorder/>
               </Border>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/tablacruzada.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;tabla&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Tablas cruzadas"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="ProductoTipPlatoCruzado">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/plato.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;plato&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Productos por tipo de plato"/>
               </Properties>
@@ -288,8 +288,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="Contrato&#xc1;reaCruzado">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/contrato.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;contrato&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Contratos por &#xe1;rea"/>
               </Properties>
@@ -299,8 +299,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="TipoUsuarioUbicacionCruzado">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/descarga.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;ubicacion&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Usuarios por tipo y ubicaci&#xf3;n"/>
               </Properties>
@@ -312,16 +312,16 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/correo.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;correo&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Correo"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemGmail">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/gmail.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;enviar&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Enviar correo..."/>
               </Properties>
@@ -333,16 +333,16 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="Redes">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/redes.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;redes&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Redes"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="facebook">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/facebook.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;enlace&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="FACEBOOK"/>
               </Properties>
@@ -352,8 +352,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="instagram">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/instagram.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;enlace&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="INSTAGRAM"/>
               </Properties>
@@ -363,8 +363,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="gmail">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/twitter.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;enlace&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value=" TWITTER"/>
               </Properties>
@@ -376,16 +376,16 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuTransaccion">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/imagenes/transaccion.jpg"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="restaurante.ui.util.Iconos.icono(&quot;transacciones&quot;)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Transacciones"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemVenta">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/venta.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;venta&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Venta"/>
               </Properties>
@@ -395,8 +395,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemOrdenDeVenta">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/imagenes/inventario.jpg"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="restaurante.ui.util.Iconos.icono(&quot;inventario&quot;)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Control de inventario"/>
               </Properties>
