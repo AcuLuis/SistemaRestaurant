@@ -6,8 +6,8 @@ public class Usuario {
     int usuarioID;
     int empleadoID;
     String usuario;
-    String contraseña;
-    int tipUsuaruario;
+    String contrasena;
+    int tipoUsuario;
     int idLocalR;
 
     public Usuario() {
@@ -23,12 +23,12 @@ public class Usuario {
         this.empleadoID = empleadoID;
     }
 
-    public Usuario(int usuarioID, int empleadoID, String usuario, String contraseña, int tipUsuaruario, int idLocalR) {
+    public Usuario(int usuarioID, int empleadoID, String usuario, String contrasena, int tipoUsuario, int idLocalR) {
         this.usuarioID = usuarioID;
         this.empleadoID = empleadoID;
         this.usuario = usuario;
-        this.contraseña = contraseña;
-        this.tipUsuaruario = tipUsuaruario;
+        this.contrasena = contrasena;
+        this.tipoUsuario = tipoUsuario;
         this.idLocalR = idLocalR;
     }
 
@@ -64,20 +64,20 @@ public class Usuario {
         this.usuario = usuario;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
-    public int getTipUsuaruario() {
-        return tipUsuaruario;
+    public int getTipoUsuario() {
+        return tipoUsuario;
     }
 
-    public void setTipUsuaruario(int tipUsuaruario) {
-        this.tipUsuaruario = tipUsuaruario;
+    public void setTipoUsuario(int tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     

@@ -58,13 +58,13 @@ public class UsuarioDao {
     }
 
     /** Lista de usuarios. Nunca incluye las contraseñas. */
-    public List<Usuario> listaUsuario(boolean filtrar, String texto) {
+    public List<Usuario> listar(boolean filtrar, String texto) {
         Jdbc.Mapeador<Usuario> mapeador = rs -> {
             Usuario u = new Usuario();
             u.setUsuarioID(rs.getInt("usuarioID"));
             u.setIdLocalR(rs.getInt("idLocalR"));
             u.setUsuario(rs.getString("usuario"));
-            u.setTipUsuaruario(rs.getInt("tipoUsuario"));
+            u.setTipoUsuario(rs.getInt("tipoUsuario"));
             u.setEmpleadoID(rs.getInt("empleadoID"));
             return u;
         };
@@ -77,7 +77,7 @@ public class UsuarioDao {
     }
 
     /** Crea el usuario guardando el hash de la contraseña y devuelve su identificador. */
-    public int insertaUsuario(Usuario user, char[] contrasena) {
+    public int insertar(Usuario user, char[] contrasena) {
         String error = Contrasenas.validarNueva(contrasena);
         if (error != null) {
             throw new DatosException(error);
@@ -87,21 +87,21 @@ public class UsuarioDao {
             int id = Jdbc.siguienteId(c, "Usuario", "usuarioID");
             Jdbc.actualizar(c, "INSERT INTO Usuario (usuarioID, idLocalR, usuario, contraseña, tipoUsuario, empleadoID)"
                     + " VALUES (?, ?, ?, ?, ?, ?)",
-                    id, user.getIdLocalR(), user.getUsuario(), hash, user.getTipUsuaruario(), user.getEmpleadoID());
+                    id, user.getIdLocalR(), user.getUsuario(), hash, user.getTipoUsuario(), user.getEmpleadoID());
             user.setUsuarioID(id);
             return id;
         });
     }
 
     /** Actualiza los datos del usuario (no la contraseña). */
-    public void actualizarUsuario(Usuario user) {
+    public void actualizar(Usuario user) {
         Jdbc.transaccion(c -> {
-            if (user.getTipUsuaruario() != TipoUsuario.ADMINISTRADOR.getCodigo()
+            if (user.getTipoUsuario() != TipoUsuario.ADMINISTRADOR.getCodigo()
                     && esAdministrador(c, user.getUsuarioID()) && contarAdministradores(c) <= 1) {
                 throw new DatosException("Debe existir al menos un usuario Administrador.");
             }
             Jdbc.actualizar(c, "UPDATE Usuario SET idLocalR = ?, usuario = ?, tipoUsuario = ?, empleadoID = ?"
-                    + " WHERE usuarioID = ?", user.getIdLocalR(), user.getUsuario(), user.getTipUsuaruario(),
+                    + " WHERE usuarioID = ?", user.getIdLocalR(), user.getUsuario(), user.getTipoUsuario(),
                     user.getEmpleadoID(), user.getUsuarioID());
             return null;
         });
@@ -115,7 +115,7 @@ public class UsuarioDao {
         Jdbc.actualizar("UPDATE Usuario SET contraseña = ? WHERE usuarioID = ?", Contrasenas.hash(nueva), usuarioID);
     }
 
-    public void eliminarUsuario(Usuario user) {
+    public void eliminar(Usuario user) {
         Optional<Sesion> sesion = Sesion.actual();
         if (sesion.isPresent() && sesion.get().getUsuarioID() == user.getUsuarioID()) {
             throw new DatosException("No puede eliminar el usuario con el que ha iniciado sesión.");

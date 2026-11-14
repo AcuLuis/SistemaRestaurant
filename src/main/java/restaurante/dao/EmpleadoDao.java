@@ -15,21 +15,21 @@ public class EmpleadoDao {
     private static final String ORDEN = " ORDER BY e.apellidos, e.nombres";
 
     /** Empleados que todavía no tienen contrato. */
-    public List<Empleado> sinContrato(boolean filtrar, String texto) {
+    public List<Empleado> listarSinContrato(boolean filtrar, String texto) {
         String sql = "SELECT " + COLUMNAS + " FROM Empleado e"
                 + " WHERE NOT EXISTS (SELECT 1 FROM Contrato c WHERE c.empleadoID = e.empleadoID)";
         return filtrar ? listaConFiltro(sql + " AND" + FILTRO + ORDEN, texto)
                 : Jdbc.lista(sql + ORDEN, EmpleadoDao::mapear);
     }
 
-    public List<Empleado> listaEmpleado(boolean filtrar, String texto) {
+    public List<Empleado> listar(boolean filtrar, String texto) {
         String sql = "SELECT " + COLUMNAS + " FROM Empleado e";
         return filtrar ? listaConFiltro(sql + " WHERE" + FILTRO + ORDEN, texto)
                 : Jdbc.lista(sql + ORDEN, EmpleadoDao::mapear);
     }
 
     /** Empleados que todavía no tienen usuario del sistema. */
-    public List<Empleado> listaEmpleadoNoUsers(boolean filtrar, String texto) {
+    public List<Empleado> listarSinUsuario(boolean filtrar, String texto) {
         String sql = "SELECT " + COLUMNAS + " FROM Empleado e"
                 + " WHERE NOT EXISTS (SELECT 1 FROM Usuario u WHERE u.empleadoID = e.empleadoID)";
         return filtrar ? listaConFiltro(sql + " AND" + FILTRO + ORDEN, texto)

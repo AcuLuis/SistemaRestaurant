@@ -10,7 +10,7 @@ public class RolDao {
 
     private static final String SELECT = "SELECT rolID, descripRol FROM Rol";
 
-    public List<Rol> listaRol(boolean filtrar, String texto) {
+    public List<Rol> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY descripRol", RolDao::mapear);
         }
@@ -19,12 +19,12 @@ public class RolDao {
                 + " ORDER BY descripRol", RolDao::mapear, patron, patron);
     }
 
-    public List<Rol> llenaRol() {
-        return listaRol(false, "");
+    public List<Rol> listarTodos() {
+        return listar(false, "");
     }
 
     /** Inserta el rol asignándole un identificador nuevo, que se devuelve. */
-    public int insertaRol(Rol rol) {
+    public int insertar(Rol rol) {
         return Jdbc.transaccion(c -> {
             int id = Jdbc.siguienteId(c, "Rol", "rolID");
             Jdbc.actualizar(c, "INSERT INTO Rol (rolID, descripRol) VALUES (?, ?)", id, rol.getDescripRol());
@@ -33,11 +33,11 @@ public class RolDao {
         });
     }
 
-    public void actualizarRol(Rol rol) {
+    public void actualizar(Rol rol) {
         Jdbc.actualizar("UPDATE Rol SET descripRol = ? WHERE rolID = ?", rol.getDescripRol(), rol.getRolID());
     }
 
-    public void eliminarRol(Rol rol) {
+    public void eliminar(Rol rol) {
         Jdbc.actualizar("DELETE FROM Rol WHERE rolID = ?", rol.getRolID());
     }
 

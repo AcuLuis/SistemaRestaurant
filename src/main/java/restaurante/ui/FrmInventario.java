@@ -16,16 +16,16 @@ import restaurante.ui.util.Tablas;
 /**
  * Consulta del inventario de insumos y productos.
  */
-public class OrdenCompra extends javax.swing.JInternalFrame {
+public class FrmInventario extends javax.swing.JInternalFrame {
 
     private final ProductoDao productoDao = new ProductoDao();
     private final InsumoDao insumoDao = new InsumoDao();
-    private final List<TipInsumo> tiposInsumo = new TipInsumoDao().llenaTipInsumo();
-    private final List<TipProducto> tiposProducto = new TipProductoDao().listaTip();
+    private final List<TipInsumo> tiposInsumo = new TipInsumoDao().listar();
+    private final List<TipProducto> tiposProducto = new TipProductoDao().listar();
     private final BusquedaDiferida busquedaInsumos;
     private final BusquedaDiferida busquedaProductos;
 
-    public OrdenCompra() {
+    public FrmInventario() {
         initComponents();
         Tablas.configurar(this.tblInsumos);
         Tablas.configurar(this.tblProductos);
@@ -37,8 +37,8 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
 
     private void llenaTblInsumo(String texto) {
         DefaultTableModel modelo = Tablas.vaciar(this.tblInsumos);
-        for (Insumo i : insumoDao.ListaItem(!texto.isEmpty(), texto)) {
-            String tipo = tiposInsumo.stream().filter(t -> t.getIdInsumo() == i.getIdTipInsumo())
+        for (Insumo i : insumoDao.listar(!texto.isEmpty(), texto)) {
+            String tipo = tiposInsumo.stream().filter(t -> t.getIdTipInsumo() == i.getIdTipInsumo())
                     .map(TipInsumo::getDescripcion).findFirst().orElse("");
             modelo.addRow(new Object[] {i.getInsumoID(), tipo, i.getUnidadMedida(), i.getDescripInsumo(),
                 Tablas.importe(i.getPrecioUnit()), i.getCantidad()});
@@ -47,7 +47,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
 
     private void llenaTblProducto(String texto) {
         DefaultTableModel modelo = Tablas.vaciar(this.tblProductos);
-        for (Producto p : productoDao.ListaProducto(!texto.isEmpty(), texto)) {
+        for (Producto p : productoDao.listar(!texto.isEmpty(), texto)) {
             String tipo = tiposProducto.stream().filter(t -> t.getIdTipProducto() == p.getTipo())
                     .map(TipProducto::getDescripcion).findFirst().orElse("");
             modelo.addRow(new Object[] {p.getProductoID(), tipo, p.getDescripProducto(),

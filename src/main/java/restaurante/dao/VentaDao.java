@@ -6,10 +6,10 @@ import restaurante.datos.Jdbc;
 import restaurante.modelo.CabOrdenDeVenta;
 import restaurante.modelo.DetOrdenDeVenta;
 
-public class CabOrdenDeVentaDao {
+public class VentaDao {
 
     /** Ventas de un cliente, de la más reciente a la más antigua. */
-    public List<CabOrdenDeVenta> ListaCodv(int clienteID) {
+    public List<CabOrdenDeVenta> listarPorCliente(int clienteID) {
         return Jdbc.lista("SELECT ordenDeVentaID, empleadoID, clienteID, mesaID,"
                 + " CONVERT(varchar(19), fechaVenta, 120) AS fechaVenta, metodoPago, tipEntrega"
                 + " FROM CabOrdenDeVenta WHERE clienteID = ? ORDER BY fechaVenta DESC", rs -> {

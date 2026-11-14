@@ -15,7 +15,7 @@ public class ClienteDao {
             + " correo, fechNaci, estado, direccion FROM Cliente";
 
     /** Todos los clientes (o los que coinciden con el nombre o apellido buscado). */
-    public List<Cliente> ListaCliente(boolean filtrar, String texto) {
+    public List<Cliente> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY apellidos, nombres", ClienteDao::mapear);
         }
@@ -25,7 +25,7 @@ public class ClienteDao {
     }
 
     /** Clientes que tienen al menos una venta registrada. */
-    public List<Cliente> ListaCliente2(boolean filtrar, String texto) {
+    public List<Cliente> listarConCompras(boolean filtrar, String texto) {
         String sql = "SELECT c.clienteID, c.nombres, c.apellidos, c.estado FROM Cliente c"
                 + " WHERE EXISTS (SELECT 1 FROM CabOrdenDeVenta v WHERE v.clienteID = c.clienteID)";
         Jdbc.Mapeador<Cliente> mapeador = rs -> {
@@ -45,7 +45,7 @@ public class ClienteDao {
     }
 
     /** Registra un cliente nuevo y devuelve su identificador. */
-    public int insertaCliente(Cliente c) {
+    public int insertar(Cliente c) {
         return Jdbc.transaccion(con -> {
             int id = Jdbc.siguienteId(con, "Cliente", "clienteID");
             Jdbc.actualizar(con, "INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"

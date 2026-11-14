@@ -12,7 +12,7 @@ public class ProductoDao {
             "SELECT productoID, idPlato, idTipProducto, descripProducto, cantidad, precioUnit FROM Producto";
 
     /** Inserta el producto asignándole un identificador nuevo, que se devuelve. */
-    public int insertaProducto(Producto p) {
+    public int insertar(Producto p) {
         return Jdbc.transaccion(c -> {
             int id = Jdbc.siguienteId(c, "Producto", "productoID");
             Jdbc.actualizar(c, "INSERT INTO Producto (productoID, idPlato, idTipProducto, descripProducto, cantidad,"
@@ -23,17 +23,17 @@ public class ProductoDao {
         });
     }
 
-    public void actualizarProducto(Producto p) {
+    public void actualizar(Producto p) {
         Jdbc.actualizar("UPDATE Producto SET idPlato = ?, idTipProducto = ?, descripProducto = ?, cantidad = ?,"
                 + " precioUnit = ? WHERE productoID = ?",
                 p.getPlato(), p.getTipo(), p.getDescripProducto(), p.getCantidad(), p.getPrecioUnit(), p.getProductoID());
     }
 
-    public void eliminarProducto(Producto p) {
+    public void eliminar(Producto p) {
         Jdbc.actualizar("DELETE FROM Producto WHERE productoID = ?", p.getProductoID());
     }
 
-    public List<Producto> ListaProducto(boolean filtrar, String texto) {
+    public List<Producto> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY descripProducto", ProductoDao::mapear);
         }
@@ -45,7 +45,7 @@ public class ProductoDao {
      * Productos incluidos en una orden de venta, con la cantidad vendida y el
      * precio aplicado en la venta (o el precio actual si la venta es antigua).
      */
-    public List<Producto> ListaProducto2(int ordenDeVentaID) {
+    public List<Producto> listarPorVenta(int ordenDeVentaID) {
         return Jdbc.lista("SELECT p.productoID, p.descripProducto, p.idTipProducto, p.idPlato, d.cantidad,"
                 + " COALESCE(d.precioUnit, p.precioUnit) AS precioUnit"
                 + " FROM DetOrdenDeVenta d INNER JOIN Producto p ON p.productoID = d.productoID"

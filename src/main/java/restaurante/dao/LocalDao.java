@@ -6,7 +6,7 @@ import restaurante.modelo.LocalR;
 
 public class LocalDao {
 
-    public List<LocalR> listaLocal() {
+    public List<LocalR> listar() {
         return Jdbc.lista("SELECT idLocalR, Ubicacion FROM LocalR ORDER BY idLocalR", rs -> {
             LocalR local = new LocalR();
             local.setIdLocalR(rs.getInt("idLocalR"));

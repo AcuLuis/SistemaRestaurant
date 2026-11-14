@@ -3,27 +3,27 @@ package restaurante.modelo;
 
 public class TipInsumo {
     
-    int IdInsumo;
+    int idTipInsumo;
     String descripcion;
 
     public TipInsumo() {
     }
 
-    public TipInsumo(int IdInsumo) {
-        this.IdInsumo = IdInsumo;
+    public TipInsumo(int idTipInsumo) {
+        this.idTipInsumo = idTipInsumo;
     }
 
-    public TipInsumo(int IdInsumo, String descripcion) {
-        this.IdInsumo = IdInsumo;
+    public TipInsumo(int idTipInsumo, String descripcion) {
+        this.idTipInsumo = idTipInsumo;
         this.descripcion = descripcion;
     }
 
-    public int getIdInsumo() {
-        return IdInsumo;
+    public int getIdTipInsumo() {
+        return idTipInsumo;
     }
 
-    public void setIdInsumo(int IdInsumo) {
-        this.IdInsumo = IdInsumo;
+    public void setIdTipInsumo(int idTipInsumo) {
+        this.idTipInsumo = idTipInsumo;
     }
 
     public String getDescripcion() {

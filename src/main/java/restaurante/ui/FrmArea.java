@@ -35,7 +35,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
     }
 
     private void buscar(String texto) {
-        registros = dao.listaArea(!texto.isEmpty(), texto);
+        registros = dao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblArea);
         for (Area r : registros) {
             modelo.addRow(new Object[] {r.getAreaID(), r.getDescripArea()});
@@ -232,11 +232,11 @@ public class FrmArea extends javax.swing.JInternalFrame {
         Area registro = new Area();
         registro.setDescripArea(descripcion);
         if (seleccionado == null) {
-            dao.insertaArea(registro);
+            dao.insertar(registro);
             Dialogos.info(this, "Área registrado con el código " + registro.getAreaID() + ".");
         } else {
             registro.setAreaID(seleccionado.getAreaID());
-            dao.actualizarArea(registro);
+            dao.actualizar(registro);
             Dialogos.info(this, "Área actualizado.");
         }
         this.buscar(this.txtBuscarArea.getText().trim());
@@ -251,7 +251,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
         if (!Dialogos.confirmar(this, "¿Desea eliminar \"" + seleccionado.getDescripArea() + "\"?")) {
             return;
         }
-        dao.eliminarArea(seleccionado);
+        dao.eliminar(seleccionado);
         this.buscar(this.txtBuscarArea.getText().trim());
         this.limpia();
     }

@@ -10,7 +10,7 @@ public class AreaDao {
 
     private static final String SELECT = "SELECT areaID, descripArea FROM Area";
 
-    public List<Area> listaArea(boolean filtrar, String texto) {
+    public List<Area> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY descripArea", AreaDao::mapear);
         }
@@ -19,12 +19,12 @@ public class AreaDao {
                 + " ORDER BY descripArea", AreaDao::mapear, patron, patron);
     }
 
-    public List<Area> llenaArea() {
-        return listaArea(false, "");
+    public List<Area> listarTodas() {
+        return listar(false, "");
     }
 
     /** Inserta el área asignándole un identificador nuevo, que se devuelve. */
-    public int insertaArea(Area area) {
+    public int insertar(Area area) {
         return Jdbc.transaccion(c -> {
             int id = Jdbc.siguienteId(c, "Area", "areaID");
             Jdbc.actualizar(c, "INSERT INTO Area (areaID, descripArea) VALUES (?, ?)", id, area.getDescripArea());
@@ -33,11 +33,11 @@ public class AreaDao {
         });
     }
 
-    public void actualizarArea(Area area) {
+    public void actualizar(Area area) {
         Jdbc.actualizar("UPDATE Area SET descripArea = ? WHERE areaID = ?", area.getDescripArea(), area.getAreaID());
     }
 
-    public void eliminarArea(Area area) {
+    public void eliminar(Area area) {
         Jdbc.actualizar("DELETE FROM Area WHERE areaID = ?", area.getAreaID());
     }
 

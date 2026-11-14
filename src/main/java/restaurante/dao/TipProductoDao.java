@@ -6,7 +6,7 @@ import restaurante.modelo.TipProducto;
 
 public class TipProductoDao {
 
-    public List<TipProducto> listaTip() {
+    public List<TipProducto> listar() {
         return Jdbc.lista("SELECT idTipProducto, descripcion FROM TipProducto ORDER BY idTipProducto", rs -> {
             TipProducto tipo = new TipProducto();
             tipo.setIdTipProducto(rs.getInt("idTipProducto"));

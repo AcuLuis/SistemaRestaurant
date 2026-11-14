@@ -32,10 +32,10 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
     public FrmProducto() {
         initComponents();
-        this.platos = new PlatoDao().listaPlato();
-        this.tipos = new TipProductoDao().listaTip();
+        this.platos = new PlatoDao().listar();
+        this.tipos = new TipProductoDao().listar();
         this.cmbPlato.addItem("");
-        this.platos.forEach(p -> this.cmbPlato.addItem(p.getDescPlat()));
+        this.platos.forEach(p -> this.cmbPlato.addItem(p.getDescPlato()));
         this.cmbTipProduct.addItem("");
         this.tipos.forEach(t -> this.cmbTipProduct.addItem(t.getDescripcion()));
         Tablas.configurar(this.tblProducto);
@@ -50,7 +50,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }
 
     private void buscar(String texto) {
-        productos = prodDao.ListaProducto(!texto.isEmpty(), texto);
+        productos = prodDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblProducto);
         for (Producto p : productos) {
             modelo.addRow(new Object[] {p.getProductoID(), p.getDescripProducto(), p.getCantidad(),
@@ -59,7 +59,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }
 
     private String descripcionPlato(int id) {
-        return platos.stream().filter(p -> p.getIdPlato() == id).map(Plato::getDescPlat).findFirst().orElse("");
+        return platos.stream().filter(p -> p.getIdPlato() == id).map(Plato::getDescPlato).findFirst().orElse("");
     }
 
     private String descripcionTipo(int id) {
@@ -379,11 +379,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         prod.setPlato(platos.get(this.cmbPlato.getSelectedIndex() - 1).getIdPlato());
         prod.setTipo(tipos.get(this.cmbTipProduct.getSelectedIndex() - 1).getIdTipProducto());
         if (seleccionado == null) {
-            prodDao.insertaProducto(prod);
+            prodDao.insertar(prod);
             Dialogos.info(this, "Producto registrado con el código " + prod.getProductoID() + ".");
         } else {
             prod.setProductoID(seleccionado.getProductoID());
-            prodDao.actualizarProducto(prod);
+            prodDao.actualizar(prod);
             Dialogos.info(this, "Producto actualizado.");
         }
         this.buscar(this.txtBuscar.getText().trim());
@@ -398,7 +398,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         if (!Dialogos.confirmar(this, "¿Desea eliminar el producto \"" + seleccionado.getDescripProducto() + "\"?")) {
             return;
         }
-        prodDao.eliminarProducto(seleccionado);
+        prodDao.eliminar(seleccionado);
         this.buscar(this.txtBuscar.getText().trim());
         this.limpiar();
     }

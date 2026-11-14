@@ -12,7 +12,7 @@ public class ContratoDao {
     private static final String SELECT = "SELECT contratoID, empleadoID, rolID, areaID, fechaIni, fechaFin, estado,"
             + " sueldo FROM Contrato";
 
-    public List<Contrato> ListaItem(boolean filtrar, String texto) {
+    public List<Contrato> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY contratoID", ContratoDao::mapear);
         }
@@ -24,7 +24,7 @@ public class ContratoDao {
     }
 
     /** Registra el contrato asignándole un identificador nuevo, que se devuelve. */
-    public int insertaContrato(Contrato c) {
+    public int insertar(Contrato c) {
         return Jdbc.transaccion(con -> {
             int id = Jdbc.siguienteId(con, "Contrato", "contratoID");
             Jdbc.actualizar(con, "INSERT INTO Contrato (contratoID, empleadoID, rolID, areaID, fechaIni, fechaFin, estado,"
@@ -36,14 +36,14 @@ public class ContratoDao {
         });
     }
 
-    public void actualizarContrato(Contrato c) {
+    public void actualizar(Contrato c) {
         Jdbc.actualizar("UPDATE Contrato SET empleadoID = ?, rolID = ?, areaID = ?, fechaIni = ?, fechaFin = ?,"
                 + " estado = ?, sueldo = ? WHERE contratoID = ?",
                 c.getEmpleadoID(), c.getRolID(), c.getAreaID(), Date.valueOf(c.getFechaIni()),
                 Date.valueOf(c.getFechaFin()), c.getEstado(), c.getSueldo(), c.getContratoID());
     }
 
-    public void eliminarContrato(Contrato contrato) {
+    public void eliminar(Contrato contrato) {
         Jdbc.actualizar("DELETE FROM Contrato WHERE contratoID = ?", contrato.getContratoID());
     }
 

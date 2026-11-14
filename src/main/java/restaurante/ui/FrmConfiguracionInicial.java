@@ -19,9 +19,9 @@ import restaurante.ui.util.Validaciones;
  * administrador. Se muestra cuando el servidor responde pero la base de
  * datos todavía no existe.
  */
-public class LoginDefecto extends javax.swing.JFrame {
+public class FrmConfiguracionInicial extends javax.swing.JFrame {
 
-    public LoginDefecto() {
+    public FrmConfiguracionInicial() {
         initComponents();
         this.setTitle("Configuración inicial - Sistema Restaurant");
         this.setLocationRelativeTo(null);
@@ -84,7 +84,7 @@ public class LoginDefecto extends javax.swing.JFrame {
                 btnGrabar.setEnabled(true);
                 try {
                     get();
-                    Dialogos.info(LoginDefecto.this, "Base de datos \"" + ConexionBD.nombreBaseDatos()
+                    Dialogos.info(FrmConfiguracionInicial.this, "Base de datos \"" + ConexionBD.nombreBaseDatos()
                             + "\" creada correctamente.\n\nInicie sesión con el ID de local "
                             + local.getIdLocalR() + " y el usuario \"" + usuario + "\".");
                     new Login().setVisible(true);
@@ -92,7 +92,7 @@ public class LoginDefecto extends javax.swing.JFrame {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (java.util.concurrent.ExecutionException e) {
-                    Dialogos.error(LoginDefecto.this, e.getCause());
+                    Dialogos.error(FrmConfiguracionInicial.this, e.getCause());
                 }
             }
         }.execute();

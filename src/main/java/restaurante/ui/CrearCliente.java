@@ -227,7 +227,7 @@ public class CrearCliente extends javax.swing.JFrame {
         clie.setApellidos(apellido);
         clie.setDireccion(SIN_DIRECCION.equals(direccion) ? "" : direccion);
         clie.setTelefono(telefono.isEmpty() ? 0 : Integer.parseInt(telefono));
-        this.clieDao.insertaCliente(clie);
+        this.clieDao.insertar(clie);
         Dialogos.info(this, "Cliente registrado con el código " + clie.getClienteID() + ".");
         this.alRegistrar.accept(clie);
         this.dispose();

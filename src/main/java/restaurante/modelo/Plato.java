@@ -4,14 +4,14 @@ package restaurante.modelo;
 public class Plato {
     
    private int idPlato;
-   private String descPlat;
+   private String descPlato;
 
     public Plato() {
     }
 
-    public Plato(int idPlato, String descPlat) {
+    public Plato(int idPlato, String descPlato) {
         this.idPlato = idPlato;
-        this.descPlat = descPlat;
+        this.descPlato = descPlato;
     }
 
     public int getIdPlato() {
@@ -22,11 +22,11 @@ public class Plato {
         this.idPlato = idPlato;
     }
 
-    public String getDescPlat() {
-        return descPlat;
+    public String getDescPlato() {
+        return descPlato;
     }
 
-    public void setDescPlat(String descPlat) {
-        this.descPlat = descPlat;
+    public void setDescPlato(String descPlato) {
+        this.descPlato = descPlato;
     }
 }

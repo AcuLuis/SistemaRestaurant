@@ -24,7 +24,7 @@ public class FrmContratoPorArea extends javax.swing.JInternalFrame {
     private void llenaCmbArea(){
         
         List<Area> listaArea;
-        listaArea = this.areaDao.llenaArea();
+        listaArea = this.areaDao.listarTodas();
         this.cmbArea.addItem("");
         
         for(int i=0;i<listaArea.size();i++){

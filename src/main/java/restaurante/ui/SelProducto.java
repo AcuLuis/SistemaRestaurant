@@ -19,7 +19,7 @@ import restaurante.ui.util.Tablas;
 public class SelProducto extends javax.swing.JDialog {
 
     private final ProductoDao productoDao = new ProductoDao();
-    private final List<TipProducto> tipos = new TipProductoDao().listaTip();
+    private final List<TipProducto> tipos = new TipProductoDao().listar();
     private final BusquedaDiferida busqueda;
     private List<Producto> productos = List.of();
     private Producto elegido;
@@ -39,7 +39,7 @@ public class SelProducto extends javax.swing.JDialog {
     }
 
     public void llenaTblProducto(String texto) {
-        productos = productoDao.ListaProducto(!texto.isEmpty(), texto);
+        productos = productoDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblProducto);
         for (Producto p : productos) {
             String tipo = tipos.stream().filter(t -> t.getIdTipProducto() == p.getTipo())
@@ -50,7 +50,7 @@ public class SelProducto extends javax.swing.JDialog {
     }
 
     /** Producto elegido, o {@code null} si se cerró el diálogo sin elegir. */
-    public Producto devProd() {
+    public Producto getProductoElegido() {
         return elegido;
     }
 

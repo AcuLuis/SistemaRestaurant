@@ -44,7 +44,7 @@ public class Login extends javax.swing.JFrame {
     /** Si solo hay un local registrado, se rellena su código para ahorrar un paso. */
     private void precargarLocal() {
         try {
-            List<LocalR> locales = new LocalDao().listaLocal();
+            List<LocalR> locales = new LocalDao().listar();
             if (locales.size() == 1) {
                 this.txtIdLocal.setText(String.valueOf(locales.get(0).getIdLocalR()));
             }

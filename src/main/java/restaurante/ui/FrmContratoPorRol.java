@@ -25,7 +25,7 @@ public class FrmContratoPorRol extends javax.swing.JInternalFrame {
         List<Rol> listaRol;
         
         this.cmbRol.addItem("");
-        listaRol = rolDao.llenaRol();
+        listaRol = rolDao.listarTodos();
         
         for(int i=0; i<listaRol.size();i++){
         

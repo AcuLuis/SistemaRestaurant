@@ -11,7 +11,7 @@ public class InsumoDao {
     private static final String SELECT =
             "SELECT insumoID, idTipInsumo, unidadMedida, descripInsumo, precioUnit, cantidad FROM Insumo";
 
-    public List<Insumo> ListaItem(boolean filtrar, String texto) {
+    public List<Insumo> listar(boolean filtrar, String texto) {
         if (!filtrar) {
             return Jdbc.lista(SELECT + " ORDER BY descripInsumo", InsumoDao::mapear);
         }
@@ -21,7 +21,7 @@ public class InsumoDao {
     }
 
     /** Inserta el insumo asignándole un identificador nuevo, que se devuelve. */
-    public int insertaInsumo(Insumo i) {
+    public int insertar(Insumo i) {
         return Jdbc.transaccion(c -> {
             int id = Jdbc.siguienteId(c, "Insumo", "insumoID");
             Jdbc.actualizar(c, "INSERT INTO Insumo (insumoID, idTipInsumo, unidadMedida, descripInsumo, precioUnit, cantidad)"
@@ -32,14 +32,14 @@ public class InsumoDao {
         });
     }
 
-    public void actualizarInsumo(Insumo i) {
+    public void actualizar(Insumo i) {
         Jdbc.actualizar("UPDATE Insumo SET idTipInsumo = ?, unidadMedida = ?, descripInsumo = ?, precioUnit = ?,"
                 + " cantidad = ? WHERE insumoID = ?",
                 i.getIdTipInsumo(), i.getUnidadMedida(), i.getDescripInsumo(), i.getPrecioUnit(), i.getCantidad(),
                 i.getInsumoID());
     }
 
-    public void eliminarInsumo(int insumoID) {
+    public void eliminar(int insumoID) {
         Jdbc.actualizar("DELETE FROM Insumo WHERE insumoID = ?", insumoID);
     }
 

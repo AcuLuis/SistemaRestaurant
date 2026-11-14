@@ -36,12 +36,12 @@ public class SelCliente extends javax.swing.JDialog {
     }
 
     /** Cliente elegido, o {@code null} si se cerró el diálogo sin elegir. */
-    public Cliente devuelveCliente() {
+    public Cliente getClienteElegido() {
         return elegido;
     }
 
     private void llenaTblClientes(String texto) {
-        clientes = this.clieDao.ListaCliente(!texto.isEmpty(), texto);
+        clientes = this.clieDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblCliente);
         for (Cliente c : clientes) {
             modelo.addRow(new Object[] {c.getClienteID(), c.getApellidos(), c.getNombres(),

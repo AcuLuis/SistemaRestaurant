@@ -6,7 +6,7 @@ import restaurante.modelo.Mesa;
 
 public class MesaDao {
 
-    public List<Mesa> ListaMesa() {
+    public List<Mesa> listar() {
         return Jdbc.lista("SELECT mesaID, ubic, numSillas, estado FROM Mesa ORDER BY mesaID", rs -> {
             Mesa mesa = new Mesa();
             mesa.setMesaID(rs.getInt("mesaID"));

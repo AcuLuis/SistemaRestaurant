@@ -25,7 +25,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
 
     public FrmInsumo() {
         initComponents();
-        this.tipos = new TipInsumoDao().llenaTipInsumo();
+        this.tipos = new TipInsumoDao().listar();
         this.cmbTipIns.addItem("");
         this.tipos.forEach(t -> this.cmbTipIns.addItem(t.getDescripcion()));
         Tablas.configurar(this.tblIns);
@@ -40,7 +40,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     }
 
     private void llenaTblIns(String texto) {
-        insumos = insuDao.ListaItem(!texto.isEmpty(), texto);
+        insumos = insuDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblIns);
         for (Insumo i : insumos) {
             modelo.addRow(new Object[] {i.getInsumoID(), descripcionTipo(i.getIdTipInsumo()), i.getUnidadMedida(),
@@ -49,7 +49,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     }
 
     private String descripcionTipo(int id) {
-        return tipos.stream().filter(t -> t.getIdInsumo() == id).map(TipInsumo::getDescripcion).findFirst().orElse("");
+        return tipos.stream().filter(t -> t.getIdTipInsumo() == id).map(TipInsumo::getDescripcion).findFirst().orElse("");
     }
 
     @SuppressWarnings("unchecked")
@@ -365,17 +365,17 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
             return;
         }
         Insumo insumo = new Insumo();
-        insumo.setIdTipInsumo(tipos.get(this.cmbTipIns.getSelectedIndex() - 1).getIdInsumo());
+        insumo.setIdTipInsumo(tipos.get(this.cmbTipIns.getSelectedIndex() - 1).getIdTipInsumo());
         insumo.setUnidadMedida(unidad);
         insumo.setDescripInsumo(descripcion);
         insumo.setPrecioUnit(precio.get());
         insumo.setCantidad(cantidad.get());
         if (seleccionado == null) {
-            this.insuDao.insertaInsumo(insumo);
+            this.insuDao.insertar(insumo);
             Dialogos.info(this, "Insumo registrado con el código " + insumo.getInsumoID() + ".");
         } else {
             insumo.setInsumoID(seleccionado.getInsumoID());
-            this.insuDao.actualizarInsumo(insumo);
+            this.insuDao.actualizar(insumo);
             Dialogos.info(this, "Insumo actualizado.");
         }
         this.llenaTblIns(this.txtBuscar.getText().trim());
@@ -390,7 +390,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
         if (!Dialogos.confirmar(this, "¿Desea eliminar el insumo \"" + seleccionado.getDescripInsumo() + "\"?")) {
             return;
         }
-        this.insuDao.eliminarInsumo(seleccionado.getInsumoID());
+        this.insuDao.eliminar(seleccionado.getInsumoID());
         this.llenaTblIns(this.txtBuscar.getText().trim());
         this.limpiar();
     }

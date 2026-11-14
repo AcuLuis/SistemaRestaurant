@@ -7,8 +7,8 @@ import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Validaciones;
 import java.util.HashMap;
 
-public class FrmRepProdRango extends javax.swing.JInternalFrame {
-    public FrmRepProdRango() {
+public class FrmProductoPorPrecio extends javax.swing.JInternalFrame {
+    public FrmProductoPorPrecio() {
         initComponents();
     }
     @SuppressWarnings("unchecked")

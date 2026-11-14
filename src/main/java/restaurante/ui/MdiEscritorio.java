@@ -534,7 +534,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemContratoPorRolActionPerformed
 
     private void menuItemProductoPorPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemProductoPorPrecioActionPerformed
-        abrir(FrmRepProdRango.class, FrmRepProdRango::new);
+        abrir(FrmProductoPorPrecio.class, FrmProductoPorPrecio::new);
     }//GEN-LAST:event_menuItemProductoPorPrecioActionPerformed
 
     private void menuItemInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemInsumoActionPerformed
@@ -542,11 +542,11 @@ public class MdiEscritorio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemInsumoActionPerformed
 
     private void menuItemInsumoPorPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemInsumoPorPrecioActionPerformed
-        abrir(FrmInsumoPorPrecioUnitario.class, FrmInsumoPorPrecioUnitario::new);
+        abrir(FrmInsumoPorPrecio.class, FrmInsumoPorPrecio::new);
     }//GEN-LAST:event_menuItemInsumoPorPrecioActionPerformed
 
     private void menuItemOrdenDeVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOrdenDeVentaActionPerformed
-        abrir(OrdenCompra.class, OrdenCompra::new);
+        abrir(FrmInventario.class, FrmInventario::new);
     }//GEN-LAST:event_menuItemOrdenDeVentaActionPerformed
 
     private void menuItemAgregaUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAgregaUsuariosActionPerformed

@@ -52,16 +52,16 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     }
 
     private void llenaTblUsuario(String texto) {
-        usuarios = uDao.listaUsuario(!texto.isEmpty(), texto);
+        usuarios = uDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblUsuario);
         for (Usuario u : usuarios) {
             modelo.addRow(new Object[] {u.getUsuarioID(), u.getIdLocalR(), u.getUsuario(),
-                TipoUsuario.deCodigo(u.getTipUsuaruario()).getDescripcion(), u.getEmpleadoID()});
+                TipoUsuario.deCodigo(u.getTipoUsuario()).getDescripcion(), u.getEmpleadoID()});
         }
     }
 
     private void llenaTblEmpleado(String texto) {
-        empleados = empDao.listaEmpleadoNoUsers(!texto.isEmpty(), texto);
+        empleados = empDao.listarSinUsuario(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblEmpleado);
         for (Empleado e : empleados) {
             modelo.addRow(new Object[] {e.getEmpleadoID(), e.getNombres(), e.getApellidos(), e.getDni()});
@@ -426,7 +426,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         this.txtUsuarioId.setText(String.valueOf(seleccionado.getUsuarioID()));
         this.txtIdLocal.setText(String.valueOf(seleccionado.getIdLocalR()));
         this.txtUsuario.setText(seleccionado.getUsuario());
-        this.cmbTipoUsuario.setSelectedItem(TipoUsuario.deCodigo(seleccionado.getTipUsuaruario()).getDescripcion());
+        this.cmbTipoUsuario.setSelectedItem(TipoUsuario.deCodigo(seleccionado.getTipoUsuario()).getDescripcion());
         this.txtEmpleadoID.setText(String.valueOf(seleccionado.getEmpleadoID()));
         this.txtPassWord.setText("");
         this.txtPassWord.setToolTipText("Déjela vacía para conservar la contraseña actual");
@@ -470,14 +470,14 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
             Usuario user = new Usuario();
             user.setIdLocalR(Integer.parseInt(this.txtIdLocal.getText()));
             user.setUsuario(nombre);
-            user.setTipUsuaruario(TipoUsuario.deDescripcion(this.cmbTipoUsuario.getSelectedItem().toString()).getCodigo());
+            user.setTipoUsuario(TipoUsuario.deDescripcion(this.cmbTipoUsuario.getSelectedItem().toString()).getCodigo());
             user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
             if (seleccionado == null) {
-                this.uDao.insertaUsuario(user, contrasena);
+                this.uDao.insertar(user, contrasena);
                 Dialogos.info(this, "Usuario \"" + nombre + "\" creado.");
             } else {
                 user.setUsuarioID(seleccionado.getUsuarioID());
-                this.uDao.actualizarUsuario(user);
+                this.uDao.actualizar(user);
                 if (cambiarContrasena) {
                     this.uDao.cambiarContrasena(user.getUsuarioID(), contrasena);
                 }
@@ -499,7 +499,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         if (!Dialogos.confirmar(this, "¿Desea eliminar el usuario \"" + seleccionado.getUsuario() + "\"?")) {
             return;
         }
-        this.uDao.eliminarUsuario(seleccionado);
+        this.uDao.eliminar(seleccionado);
         this.llenaTblUsuario(this.txtBuscarUsuario.getText().trim());
         this.llenaTblEmpleado(this.txtBuscarEmpleado.getText().trim());
         this.limpiar();

@@ -14,7 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import restaurante.dao.CabOrdenDeVentaDao;
+import restaurante.dao.VentaDao;
 import restaurante.dao.ClienteDao;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.MesaDao;
@@ -44,7 +44,7 @@ public class FrmVenta extends javax.swing.JFrame {
     private static final String DELIVERY = "Delivery";
     private static final String PARA_LLEVAR = "ParaLlevar";
 
-    private final CabOrdenDeVentaDao ventaDao = new CabOrdenDeVentaDao();
+    private final VentaDao ventaDao = new VentaDao();
     private final ClienteDao clienteDao = new ClienteDao();
     private final ProductoDao productoDao = new ProductoDao();
     private final List<Empleado> empleados;
@@ -76,9 +76,9 @@ public class FrmVenta extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Ventas - Sistema Restaurant");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.empleados = new EmpleadoDao().listaEmpleado(false, "");
-        this.mesas = new MesaDao().ListaMesa();
-        this.tipos = new TipProductoDao().listaTip();
+        this.empleados = new EmpleadoDao().listar(false, "");
+        this.mesas = new MesaDao().listar();
+        this.tipos = new TipProductoDao().listar();
         this.cmbEmpleado.addItem("");
         this.empleados.forEach(e -> this.cmbEmpleado.addItem(e.getNombres() + " " + e.getApellidos()));
         this.cmbMesa.addItem("");
@@ -827,7 +827,7 @@ public class FrmVenta extends javax.swing.JFrame {
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
         SelCliente dialogo = new SelCliente(this, true);
         dialogo.setVisible(true);
-        Cliente elegido = dialogo.devuelveCliente();
+        Cliente elegido = dialogo.getClienteElegido();
         if (elegido != null) {
             this.usarCliente(elegido);
         }
@@ -836,7 +836,7 @@ public class FrmVenta extends javax.swing.JFrame {
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
         SelProducto dialogo = new SelProducto(this, true);
         dialogo.setVisible(true);
-        Producto elegido = dialogo.devProd();
+        Producto elegido = dialogo.getProductoElegido();
         if (elegido != null) {
             this.usarProducto(elegido);
         }
@@ -1050,7 +1050,7 @@ public class FrmVenta extends javax.swing.JFrame {
     // ------------------------------------------------------------- Historial
 
     private void llenaTblCliente(String texto) {
-        clientesConCompras = clienteDao.ListaCliente2(!texto.isEmpty(), texto);
+        clientesConCompras = clienteDao.listarConCompras(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblClientes);
         for (Cliente c : clientesConCompras) {
             modelo.addRow(new Object[] {c.getClienteID(), c.getNombres(), c.getApellidos(),
@@ -1065,7 +1065,7 @@ public class FrmVenta extends javax.swing.JFrame {
         if (fila < 0) {
             return;
         }
-        ventasCliente = ventaDao.ListaCodv(clientesConCompras.get(fila).getClienteID());
+        ventasCliente = ventaDao.listarPorCliente(clientesConCompras.get(fila).getClienteID());
         DefaultTableModel modelo = Tablas.vaciar(this.tblCompraClie);
         for (CabOrdenDeVenta v : ventasCliente) {
             modelo.addRow(new Object[] {v.getOrdenDeVentaID(), v.getClienteID(), descripcionMesa(v.getMesaID()),
@@ -1081,7 +1081,7 @@ public class FrmVenta extends javax.swing.JFrame {
         }
         double totalVenta = 0;
         DefaultTableModel modelo = Tablas.vaciar(this.tblDetCompraClie);
-        for (Producto p : productoDao.ListaProducto2(ventasCliente.get(fila).getOrdenDeVentaID())) {
+        for (Producto p : productoDao.listarPorVenta(ventasCliente.get(fila).getOrdenDeVentaID())) {
             modelo.addRow(new Object[] {p.getProductoID(), p.getCantidad() + " x " + p.getDescripProducto(),
                 descripcionTipo(p.getTipo()), Tablas.importe(p.getPrecioUnit())});
             totalVenta += p.getPrecioUnit() * p.getCantidad();

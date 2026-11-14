@@ -34,7 +34,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
     }
 
     private void buscar(String texto) {
-        registros = dao.listaRol(!texto.isEmpty(), texto);
+        registros = dao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblRol);
         for (Rol r : registros) {
             modelo.addRow(new Object[] {r.getRolID(), r.getDescripRol()});
@@ -240,11 +240,11 @@ public class FrmRol extends javax.swing.JInternalFrame {
         Rol registro = new Rol();
         registro.setDescripRol(descripcion);
         if (seleccionado == null) {
-            dao.insertaRol(registro);
+            dao.insertar(registro);
             Dialogos.info(this, "Rol registrado con el código " + registro.getRolID() + ".");
         } else {
             registro.setRolID(seleccionado.getRolID());
-            dao.actualizarRol(registro);
+            dao.actualizar(registro);
             Dialogos.info(this, "Rol actualizado.");
         }
         this.buscar(this.txtBuscarRol.getText().trim());
@@ -259,7 +259,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
         if (!Dialogos.confirmar(this, "¿Desea eliminar \"" + seleccionado.getDescripRol() + "\"?")) {
             return;
         }
-        dao.eliminarRol(seleccionado);
+        dao.eliminar(seleccionado);
         this.buscar(this.txtBuscarRol.getText().trim());
         this.limpia();
     }

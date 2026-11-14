@@ -9,9 +9,9 @@ import restaurante.ui.util.Validaciones;
 
 import java.util.HashMap;
 
-public class FrmInsumoPorPrecioUnitario extends javax.swing.JInternalFrame {
+public class FrmInsumoPorPrecio extends javax.swing.JInternalFrame {
 
-    public FrmInsumoPorPrecioUnitario() {
+    public FrmInsumoPorPrecio() {
         initComponents();
     }
 

@@ -42,8 +42,8 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
     public FrmContrato() {
         initComponents();
-        this.roles = new RolDao().llenaRol();
-        this.areas = new AreaDao().llenaArea();
+        this.roles = new RolDao().listarTodos();
+        this.areas = new AreaDao().listarTodas();
         this.cmbRol.addItem("");
         this.roles.forEach(r -> this.cmbRol.addItem(r.getDescripRol()));
         this.cmbArea.addItem("");
@@ -71,11 +71,11 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     }
 
     private void llenaTblEmpleado(String texto) {
-        llenarEmpleados(this.tblBuscarEmpleado, empDao.listaEmpleado(!texto.isEmpty(), texto));
+        llenarEmpleados(this.tblBuscarEmpleado, empDao.listar(!texto.isEmpty(), texto));
     }
 
     private void llenaTblEmpleadoSinContrato(String texto) {
-        sinContrato = empDao.sinContrato(!texto.isEmpty(), texto);
+        sinContrato = empDao.listarSinContrato(!texto.isEmpty(), texto);
         llenarEmpleados(this.tblBuscarEmpleadoSinContrato, sinContrato);
     }
 
@@ -88,7 +88,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     }
 
     private void llenaTblContratos(String texto) {
-        contratos = contratoDao.ListaItem(!texto.isEmpty(), texto);
+        contratos = contratoDao.listar(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblContratos);
         for (Contrato c : contratos) {
             modelo.addRow(new Object[] {c.getContratoID(), c.getEmpleadoID(), descripcionRol(c.getRolID()),
@@ -604,11 +604,11 @@ public class FrmContrato extends javax.swing.JInternalFrame {
             contrato.setEstado(ACTIVO.equals(this.cmbEstado.getSelectedItem()) ? 1 : 0);
             contrato.setSueldo(sueldo.get());
             if (seleccionado == null) {
-                this.contratoDao.insertaContrato(contrato);
+                this.contratoDao.insertar(contrato);
                 Dialogos.info(this, "Contrato registrado con el código " + contrato.getContratoID() + ".");
             } else {
                 contrato.setContratoID(seleccionado.getContratoID());
-                this.contratoDao.actualizarContrato(contrato);
+                this.contratoDao.actualizar(contrato);
                 Dialogos.info(this, "Contrato actualizado.");
             }
             refrescar();
@@ -625,7 +625,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
                 + " del empleado " + seleccionado.getEmpleadoID() + "?")) {
             return;
         }
-        this.contratoDao.eliminarContrato(seleccionado);
+        this.contratoDao.eliminar(seleccionado);
         refrescar();
         this.limpia();
     }

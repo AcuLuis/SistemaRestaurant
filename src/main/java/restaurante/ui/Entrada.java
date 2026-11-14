@@ -105,7 +105,7 @@ public class Entrada extends javax.swing.JFrame {
             case SIN_BASE_DATOS:
                 if (Dialogos.confirmar(this, "El servidor de base de datos está disponible, pero no existe la base de datos \""
                         + ConexionBD.nombreBaseDatos() + "\".\n\n¿Desea crearla ahora con un usuario administrador?")) {
-                    new LoginDefecto().setVisible(true);
+                    new FrmConfiguracionInicial().setVisible(true);
                     this.dispose();
                 }
                 break;
