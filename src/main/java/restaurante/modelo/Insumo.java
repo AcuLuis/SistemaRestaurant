@@ -1,13 +1,15 @@
 
 package restaurante.modelo;
 
+import java.math.BigDecimal;
+
 public class Insumo {
     
     int insumoID;
     String unidadMedida;
     String descripInsumo;
-    double precioUnit;
-    int cantidad;
+    BigDecimal precioUnit;
+    BigDecimal cantidad;
     int idTipInsumo;
 
     public Insumo() {
@@ -22,7 +24,7 @@ public class Insumo {
         this.idTipInsumo = idTipInsumo;
     }
 
-    public Insumo(int insumoID, String unidadMedida, String descripInsumo, double precioUnit, int cantidad, int idTipInsumo) {
+    public Insumo(int insumoID, String unidadMedida, String descripInsumo, BigDecimal precioUnit, BigDecimal cantidad, int idTipInsumo) {
         this.insumoID = insumoID;
         this.unidadMedida = unidadMedida;
         this.descripInsumo = descripInsumo;
@@ -31,11 +33,11 @@ public class Insumo {
         this.idTipInsumo = idTipInsumo;
     }
 
-    public int getCantidad() {
+    public BigDecimal getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -71,11 +73,11 @@ public class Insumo {
         this.descripInsumo = descripInsumo;
     }
 
-    public double getPrecioUnit() {
+    public BigDecimal getPrecioUnit() {
         return precioUnit;
     }
 
-    public void setPrecioUnit(double precioUnit) {
+    public void setPrecioUnit(BigDecimal precioUnit) {
         this.precioUnit = precioUnit;
     }
 }

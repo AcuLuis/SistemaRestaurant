@@ -66,6 +66,7 @@ public final class InstaladorBD {
                         + " VALUES (?, ?, ?, ?, ?, ?)",
                         ID_USUARIO_ADMIN, local.getIdLocalR(), usuario, hash, TipoUsuario.ADMINISTRADOR.getCodigo(),
                         ID_EMPLEADO_ADMIN);
+                MigradorBD.aplicar(c);
                 return null;
             });
         } catch (RuntimeException e) {
@@ -100,6 +101,8 @@ public final class InstaladorBD {
                 Map.of("idLocal", Integer.toString(idLocal)));
         Jdbc.transaccion(c -> {
             ScriptSql.ejecutar(c, script);
+            // Los datos de ejemplo usan identificadores fijos: se adelantan las secuencias.
+            MigradorBD.aplicar(c);
             return null;
         });
     }

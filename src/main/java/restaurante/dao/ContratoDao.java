@@ -47,9 +47,6 @@ public class ContratoDao {
         Jdbc.actualizar("DELETE FROM Contrato WHERE contratoID = ?", contrato.getContratoID());
     }
 
-    public int siguienteId() {
-        return Jdbc.siguienteIdSugerido("Contrato", "contratoID");
-    }
 
     private static Contrato mapear(ResultSet rs) throws SQLException {
         Contrato contrato = new Contrato();
@@ -60,7 +57,7 @@ public class ContratoDao {
         contrato.setFechaIni(rs.getString("fechaIni"));
         contrato.setFechaFin(rs.getString("fechaFin"));
         contrato.setEstado(rs.getInt("estado"));
-        contrato.setSueldo(rs.getDouble("sueldo"));
+        contrato.setSueldo(rs.getBigDecimal("sueldo"));
         return contrato;
     }
 }

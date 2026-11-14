@@ -41,7 +41,7 @@ public class FrmInventario extends javax.swing.JInternalFrame {
             String tipo = tiposInsumo.stream().filter(t -> t.getIdTipInsumo() == i.getIdTipInsumo())
                     .map(TipInsumo::getDescripcion).findFirst().orElse("");
             modelo.addRow(new Object[] {i.getInsumoID(), tipo, i.getUnidadMedida(), i.getDescripInsumo(),
-                Tablas.importe(i.getPrecioUnit()), i.getCantidad()});
+                Tablas.importe(i.getPrecioUnit()), Tablas.cantidad(i.getCantidad())});
         }
     }
 

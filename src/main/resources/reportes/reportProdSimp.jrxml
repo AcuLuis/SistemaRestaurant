@@ -17,7 +17,7 @@ FROM
 	<field name="Producto_productoID" class="java.lang.Integer"/>
 	<field name="Producto_descripProducto" class="java.lang.String"/>
 	<field name="Producto_cantidad" class="java.lang.Integer"/>
-	<field name="Producto_precioUnit" class="java.lang.Double"/>
+	<field name="Producto_precioUnit" class="java.math.BigDecimal"/>
 	<field name="Producto_IdPlato" class="java.lang.Integer"/>
 	<field name="Producto_idTipProducto" class="java.lang.Integer"/>
 	<background>
@@ -79,7 +79,7 @@ FROM
 				<reportElement x="256" y="0" width="100" height="37" uuid="ff0916b1-a8f3-4705-9528-bcef8b2e9120"/>
 				<textFieldExpression><![CDATA[$F{Producto_cantidad}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="373" y="0" width="100" height="37" uuid="6bcdc55f-226a-4075-a931-5b0c81ad034f"/>
 				<textFieldExpression><![CDATA[$F{Producto_precioUnit}]]></textFieldExpression>
 			</textField>

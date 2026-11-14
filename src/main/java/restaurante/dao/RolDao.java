@@ -41,9 +41,6 @@ public class RolDao {
         Jdbc.actualizar("DELETE FROM Rol WHERE rolID = ?", rol.getRolID());
     }
 
-    public int siguienteId() {
-        return Jdbc.siguienteIdSugerido("Rol", "rolID");
-    }
 
     private static Rol mapear(ResultSet rs) throws SQLException {
         Rol rol = new Rol();

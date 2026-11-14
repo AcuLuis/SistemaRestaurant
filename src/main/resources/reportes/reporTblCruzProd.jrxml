@@ -13,7 +13,7 @@ inner join Plato as pla on pla.idPlato = p.idPlato]]>
 	<field name="descPlato" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.lang.Integer"/>
-	<field name="precioUnit" class="java.lang.Double"/>
+	<field name="precioUnit" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

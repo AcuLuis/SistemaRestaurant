@@ -51,7 +51,7 @@ public class ClienteDao {
             Jdbc.actualizar(con, "INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"
                     + " correo, fechNaci, estado, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     id, c.getNombres(), c.getApellidos(), vacioANulo(c.getDni()), null, vacioANulo(c.getEstadoCivil()),
-                    c.getTelefono() > 0 ? c.getTelefono() : null, vacioANulo(c.getCorreo()), null, ESTADO_ACTIVO,
+                    vacioANulo(c.getTelefono()), vacioANulo(c.getCorreo()), null, ESTADO_ACTIVO,
                     vacioANulo(c.getDireccion()));
             c.setClienteID(id);
             c.setEstado(ESTADO_ACTIVO);
@@ -71,7 +71,7 @@ public class ClienteDao {
         clie.setDni(rs.getString("dni"));
         clie.setGenero(rs.getInt("genero"));
         clie.setEstadoCivil(rs.getString("estadoCivil"));
-        clie.setTelefono(rs.getInt("telefono"));
+        clie.setTelefono(rs.getString("telefono"));
         clie.setCorreo(rs.getString("correo"));
         clie.setFechNaci(rs.getString("fechNaci"));
         clie.setEstado(rs.getInt("estado"));

@@ -3,7 +3,8 @@ package restaurante.ui.util;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Locale;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -83,7 +84,12 @@ public final class Tablas {
     }
 
     /** Importe con dos decimales (separador decimal punto, como se introduce en los formularios). */
-    public static String importe(double valor) {
-        return String.format(Locale.ROOT, "%.2f", valor);
+    public static String importe(BigDecimal valor) {
+        return valor == null ? "" : valor.setScale(2, RoundingMode.HALF_UP).toPlainString();
+    }
+
+    /** Cantidad sin ceros decimales innecesarios (2, 0.25, 1.5). */
+    public static String cantidad(BigDecimal valor) {
+        return valor == null ? "" : valor.stripTrailingZeros().toPlainString();
     }
 }

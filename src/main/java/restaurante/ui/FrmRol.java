@@ -13,6 +13,9 @@ import restaurante.ui.util.Tablas;
  */
 public class FrmRol extends javax.swing.JInternalFrame {
 
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
+
     private static final int LONGITUD_MAXIMA = 25;
 
     private final RolDao dao = new RolDao();
@@ -278,7 +281,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
     private void limpia() {
         seleccionado = null;
         this.tblRol.clearSelection();
-        this.txtRolID.setText(String.valueOf(dao.siguienteId()));
+        this.txtRolID.setText(NUEVO);
         this.txtDescripcionRol.setText("");
         this.btnGrabar.setText("Grabar");
         this.txtDescripcionRol.requestFocusInWindow();

@@ -19,6 +19,9 @@ import restaurante.ui.util.Tablas;
  */
 public class FrmUsuario extends javax.swing.JInternalFrame {
 
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
+
     private static final int PESTANA_EMPLEADOS = 0;
     private static final int PESTANA_USUARIO = 1;
     private static final int LONGITUD_MAXIMA_USUARIO = 25;
@@ -406,7 +409,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         }
         seleccionado = null;
         this.tblUsuario.clearSelection();
-        this.txtUsuarioId.setText(String.valueOf(uDao.siguienteId()));
+        this.txtUsuarioId.setText(NUEVO);
         this.txtIdLocal.setText(String.valueOf(Sesion.actual().map(Sesion::getIdLocal).orElse(0)));
         this.txtEmpleadoID.setText(String.valueOf(empleados.get(fila).getEmpleadoID()));
         this.txtUsuario.setText("");

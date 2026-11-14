@@ -23,7 +23,7 @@ public class CrearCliente extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.btnAutoDirecc.setToolTipText("Usar cuando el cliente no indica su dirección");
         this.btnAutoTelef.setToolTipText("Usar cuando el cliente no indica su teléfono");
-        this.txtTelefono.setToolTipText("Entre 6 y 9 dígitos (opcional)");
+        this.txtTelefono.setToolTipText("Entre 6 y 15 dígitos, puede empezar con + (opcional)");
         this.getRootPane().setDefaultButton(this.btnRegistrar);
     }
 
@@ -219,14 +219,14 @@ public class CrearCliente extends javax.swing.JFrame {
             return;
         }
         if (!telefono.isEmpty() && !Validaciones.esTelefono(telefono)) {
-            invalido(this.txtTelefono, "El teléfono debe tener entre 6 y 9 dígitos.");
+            invalido(this.txtTelefono, "El teléfono debe tener entre 6 y 15 dígitos (puede empezar con +).");
             return;
         }
         Cliente clie = new Cliente();
         clie.setNombres(nombre);
         clie.setApellidos(apellido);
         clie.setDireccion(SIN_DIRECCION.equals(direccion) ? "" : direccion);
-        clie.setTelefono(telefono.isEmpty() ? 0 : Integer.parseInt(telefono));
+        clie.setTelefono(telefono);
         this.clieDao.insertar(clie);
         Dialogos.info(this, "Cliente registrado con el código " + clie.getClienteID() + ".");
         this.alRegistrar.accept(clie);

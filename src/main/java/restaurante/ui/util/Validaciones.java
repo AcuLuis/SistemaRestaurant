@@ -1,5 +1,6 @@
 package restaurante.ui.util;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -21,7 +22,7 @@ public final class Validaciones {
             .withResolverStyle(ResolverStyle.STRICT);
     private static final Pattern DNI = Pattern.compile("\\d{8}");
     private static final Pattern CORREO = Pattern.compile("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)*\\.[A-Za-z]{2,}$");
-    private static final Pattern TELEFONO = Pattern.compile("\\d{6,9}");
+    private static final Pattern TELEFONO = Pattern.compile("\\+?\\d{6,15}");
 
     private Validaciones() {
     }
@@ -61,6 +62,31 @@ public final class Validaciones {
             double valor = Double.parseDouble(texto.trim().replace(',', '.'));
             return Double.isFinite(valor) && valor >= 0 ? Optional.of(valor) : Optional.empty();
         } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    /** Importe no negativo con como máximo dos decimales (acepta coma o punto). */
+    public static Optional<BigDecimal> importe(String texto) {
+        return decimal(texto, 2);
+    }
+
+    /** Cantidad no negativa con como máximo tres decimales (por ejemplo, 0.250 kg). */
+    public static Optional<BigDecimal> cantidad(String texto) {
+        return decimal(texto, 3);
+    }
+
+    private static Optional<BigDecimal> decimal(String texto, int decimales) {
+        if (vacio(texto)) {
+            return Optional.empty();
+        }
+        try {
+            BigDecimal valor = new BigDecimal(texto.trim().replace(',', '.'));
+            if (valor.signum() < 0 || valor.stripTrailingZeros().scale() > decimales) {
+                return Optional.empty();
+            }
+            return Optional.of(valor.setScale(decimales));
+        } catch (NumberFormatException | ArithmeticException e) {
             return Optional.empty();
         }
     }

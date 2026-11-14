@@ -45,7 +45,7 @@ public class SelCliente extends javax.swing.JDialog {
         DefaultTableModel modelo = Tablas.vaciar(this.tblCliente);
         for (Cliente c : clientes) {
             modelo.addRow(new Object[] {c.getClienteID(), c.getApellidos(), c.getNombres(),
-                c.getDireccion() == null ? "" : c.getDireccion(), c.getTelefono() > 0 ? c.getTelefono() : "",
+                c.getDireccion() == null ? "" : c.getDireccion(), c.getTelefono() == null ? "" : c.getTelefono(),
                 c.getEstado() == ClienteDao.ESTADO_ACTIVO ? "Activo" : "Inactivo"});
         }
     }

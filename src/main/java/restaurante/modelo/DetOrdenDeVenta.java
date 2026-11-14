@@ -1,6 +1,8 @@
 
 package restaurante.modelo;
 
+import java.math.BigDecimal;
+
 public class DetOrdenDeVenta {
     
     int ordenDeVentaID;
@@ -8,7 +10,7 @@ public class DetOrdenDeVenta {
     int cantidad;
     int estado;
     int idPedidos;
-    double precioUnit;
+    BigDecimal precioUnit;
 
     public DetOrdenDeVenta() {
     }
@@ -71,11 +73,11 @@ public class DetOrdenDeVenta {
     }
 
     /** Precio unitario aplicado en la venta. */
-    public double getPrecioUnit() {
+    public BigDecimal getPrecioUnit() {
         return precioUnit;
     }
 
-    public void setPrecioUnit(double precioUnit) {
+    public void setPrecioUnit(BigDecimal precioUnit) {
         this.precioUnit = precioUnit;
     }
     

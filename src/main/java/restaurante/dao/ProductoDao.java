@@ -56,14 +56,11 @@ public class ProductoDao {
                     pro.setTipo(rs.getInt("idTipProducto"));
                     pro.setPlato(rs.getInt("idPlato"));
                     pro.setCantidad(rs.getInt("cantidad"));
-                    pro.setPrecioUnit(rs.getDouble("precioUnit"));
+                    pro.setPrecioUnit(rs.getBigDecimal("precioUnit"));
                     return pro;
                 }, ordenDeVentaID);
     }
 
-    public int siguienteId() {
-        return Jdbc.siguienteIdSugerido("Producto", "productoID");
-    }
 
     private static Producto mapear(ResultSet rs) throws SQLException {
         Producto pro = new Producto();
@@ -72,7 +69,7 @@ public class ProductoDao {
         pro.setTipo(rs.getInt("idTipProducto"));
         pro.setDescripProducto(rs.getString("descripProducto"));
         pro.setCantidad(rs.getInt("cantidad"));
-        pro.setPrecioUnit(rs.getDouble("precioUnit"));
+        pro.setPrecioUnit(rs.getBigDecimal("precioUnit"));
         return pro;
     }
 }

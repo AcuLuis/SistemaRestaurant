@@ -43,9 +43,6 @@ public class InsumoDao {
         Jdbc.actualizar("DELETE FROM Insumo WHERE insumoID = ?", insumoID);
     }
 
-    public int siguienteId() {
-        return Jdbc.siguienteIdSugerido("Insumo", "insumoID");
-    }
 
     private static Insumo mapear(ResultSet rs) throws SQLException {
         Insumo insumo = new Insumo();
@@ -53,8 +50,8 @@ public class InsumoDao {
         insumo.setIdTipInsumo(rs.getInt("idTipInsumo"));
         insumo.setUnidadMedida(rs.getString("unidadMedida"));
         insumo.setDescripInsumo(rs.getString("descripInsumo"));
-        insumo.setPrecioUnit(rs.getDouble("precioUnit"));
-        insumo.setCantidad(rs.getInt("cantidad"));
+        insumo.setPrecioUnit(rs.getBigDecimal("precioUnit"));
+        insumo.setCantidad(rs.getBigDecimal("cantidad"));
         return insumo;
     }
 }

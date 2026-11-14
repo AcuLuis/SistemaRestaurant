@@ -58,7 +58,9 @@ CREATE TABLE Empleado (
     genero           int,
     fechModif        date,
     dni              varchar(8),
-    estadoCivil      varchar(10)
+    estadoCivil      varchar(10),
+    -- 1 = activo, 0 = de baja (los empleados no se eliminan para conservar el historial)
+    estado           int          NOT NULL CONSTRAINT dfEmpleadoEstado DEFAULT 1
 )
 GO
 
@@ -69,7 +71,7 @@ CREATE TABLE Cliente (
     dni          varchar(8),
     genero       int,
     estadoCivil  varchar(10),
-    telefono     int,
+    telefono     varchar(15),
     correo       varchar(100),
     fechNaci     date,
     estado       int,
@@ -81,7 +83,8 @@ CREATE TABLE Mesa (
     mesaID     int          CONSTRAINT pkMesaID PRIMARY KEY,
     ubic       varchar(30)  NOT NULL,
     numSillas  int,
-    estado     int
+    -- 0 = disponible, 1 = fuera de servicio
+    estado     int          NOT NULL CONSTRAINT dfMesaEstado DEFAULT 0
 )
 GO
 
@@ -90,8 +93,9 @@ CREATE TABLE Insumo (
     idTipInsumo    int          NOT NULL CONSTRAINT fkIdTipInsumo REFERENCES TipInsumo (idTipInsumo),
     unidadMedida   varchar(10),
     descripInsumo  varchar(60)  NOT NULL,
-    precioUnit     float,
-    cantidad       int
+    precioUnit     decimal(10, 2),
+    cantidad       decimal(12, 3),
+    CONSTRAINT ckInsumoCantidad CHECK (cantidad >= 0)
 )
 GO
 
@@ -101,7 +105,8 @@ CREATE TABLE Producto (
     idTipProducto    int          CONSTRAINT fkIdTipProducto REFERENCES TipProducto (idTipProducto),
     descripProducto  varchar(40)  NOT NULL,
     cantidad         int,
-    precioUnit       float
+    precioUnit       decimal(10, 2),
+    CONSTRAINT ckProductoCantidad CHECK (cantidad >= 0)
 )
 GO
 
@@ -113,7 +118,7 @@ CREATE TABLE Contrato (
     fechaIni    date   NOT NULL,
     fechaFin    date   NOT NULL,
     estado      int    NOT NULL,
-    sueldo      float  NOT NULL,
+    sueldo      decimal(10, 2)  NOT NULL,
     CONSTRAINT ckContratoFechas CHECK (fechaFin >= fechaIni)
 )
 GO
@@ -146,7 +151,12 @@ CREATE TABLE CabOrdenDeVenta (
     mesaID          int          CONSTRAINT fkMesaID REFERENCES Mesa (mesaID),
     fechaVenta      datetime,
     metodoPago      int,
-    tipEntrega      varchar(15)
+    tipEntrega      varchar(15),
+    -- 1 = registrada, 0 = anulada
+    estado          int           NOT NULL CONSTRAINT dfVentaEstado DEFAULT 1,
+    motivoAnulacion varchar(200),
+    usuarioAnulaID  int,
+    fechaAnulacion  datetime
 )
 GO
 
@@ -156,7 +166,7 @@ CREATE TABLE DetOrdenDeVenta (
     productoID      int    CONSTRAINT fk2ProductoID REFERENCES Producto (productoID),
     idPedidos       int    CONSTRAINT fkIdPedidos REFERENCES Pedidos (idPedidos),
     cantidad        int    NOT NULL,
-    precioUnit      float
+    precioUnit      decimal(10, 2)
 )
 GO
 
@@ -172,7 +182,7 @@ GO
 CREATE TABLE DetReceta (
     recetaID  int  CONSTRAINT fkRecetaID REFERENCES CabReceta (recetaID),
     insumoID  int  CONSTRAINT fkInsumoID REFERENCES Insumo (insumoID),
-    cantidad  int
+    cantidad  decimal(12, 3)
 )
 GO
 
@@ -180,7 +190,10 @@ CREATE TABLE CabOrdenDeProduccionSemanal (
     ordenProduccionID  int          CONSTRAINT pkOrdenProduccionID PRIMARY KEY,
     empleadoID         int          CONSTRAINT fkEmpleadoID REFERENCES Empleado (empleadoID),
     descripArea        varchar(40),
-    fechaxSem          date
+    fechaxSem          date,
+    -- 0 = pendiente, 1 = completada
+    estado             int          NOT NULL CONSTRAINT dfProduccionEstado DEFAULT 0,
+    fechaCompletada    datetime
 )
 GO
 
@@ -198,7 +211,12 @@ CREATE TABLE Reserva (
     empleadoID  int   CONSTRAINT fk5EmpleadoID REFERENCES Empleado (empleadoID),
     clienteID   int   CONSTRAINT fk1ClienteID REFERENCES Cliente (clienteID),
     fecha       date,
-    estado      int
+    -- 1 = pendiente, 2 = atendida, 0 = cancelada
+    estado      int,
+    hora        time,
+    personas    int,
+    mesaID      int           CONSTRAINT fkReservaMesa REFERENCES Mesa (mesaID),
+    observacion varchar(200)
 )
 GO
 

@@ -75,8 +75,8 @@ GO
 
 INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono, correo, fechNaci, estado,
                      direccion) VALUES
-    (90, 'Lucía', 'Fernández Soto', '70000001', 0, 'SOLTERO', 987000001, 'lucia@example.com', '2001-04-10', 1,
+    (90, 'Lucía', 'Fernández Soto', '70000001', 0, 'SOLTERO', '987000001', 'lucia@example.com', '2001-04-10', 1,
          'Av. Los Olivos 123'),
-    (91, 'Marco', 'Paredes Luna', '70000002', 1, 'CASADO', 987000002, 'marco@example.com', '1987-08-25', 1,
+    (91, 'Marco', 'Paredes Luna', '70000002', 1, 'CASADO', '987000002', 'marco@example.com', '1987-08-25', 1,
          'Jr. Las Flores 456')
 GO

@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +18,9 @@ import restaurante.ui.util.Validaciones;
  * Mantenimiento de insumos (materia prima).
  */
 public class FrmInsumo extends javax.swing.JInternalFrame {
+
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
 
     private final InsumoDao insuDao = new InsumoDao();
     private final BusquedaDiferida busqueda;
@@ -44,7 +49,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = Tablas.vaciar(this.tblIns);
         for (Insumo i : insumos) {
             modelo.addRow(new Object[] {i.getInsumoID(), descripcionTipo(i.getIdTipInsumo()), i.getUnidadMedida(),
-                i.getDescripInsumo(), Tablas.importe(i.getPrecioUnit()), i.getCantidad()});
+                i.getDescripInsumo(), Tablas.importe(i.getPrecioUnit()), Tablas.cantidad(i.getCantidad())});
         }
     }
 
@@ -337,8 +342,8 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     private void grabar() {
         String unidad = this.txtUnidadMed.getText().trim();
         String descripcion = this.txtDesc.getText().trim();
-        Optional<Double> precio = Validaciones.decimalNoNegativo(this.txtPrecU.getText());
-        Optional<Integer> cantidad = Validaciones.enteroNoNegativo(this.txtCant.getText());
+        Optional<BigDecimal> precio = Validaciones.importe(this.txtPrecU.getText());
+        Optional<BigDecimal> cantidad = Validaciones.cantidad(this.txtCant.getText());
         if (this.cmbTipIns.getSelectedIndex() <= 0) {
             Dialogos.aviso(this, "Seleccione el tipo de insumo.");
             this.cmbTipIns.requestFocusInWindow();
@@ -355,12 +360,12 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
             return;
         }
         if (precio.isEmpty()) {
-            Dialogos.aviso(this, "El precio debe ser un número mayor o igual que cero.");
+            Dialogos.aviso(this, "El precio debe ser un importe mayor o igual que cero (con hasta dos decimales).");
             this.txtPrecU.requestFocusInWindow();
             return;
         }
         if (cantidad.isEmpty()) {
-            Dialogos.aviso(this, "La cantidad debe ser un número entero mayor o igual que cero.");
+            Dialogos.aviso(this, "La cantidad debe ser un número mayor o igual que cero (con hasta tres decimales).");
             this.txtCant.requestFocusInWindow();
             return;
         }
@@ -406,7 +411,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
         this.txtUnidadMed.setText(seleccionado.getUnidadMedida());
         this.txtDesc.setText(seleccionado.getDescripInsumo());
         this.txtPrecU.setText(Tablas.importe(seleccionado.getPrecioUnit()));
-        this.txtCant.setText(String.valueOf(seleccionado.getCantidad()));
+        this.txtCant.setText(Tablas.cantidad(seleccionado.getCantidad()));
         this.btnGrabar.setText("Actualizar");
     }
 
@@ -414,7 +419,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     public void limpiar() {
         seleccionado = null;
         this.tblIns.clearSelection();
-        this.txtInsumoID.setText(String.valueOf(insuDao.siguienteId()));
+        this.txtInsumoID.setText(NUEVO);
         this.cmbTipIns.setSelectedIndex(0);
         this.txtUnidadMed.setText("");
         this.txtPrecU.setText("");

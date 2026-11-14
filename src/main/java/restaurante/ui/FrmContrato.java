@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,9 @@ import restaurante.ui.util.Validaciones;
  * nuevo, o un contrato existente para modificarlo.
  */
 public class FrmContrato extends javax.swing.JInternalFrame {
+
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
 
     private static final int PESTANA_SIN_CONTRATO = 1;
     private static final int PESTANA_CONTRATO = 2;
@@ -541,7 +546,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
         }
         limpiarCampos();
         seleccionado = null;
-        this.txtContratoID.setText(String.valueOf(contratoDao.siguienteId()));
+        this.txtContratoID.setText(NUEVO);
         this.txtEmpleadoID.setText(String.valueOf(sinContrato.get(fila).getEmpleadoID()));
         this.btnGrabar.setText("Grabar");
         abrirPestanaContrato();
@@ -579,7 +584,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
         }
         Optional<LocalDate> inicio = Validaciones.fecha(this.txtFechaInicio.getText());
         Optional<LocalDate> fin = Validaciones.fecha(this.txtFechaFin.getText());
-        Optional<Double> sueldo = Validaciones.decimalNoNegativo(this.txtSueldo.getText());
+        Optional<BigDecimal> sueldo = Validaciones.importe(this.txtSueldo.getText());
         if (this.cmbRol.getSelectedIndex() <= 0) {
             invalido(this.cmbRol, "Seleccione el rol.");
         } else if (this.cmbArea.getSelectedIndex() <= 0) {
@@ -592,8 +597,8 @@ public class FrmContrato extends javax.swing.JInternalFrame {
             invalido(this.txtFechaFin, "La fecha de fin no puede ser anterior a la de inicio.");
         } else if (this.cmbEstado.getSelectedIndex() <= 0) {
             invalido(this.cmbEstado, "Seleccione el estado del contrato.");
-        } else if (sueldo.isEmpty() || sueldo.get() <= 0) {
-            invalido(this.txtSueldo, "El sueldo debe ser un número mayor que cero.");
+        } else if (sueldo.isEmpty() || sueldo.get().signum() <= 0) {
+            invalido(this.txtSueldo, "El sueldo debe ser un importe mayor que cero (con hasta dos decimales).");
         } else {
             Contrato contrato = new Contrato();
             contrato.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));

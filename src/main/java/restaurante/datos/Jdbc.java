@@ -7,12 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Utilidades de JDBC.
@@ -24,17 +20,6 @@ import java.util.stream.Stream;
 public final class Jdbc {
 
     private static final Logger LOG = Logger.getLogger(Jdbc.class.getName());
-
-    /**
-     * Tablas cuyo identificador genera la aplicación. Se usa como lista blanca
-     * porque los nombres de tabla y columna no pueden enviarse como parámetros.
-     */
-    private static final Map<String, String> TABLAS_CON_ID = Stream.of(
-            "Area.areaID", "Rol.rolID", "TipInsumo.idTipInsumo", "Insumo.insumoID",
-            "Producto.productoID", "Cliente.clienteID", "Contrato.contratoID",
-            "Empleado.empleadoID", "Usuario.usuarioID", "CabOrdenDeVenta.ordenDeVentaID",
-            "Pedidos.idPedidos", "Mesa.mesaID", "LocalR.idLocalR")
-            .collect(Collectors.toMap(t -> t.toLowerCase(Locale.ROOT), t -> t));
 
     /** Convierte la fila actual de un {@link ResultSet} en un objeto. */
     @FunctionalInterface
@@ -122,27 +107,15 @@ public final class Jdbc {
     }
 
     /**
-     * Obtiene el siguiente identificador de una tabla. Debe llamarse dentro de
-     * una transacción: los bloqueos UPDLOCK/HOLDLOCK impiden que dos usuarios
-     * obtengan el mismo identificador a la vez.
+     * Obtiene el siguiente identificador de una tabla a partir de su secuencia
+     * (seq_ + tabla). Las secuencias garantizan valores únicos aunque varios
+     * usuarios registren datos a la vez, sin bloquear la tabla.
      */
     public static int siguienteId(Connection c, String tabla, String columna) throws SQLException {
-        String canonico = TABLAS_CON_ID.get((tabla + "." + columna).toLowerCase(Locale.ROOT));
-        if (canonico == null) {
-            throw new IllegalArgumentException("Tabla no admitida para generar identificadores: " + tabla);
-        }
-        String[] partes = canonico.split("[.]");
-        String sql = "SELECT ISNULL(MAX(" + partes[1] + "), 0) + 1 FROM " + partes[0] + " WITH (UPDLOCK, HOLDLOCK)";
-        return uno(c, sql, rs -> rs.getInt(1)).orElse(1);
-    }
-
-    /** Siguiente identificador (solo informativo, para mostrarlo en pantalla). */
-    public static int siguienteIdSugerido(String tabla, String columna) {
-        try (Connection c = ConexionBD.abrir()) {
-            return siguienteId(c, tabla, columna);
-        } catch (SQLException e) {
-            throw error(e, tabla);
-        }
+        String canonica = MigradorBD.SECUENCIAS.keySet().stream().filter(t -> t.equalsIgnoreCase(tabla))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Tabla sin secuencia: " + tabla));
+        return uno(c, "SELECT NEXT VALUE FOR seq_" + canonica, rs -> rs.getInt(1))
+                .orElseThrow(() -> new SQLException("No se pudo obtener el siguiente identificador de " + tabla));
     }
 
     /** Escapa los comodines de LIKE y añade '%' al final (búsqueda "empieza por"). */

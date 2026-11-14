@@ -1,18 +1,20 @@
 
 package restaurante.modelo;
 
+import java.math.BigDecimal;
+
 public class Producto {
    private int productoID;
    private String descripProducto;
    private int cantidad;
-   private double precioUnit;
+   private BigDecimal precioUnit;
    private int plato;
    private int tipo;
 
     public Producto() {
     }
 
-    public Producto(int productoID, String descripProducto, int cantidad, double precioUnit, int plato, int tipo) {
+    public Producto(int productoID, String descripProducto, int cantidad, BigDecimal precioUnit, int plato, int tipo) {
         this.productoID = productoID;
         this.descripProducto = descripProducto;
         this.cantidad = cantidad;
@@ -45,11 +47,11 @@ public class Producto {
         this.cantidad = cantidad;
     }
 
-    public double getPrecioUnit() {
+    public BigDecimal getPrecioUnit() {
         return precioUnit;
     }
 
-    public void setPrecioUnit(double precioUnit) {
+    public void setPrecioUnit(BigDecimal precioUnit) {
         this.precioUnit = precioUnit;
     }
 

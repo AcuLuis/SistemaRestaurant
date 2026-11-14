@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -47,13 +48,26 @@ class ValidacionesTest {
         assertFalse(Validaciones.esCorreo("persona@"));
         assertFalse(Validaciones.esCorreo("sin-arroba.com"));
         assertTrue(Validaciones.esTelefono("987654321"));
+        assertTrue(Validaciones.esTelefono("+51987654321"));
         assertFalse(Validaciones.esTelefono("98765"));
-        assertFalse(Validaciones.esTelefono("+51987654321"));
+        assertFalse(Validaciones.esTelefono("987-654-321"));
     }
 
     @Test
-    void importesConDosDecimales() {
-        assertEquals("28.00", Tablas.importe(28));
-        assertEquals("0.10", Tablas.importe(0.1));
+    void importesYCantidadesDecimales() {
+        assertEquals(Optional.of(new BigDecimal("12.50")), Validaciones.importe("12,5"));
+        assertEquals(Optional.of(new BigDecimal("100.00")), Validaciones.importe("100"));
+        assertTrue(Validaciones.importe("1.005").isEmpty());
+        assertTrue(Validaciones.importe("-1").isEmpty());
+        assertEquals(Optional.of(new BigDecimal("0.250")), Validaciones.cantidad("0.25"));
+        assertTrue(Validaciones.cantidad("0.2505").isEmpty());
+    }
+
+    @Test
+    void formatoDeImportesYCantidades() {
+        assertEquals("28.00", Tablas.importe(new BigDecimal("28")));
+        assertEquals("0.13", Tablas.importe(new BigDecimal("0.125")));
+        assertEquals("1.5", Tablas.cantidad(new BigDecimal("1.500")));
+        assertEquals("20", Tablas.cantidad(new BigDecimal("20.000")));
     }
 }

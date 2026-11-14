@@ -9,7 +9,7 @@ public class Cliente {
     String dni;
     int genero;
     String estadoCivil;
-    int telefono;
+    String telefono;
     String correo;
     String fechNaci;
     int estado;
@@ -22,7 +22,7 @@ public class Cliente {
         this.clienteID = clienteID;
     }
 
-    public Cliente(int clienteID, String nombres, String apellidos, String dni, int genero, String estadoCivil, int telefono, String correo, String fechNaci, int estado, String direccion) {
+    public Cliente(int clienteID, String nombres, String apellidos, String dni, int genero, String estadoCivil, String telefono, String correo, String fechNaci, int estado, String direccion) {
         this.clienteID = clienteID;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -60,11 +60,11 @@ public class Cliente {
         this.estadoCivil = estadoCivil;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 

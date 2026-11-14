@@ -28,7 +28,7 @@ WHERE
 	<field name="Contrato_fechaIni" class="java.sql.Date"/>
 	<field name="Contrato_fechaFin" class="java.sql.Date"/>
 	<field name="Contrato_estado" class="java.lang.Integer"/>
-	<field name="Contrato_sueldo" class="java.lang.Double"/>
+	<field name="Contrato_sueldo" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -112,7 +112,7 @@ WHERE
 				<reportElement x="444" y="3" width="34" height="20" uuid="80c68f7b-1912-49de-a428-c6c7d502e3a4"/>
 				<textFieldExpression><![CDATA[$F{Contrato_estado} != null && $F{Contrato_estado} == 1 ? "Activo" : "No activo"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="490" y="0" width="48" height="20" uuid="bf59a678-00ec-48d3-a484-a26eacfea303"/>
 				<textFieldExpression><![CDATA[$F{Contrato_sueldo}]]></textFieldExpression>
 			</textField>

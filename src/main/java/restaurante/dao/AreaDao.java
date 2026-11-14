@@ -41,9 +41,6 @@ public class AreaDao {
         Jdbc.actualizar("DELETE FROM Area WHERE areaID = ?", area.getAreaID());
     }
 
-    public int siguienteId() {
-        return Jdbc.siguienteIdSugerido("Area", "areaID");
-    }
 
     private static Area mapear(ResultSet rs) throws SQLException {
         Area area = new Area();

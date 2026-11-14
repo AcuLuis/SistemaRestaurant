@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+import java.math.BigDecimal;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +69,8 @@ public class FrmVenta extends javax.swing.JFrame {
             this.cantidad = cantidad;
         }
 
-        double subtotal() {
-            return producto.getPrecioUnit() * cantidad;
+        BigDecimal subtotal() {
+            return producto.getPrecioUnit().multiply(BigDecimal.valueOf(cantidad));
         }
     }
 
@@ -878,7 +880,7 @@ public class FrmVenta extends javax.swing.JFrame {
         this.txtNombreClie.setText(c.getNombres());
         this.txtApellidosClie.setText(c.getApellidos());
         this.txtDireccionClie.setText(c.getDireccion() == null ? "" : c.getDireccion());
-        this.txtTelefonoClie.setText(c.getTelefono() > 0 ? String.valueOf(c.getTelefono()) : "");
+        this.txtTelefonoClie.setText(c.getTelefono() == null ? "" : c.getTelefono());
     }
 
     private void usarProducto(Producto p) {
@@ -933,8 +935,8 @@ public class FrmVenta extends javax.swing.JFrame {
                 + Tablas.importe(total())));
     }
 
-    private double total() {
-        return carrito.stream().mapToDouble(LineaVenta::subtotal).sum();
+    private BigDecimal total() {
+        return carrito.stream().map(LineaVenta::subtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private void actualizarMesa() {
@@ -1009,7 +1011,7 @@ public class FrmVenta extends javax.swing.JFrame {
             det.setPrecioUnit(l.producto.getPrecioUnit());
             detalles.add(det);
         }
-        double importe = total();
+        BigDecimal importe = total();
         int numero = this.ventaDao.registrarVenta(cab, ubicacion, detalles);
         Dialogos.info(this, "Venta N.º " + numero + " registrada correctamente.\nTotal: " + Tablas.importe(importe));
         this.limpiarVenta();
@@ -1079,12 +1081,12 @@ public class FrmVenta extends javax.swing.JFrame {
         if (fila < 0) {
             return;
         }
-        double totalVenta = 0;
+        BigDecimal totalVenta = BigDecimal.ZERO;
         DefaultTableModel modelo = Tablas.vaciar(this.tblDetCompraClie);
         for (Producto p : productoDao.listarPorVenta(ventasCliente.get(fila).getOrdenDeVentaID())) {
             modelo.addRow(new Object[] {p.getProductoID(), p.getCantidad() + " x " + p.getDescripProducto(),
                 descripcionTipo(p.getTipo()), Tablas.importe(p.getPrecioUnit())});
-            totalVenta += p.getPrecioUnit() * p.getCantidad();
+            totalVenta = totalVenta.add(p.getPrecioUnit().multiply(BigDecimal.valueOf(p.getCantidad())));
         }
         this.jScrollPane4.setBorder(BorderFactory.createTitledBorder("Total de la venta: " + Tablas.importe(totalVenta)));
     }

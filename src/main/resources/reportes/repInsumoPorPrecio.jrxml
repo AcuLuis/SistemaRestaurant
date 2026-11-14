@@ -26,8 +26,8 @@ Where
 	<field name="Insumo_idTipInsumo" class="java.lang.Integer"/>
 	<field name="Insumo_unidadMedida" class="java.lang.String"/>
 	<field name="Insumo_descripInsumo" class="java.lang.String"/>
-	<field name="Insumo_precioUnit" class="java.lang.Double"/>
-	<field name="Insumo_cantidad" class="java.lang.Integer"/>
+	<field name="Insumo_precioUnit" class="java.math.BigDecimal"/>
+	<field name="Insumo_cantidad" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -91,11 +91,11 @@ Where
 				<reportElement x="295" y="0" width="72" height="20" uuid="d601b1a7-fb74-4f3d-8ce1-09fef5be568f"/>
 				<textFieldExpression><![CDATA[$F{Insumo_descripInsumo}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="386" y="0" width="72" height="20" uuid="64bea583-9087-48ea-b8c8-f8996e32a41b"/>
 				<textFieldExpression><![CDATA[$F{Insumo_precioUnit}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.###">
 				<reportElement x="478" y="0" width="50" height="20" uuid="8f650a92-864c-416f-bde0-d81763bf110f"/>
 				<textFieldExpression><![CDATA[$F{Insumo_cantidad}]]></textFieldExpression>
 			</textField>

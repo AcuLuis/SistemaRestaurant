@@ -13,6 +13,9 @@ import restaurante.ui.util.Tablas;
  */
 public class FrmArea extends javax.swing.JInternalFrame {
 
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
+
     private static final int LONGITUD_MAXIMA = 40;
 
     private final AreaDao dao = new AreaDao();
@@ -270,7 +273,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
     private void limpia() {
         seleccionado = null;
         this.tblArea.clearSelection();
-        this.txtAreaID.setText(String.valueOf(dao.siguienteId()));
+        this.txtAreaID.setText(NUEVO);
         this.txtDescripcionArea.setText("");
         this.btnGrabar.setText("Grabar");
         this.txtDescripcionArea.requestFocusInWindow();

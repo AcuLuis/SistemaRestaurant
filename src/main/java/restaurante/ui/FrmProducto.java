@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +24,9 @@ import restaurante.ui.util.Validaciones;
  * tabla al editar un producto.</p>
  */
 public class FrmProducto extends javax.swing.JInternalFrame {
+
+    /** Texto del código mientras el registro aún no se ha grabado. */
+    private static final String NUEVO = "(nuevo)";
 
     private final ProductoDao prodDao = new ProductoDao();
     private final BusquedaDiferida busqueda;
@@ -346,7 +351,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void grabar() {
         String descripcion = this.txtDescripcion.getText().trim();
         Optional<Integer> cantidad = Validaciones.enteroNoNegativo(this.txtCantidad.getText());
-        Optional<Double> precio = Validaciones.decimalNoNegativo(this.txtPrecioUnit.getText());
+        Optional<BigDecimal> precio = Validaciones.importe(this.txtPrecioUnit.getText());
         if (descripcion.isEmpty() || descripcion.length() > 40) {
             Dialogos.aviso(this, "Indique la descripción del producto (máximo 40 caracteres).");
             this.txtDescripcion.requestFocusInWindow();
@@ -358,7 +363,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             return;
         }
         if (precio.isEmpty()) {
-            Dialogos.aviso(this, "El precio unitario debe ser un número mayor o igual que cero.");
+            Dialogos.aviso(this, "El precio unitario debe ser un importe mayor o igual que cero (con hasta dos decimales).");
             this.txtPrecioUnit.requestFocusInWindow();
             return;
         }
@@ -421,7 +426,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void limpiar() {
         seleccionado = null;
         this.tblProducto.clearSelection();
-        this.txtProductoID.setText(String.valueOf(prodDao.siguienteId()));
+        this.txtProductoID.setText(NUEVO);
         this.txtDescripcion.setText("");
         this.txtCantidad.setText("");
         this.txtPrecioUnit.setText("");

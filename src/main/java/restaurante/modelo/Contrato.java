@@ -1,6 +1,8 @@
 
 package restaurante.modelo;
 
+import java.math.BigDecimal;
+
 public class Contrato {
     
     int contratoID;
@@ -10,7 +12,7 @@ public class Contrato {
     String fechaIni;
     String fechaFin;
     int estado;
-    double sueldo;
+    BigDecimal sueldo;
 
     public Contrato() {
     }
@@ -19,7 +21,7 @@ public class Contrato {
         this.contratoID = contratoID;
     }
 
-    public Contrato(int contratoID, String fechaIni, String fechaFin, int estado, double sueldo) {
+    public Contrato(int contratoID, String fechaIni, String fechaFin, int estado, BigDecimal sueldo) {
         this.contratoID = contratoID;
         this.fechaIni = fechaIni;
         this.fechaFin = fechaFin;
@@ -27,7 +29,7 @@ public class Contrato {
         this.sueldo = sueldo;
     }
 
-    public Contrato(int contratoID, int empleadoID, int rolID, int areaID, String fechaIni, String fechaFin, int estado, double sueldo) {
+    public Contrato(int contratoID, int empleadoID, int rolID, int areaID, String fechaIni, String fechaFin, int estado, BigDecimal sueldo) {
         this.contratoID = contratoID;
         this.empleadoID = empleadoID;
         this.rolID = rolID;
@@ -94,11 +96,11 @@ public class Contrato {
         this.estado = estado;
     }
 
-    public double getSueldo() {
+    public BigDecimal getSueldo() {
         return sueldo;
     }
 
-    public void setSueldo(double sueldo) {
+    public void setSueldo(BigDecimal sueldo) {
         this.sueldo = sueldo;
     }  
 }
