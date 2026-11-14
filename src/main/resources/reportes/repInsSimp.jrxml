@@ -30,7 +30,7 @@ FROM
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[ REPORTE INSUMO]]></text>
+				<text><![CDATA[REPORTE DE INSUMOS]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -41,7 +41,7 @@ FROM
 		<band height="23" splitType="Stretch">
 			<staticText>
 				<reportElement x="45" y="0" width="59" height="20" uuid="c78672cf-e86c-4e9e-93a6-3958e69219ad"/>
-				<text><![CDATA[InsumoID]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="141" y="0" width="90" height="20" uuid="a6afdda7-d191-4598-bf82-3235e8730887"/>
@@ -53,7 +53,7 @@ FROM
 			</staticText>
 			<staticText>
 				<reportElement x="376" y="0" width="76" height="20" uuid="74afd136-a69f-425c-be28-58570a9237a4"/>
-				<text><![CDATA[Precio Unidad]]></text>
+				<text><![CDATA[Precio unitario]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

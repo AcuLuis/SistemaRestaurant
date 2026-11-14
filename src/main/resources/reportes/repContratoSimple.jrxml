@@ -50,11 +50,11 @@ FROM
 		<band height="33" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="52" height="20" uuid="344ddd51-1174-49f6-ae83-889763fcbe50"/>
-				<text><![CDATA[IDContrato]]></text>
+				<text><![CDATA[Contrato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="67" y="0" width="62" height="20" uuid="849f31f7-7721-4e0c-802a-493db02f49b6"/>
-				<text><![CDATA[IDEmpleado]]></text>
+				<text><![CDATA[Empleado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="151" y="0" width="30" height="20" uuid="a833d955-a97a-4430-b828-ffc19dff9b5f"/>
@@ -66,11 +66,11 @@ FROM
 			</staticText>
 			<staticText>
 				<reportElement x="291" y="0" width="63" height="20" uuid="5be13275-f477-484f-acbb-0305945649b4"/>
-				<text><![CDATA[FechaInicio]]></text>
+				<text><![CDATA[Fecha inicio]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="373" y="0" width="50" height="20" uuid="92c3336b-a1f1-4fa6-9ce0-b0724569f87d"/>
-				<text><![CDATA[FechaFin]]></text>
+				<text><![CDATA[Fecha fin]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="450" y="0" width="37" height="20" uuid="dfb7bce9-5ecb-4d0c-8147-0d1e17c88ff4"/>
@@ -100,17 +100,17 @@ FROM
 				<reportElement x="215" y="0" width="62" height="40" uuid="dfb7ef1c-603a-40d6-852e-d09986d83d66"/>
 				<textFieldExpression><![CDATA[$F{Area_descripArea}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="291" y="0" width="63" height="40" uuid="2a1b3dee-6107-4a49-b3a9-7db4e25e4c5c"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="373" y="0" width="61" height="40" uuid="0a6332c7-f3c6-45bb-8ee8-8fb715a6f4c0"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaFin}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="450" y="0" width="37" height="40" uuid="edf79abd-cbe4-4cf4-9cb5-c5a511a28897"/>
-				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Contrato_estado} != null && $F{Contrato_estado} == 1 ? "Activo" : "No activo"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="501" y="0" width="54" height="40" uuid="12d9beb0-00e1-44e8-9f32-5bb6d0f6792a"/>

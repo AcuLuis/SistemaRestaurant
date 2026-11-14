@@ -50,19 +50,19 @@ WHERE
 		<band height="34" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="53" height="20" uuid="c5b47e93-c627-43f2-9328-52dcfd2f02fb"/>
-				<text><![CDATA[ContratoID]]></text>
+				<text><![CDATA[Contrato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="63" y="0" width="64" height="20" uuid="bda9faaf-a0d5-4865-9a48-b08d50c8bc3a"/>
-				<text><![CDATA[EmpleadoID]]></text>
+				<text><![CDATA[Empleado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="138" y="0" width="42" height="20" uuid="19437dd7-e911-43df-9f23-ed6dfbdf59bc"/>
-				<text><![CDATA[RolID]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="192" y="0" width="87" height="20" uuid="100aa7d8-56bb-4a57-b62d-da5e659fd125"/>
-				<text><![CDATA[Descripcion Area]]></text>
+				<text><![CDATA[Área]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="290" y="0" width="69" height="20" uuid="803c066c-ae97-4a23-9dca-f34f47dfeae5"/>
@@ -100,17 +100,17 @@ WHERE
 				<reportElement x="192" y="0" width="87" height="20" uuid="2e57f0c9-7354-4835-8b40-959a442c7d42"/>
 				<textFieldExpression><![CDATA[$F{Area_descripArea}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="290" y="0" width="69" height="20" uuid="50838a8a-5f29-4c17-a899-b9b681a7cc60"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="376" y="3" width="55" height="20" uuid="8aeddf1e-96de-496a-93a7-a62d44291ebe"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaFin}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="444" y="3" width="34" height="20" uuid="80c68f7b-1912-49de-a428-c6c7d502e3a4"/>
-				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Contrato_estado} != null && $F{Contrato_estado} == 1 ? "Activo" : "No activo"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="490" y="0" width="48" height="20" uuid="bf59a678-00ec-48d3-a484-a26eacfea303"/>

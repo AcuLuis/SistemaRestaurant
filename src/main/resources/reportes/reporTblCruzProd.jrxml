@@ -24,7 +24,7 @@ inner join Plato as pla on pla.idPlato = p.idPlato]]>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REPORTE DE CANTIDAD TIPOS DE PRODUCTOS SEGUN EL TIPO DE PLATO]]></text>
+				<text><![CDATA[CANTIDAD DE PRODUCTOS POR TIPO Y TIPO DE PLATO]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -55,7 +55,7 @@ inner join Plato as pla on pla.idPlato = p.idPlato]]>
 							<staticText>
 								<reportElement x="0" y="0" width="70" height="25" uuid="76cc9bf8-260c-4a5b-b135-0f0c2a910754"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total descripcion]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalRowHeader>
@@ -83,7 +83,7 @@ inner join Plato as pla on pla.idPlato = p.idPlato]]>
 							<staticText>
 								<reportElement x="20" y="0" width="50" height="30" uuid="fd4e783f-1f53-41b7-8e57-da67fa1edbde"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total descPlato]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>

@@ -54,19 +54,19 @@ WHERE
 		<band height="32" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="57" height="20" uuid="2de91dd1-89a4-4158-82cb-9b80edcc5f29"/>
-				<text><![CDATA[ContratoID]]></text>
+				<text><![CDATA[Contrato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="68" y="0" width="62" height="20" uuid="e3bcda42-c746-453a-aa3f-be32d237a097"/>
-				<text><![CDATA[EmpleadoID]]></text>
+				<text><![CDATA[Empleado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="141" y="0" width="32" height="20" uuid="46e5ad5e-e9f0-4a7a-9445-9e557730bed1"/>
-				<text><![CDATA[RolID]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="189" y="0" width="36" height="20" uuid="f0f2a0fe-31d6-455d-9582-38dd0b6bcab5"/>
-				<text><![CDATA[AreaID]]></text>
+				<text><![CDATA[Área]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="240" y="0" width="71" height="20" forecolor="#666600" uuid="85438505-a150-43d3-aa5d-090f7c6e28b3"/>
@@ -80,14 +80,14 @@ WHERE
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[FechaInicio]]></text>
+				<text><![CDATA[Fecha inicio]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="324" y="0" width="62" height="20" forecolor="#990000" uuid="f9e5b713-3223-4fc2-9508-6562a72692f3"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[FechaFin]]></text>
+				<text><![CDATA[Fecha fin]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="406" y="0" width="37" height="20" uuid="4c98920a-0af9-4772-9abb-68e43167ece3"/>
@@ -117,7 +117,7 @@ WHERE
 				<reportElement x="189" y="4" width="36" height="20" uuid="968ad16a-844e-451f-84f6-1aea405dcffb"/>
 				<textFieldExpression><![CDATA[$F{Contrato_areaID}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="240" y="0" width="71" height="20" forecolor="#666600" backcolor="#FFFFFF" uuid="bb60b459-9e91-4d62-aeec-5c53fa071872"/>
 				<box>
 					<pen lineColor="#000000"/>
@@ -131,7 +131,7 @@ WHERE
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="324" y="0" width="62" height="20" forecolor="#990000" uuid="31da66c5-e7e7-4817-8bd3-29bee4fd90d3"/>
 				<textElement>
 					<font isBold="true"/>
@@ -140,7 +140,7 @@ WHERE
 			</textField>
 			<textField>
 				<reportElement x="406" y="4" width="37" height="20" uuid="1f252711-1b48-4c07-bc08-663720341588"/>
-				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Contrato_estado} != null && $F{Contrato_estado} == 1 ? "Activo" : "No activo"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="466" y="4" width="57" height="20" uuid="05dc1519-3d16-4d78-928a-c411a799cc65"/>

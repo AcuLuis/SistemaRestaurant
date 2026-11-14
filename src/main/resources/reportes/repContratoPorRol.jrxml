@@ -50,11 +50,11 @@ WHERE
 		<band height="25" splitType="Stretch">
 			<staticText>
 				<reportElement x="5" y="1" width="52" height="20" uuid="fd73e6bf-26ec-44a8-b407-253cdcae1420"/>
-				<text><![CDATA[ContratoID]]></text>
+				<text><![CDATA[Contrato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="76" y="0" width="63" height="20" uuid="ab58e9d5-4f51-4cd2-9016-6125b2819792"/>
-				<text><![CDATA[EmpleadoID]]></text>
+				<text><![CDATA[Empleado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="155" y="2" width="63" height="20" uuid="ff98e848-3e30-4a36-85ec-6db47dee1c3c"/>
@@ -62,15 +62,15 @@ WHERE
 			</staticText>
 			<staticText>
 				<reportElement x="236" y="2" width="34" height="20" uuid="e17b56b3-fa91-4919-b183-e53953f275fd"/>
-				<text><![CDATA[AreaID]]></text>
+				<text><![CDATA[Área]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="282" y="2" width="62" height="20" uuid="2c317daf-fa3e-4f26-815d-289dcc3a2884"/>
-				<text><![CDATA[FechaInicio]]></text>
+				<text><![CDATA[Fecha inicio]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="363" y="2" width="48" height="20" uuid="fcfa240d-6386-4e6c-8756-6413cda591f8"/>
-				<text><![CDATA[FechaFin]]></text>
+				<text><![CDATA[Fecha fin]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="424" y="2" width="36" height="20" uuid="a45d88c8-5f8b-40fc-9b66-b052b4bd4dce"/>
@@ -100,17 +100,17 @@ WHERE
 				<reportElement x="236" y="2" width="34" height="20" uuid="299d9566-948e-4064-95a6-23dd6937dbd5"/>
 				<textFieldExpression><![CDATA[$F{Contrato_areaID}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="282" y="2" width="62" height="20" uuid="7fceaa8d-c3af-429b-a5c1-2f8066d7d329"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd/MM/yyyy">
 				<reportElement x="363" y="1" width="48" height="20" uuid="1af7e2fb-ee58-468f-ac64-6dd4b35010ae"/>
 				<textFieldExpression><![CDATA[$F{Contrato_fechaFin}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="424" y="4" width="36" height="20" uuid="849eca2c-ed81-421a-96f7-42ad0009d3b3"/>
-				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{Contrato_estado} != null && $F{Contrato_estado} == 1 ? "Activo" : "No activo"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="471" y="2" width="59" height="20" uuid="59a38b1a-f415-44b6-b313-21dad460f97d"/>

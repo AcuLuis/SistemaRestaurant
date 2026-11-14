@@ -22,7 +22,7 @@ inner join Rol as r on c.rolID = r.rolID]]>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REPORTE DE NUMERO DE CONTRATOS SEGUN EL ÁREA ]]></text>
+				<text><![CDATA[NÚMERO DE CONTRATOS POR ÁREA]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -53,7 +53,7 @@ inner join Rol as r on c.rolID = r.rolID]]>
 							<staticText>
 								<reportElement x="0" y="0" width="70" height="25" uuid="83700721-2730-4081-90fc-82efa95e0f0f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total descripArea]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalRowHeader>
@@ -81,7 +81,7 @@ inner join Rol as r on c.rolID = r.rolID]]>
 							<staticText>
 								<reportElement x="50" y="0" width="89" height="30" uuid="c4248d84-a519-4aa3-afc2-3c3a6fb1b9fa"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total descripRol]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>

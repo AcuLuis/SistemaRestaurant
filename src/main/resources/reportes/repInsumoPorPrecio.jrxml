@@ -38,7 +38,7 @@ Where
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[RESPORTE DE INSUMOS POR PRECIO]]></text>
+				<text><![CDATA[REPORTE DE INSUMOS POR RANGO DE PRECIO]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -49,11 +49,11 @@ Where
 		<band height="34" splitType="Stretch">
 			<staticText>
 				<reportElement x="24" y="0" width="49" height="20" uuid="6bb57c94-b04f-4734-8e35-641db090e543"/>
-				<text><![CDATA[InsumoID]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="100" y="0" width="76" height="20" uuid="fe9ad9ef-c6ea-48b9-8b91-2755caf9b61a"/>
-				<text><![CDATA[TipoInsumoID]]></text>
+				<text><![CDATA[Tipo]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="188" y="0" width="90" height="20" uuid="3f7fde99-102b-4e09-8f53-a81cce1cb425"/>
@@ -65,7 +65,7 @@ Where
 			</staticText>
 			<staticText>
 				<reportElement x="386" y="0" width="72" height="20" uuid="81187165-14e5-44c2-9eb7-8e94a2beeea7"/>
-				<text><![CDATA[PrecioUnitario]]></text>
+				<text><![CDATA[Precio unitario]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="478" y="0" width="50" height="20" uuid="8d8c6b30-4c6f-4069-8677-1df3e7e21f93"/>

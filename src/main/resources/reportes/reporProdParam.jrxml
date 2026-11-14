@@ -39,7 +39,7 @@ WHERE
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REPORSTE DE PRECIOS UNITARIOS MAX O MIN]]></text>
+				<text><![CDATA[REPORTE DE PRODUCTOS POR RANGO DE PRECIO]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -50,27 +50,27 @@ WHERE
 		<band height="61" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20" uuid="a09c8371-2992-4356-8c88-3ed1bf33fde6"/>
-				<text><![CDATA[Producto_productoID]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="154" y="0" width="100" height="20" uuid="ec4a83bf-d419-4656-a976-ca13cbc1667b"/>
-				<text><![CDATA[Producto_descripProducto]]></text>
+				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="314" y="0" width="100" height="20" uuid="ce5c9f32-2d80-40cc-93f9-25de117edad5"/>
-				<text><![CDATA[Producto_cantidad]]></text>
+				<text><![CDATA[Cantidad]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="483" y="0" width="100" height="20" uuid="e75a77a6-57ce-4d91-9696-ec76b0b691d4"/>
-				<text><![CDATA[Producto_precioUnit]]></text>
+				<text><![CDATA[Precio unitario]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="626" y="0" width="100" height="20" uuid="aa029048-a2e9-4ddd-aba5-e74aeb87f47b"/>
-				<text><![CDATA[Producto_IdPlato]]></text>
+				<text><![CDATA[Plato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="760" y="0" width="100" height="20" uuid="d7c7d25c-0c3c-41b5-b6d2-957ea3db0052"/>
-				<text><![CDATA[Producto_idTipProducto]]></text>
+				<text><![CDATA[Tipo]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

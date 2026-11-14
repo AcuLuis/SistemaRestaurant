@@ -36,7 +36,7 @@ FROM
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ROL ID]]></text>
+				<text><![CDATA[CÓDIGO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="311" y="0" width="104" height="20" uuid="0e1c087e-c418-43cb-b4e1-7d852f20f372"/>

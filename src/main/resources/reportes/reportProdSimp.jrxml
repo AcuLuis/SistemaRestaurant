@@ -41,27 +41,27 @@ FROM
 		<band height="61" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20" uuid="550fe9d3-c929-4752-af8e-2952a22a0d25"/>
-				<text><![CDATA[IdProducto]]></text>
+				<text><![CDATA[Código]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="113" y="0" width="100" height="20" uuid="91f48b6c-7662-4128-aef6-7ac847df3854"/>
-				<text><![CDATA[Producto_descripProducto]]></text>
+				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="234" y="0" width="100" height="20" uuid="b30b0910-b95f-42fb-ba87-112f62611ad4"/>
-				<text><![CDATA[Producto_cantidad]]></text>
+				<text><![CDATA[Cantidad]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="356" y="0" width="100" height="20" uuid="6920b97d-3bdb-4c8a-8f9f-a65b5eac261a"/>
-				<text><![CDATA[Producto_precioUnit]]></text>
+				<text><![CDATA[Precio unitario]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="473" y="0" width="100" height="20" uuid="c5b614fc-1364-4f01-ac71-7d368f02a2ad"/>
-				<text><![CDATA[Producto_IdPlato]]></text>
+				<text><![CDATA[Plato]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="596" y="0" width="100" height="20" uuid="961ca37e-a2af-4bf5-aded-dc0cc0b06120"/>
-				<text><![CDATA[Producto_idTipProducto]]></text>
+				<text><![CDATA[Tipo]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

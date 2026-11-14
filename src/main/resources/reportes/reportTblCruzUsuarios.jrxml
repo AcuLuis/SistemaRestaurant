@@ -53,7 +53,7 @@ from Usuario as u inner join LocalR as l on u.idLocalR = l.idLocalR]]>
 							<staticText>
 								<reportElement x="0" y="0" width="70" height="25" uuid="4708aab0-61cc-48e7-9902-bdc1beccdb67"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total Ubicacion]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalRowHeader>
@@ -81,7 +81,7 @@ from Usuario as u inner join LocalR as l on u.idLocalR = l.idLocalR]]>
 							<staticText>
 								<reportElement x="39" y="0" width="50" height="30" uuid="4f9453f5-6ae2-4a97-bf14-f26abe4e3f16"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Total tipoUsuario]]></text>
+								<text><![CDATA[Total]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>
