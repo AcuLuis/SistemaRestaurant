@@ -91,4 +91,24 @@ public class CabOrdenDeVenta {
         this.fechaVenta = fechaVenta;
     }
     
+
+    /** 1 = registrada, 0 = anulada. */
+    private int estado = 1;
+    private String motivoAnulacion;
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
+    }
 }

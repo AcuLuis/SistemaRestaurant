@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -29,7 +31,9 @@ import restaurante.modelo.Empleado;
 import restaurante.modelo.Mesa;
 import restaurante.modelo.Producto;
 import restaurante.modelo.TipProducto;
+import restaurante.reportes.Reportes;
 import restaurante.seguridad.Sesion;
+import restaurante.servicio.VentaServicio;
 import restaurante.ui.util.BusquedaDiferida;
 import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Tablas;
@@ -47,6 +51,7 @@ public class FrmVenta extends javax.swing.JFrame {
     private static final String PARA_LLEVAR = "ParaLlevar";
 
     private final VentaDao ventaDao = new VentaDao();
+    private final VentaServicio ventaServicio = new VentaServicio();
     private final ClienteDao clienteDao = new ClienteDao();
     private final ProductoDao productoDao = new ProductoDao();
     private final List<Empleado> empleados;
@@ -79,7 +84,7 @@ public class FrmVenta extends javax.swing.JFrame {
         this.setTitle("Ventas - Sistema Restaurant");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.empleados = new EmpleadoDao().listar(false, "");
-        this.mesas = new MesaDao().listar();
+        this.mesas = new MesaDao().listarDisponibles();
         this.tipos = new TipProductoDao().listar();
         this.cmbEmpleado.addItem("");
         this.empleados.forEach(e -> this.cmbEmpleado.addItem(e.getNombres() + " " + e.getApellidos()));
@@ -93,6 +98,8 @@ public class FrmVenta extends javax.swing.JFrame {
         }
         Tablas.alSeleccionar(this.tblClientes, this::cargarVentasCliente);
         Tablas.alSeleccionar(this.tblCompraClie, this::cargarDetalleVenta);
+        ((DefaultTableModel) this.tblCompraClie.getModel()).addColumn("Estado");
+        configurarHistorial();
         for (JTextField campo : new JTextField[] {txtIdCliente, txtNombreClie, txtApellidosClie, txtTelefonoClie,
             txtIdProducto, txtDescripProd, txtTipProd, txtPrecio}) {
             campo.setEditable(false);
@@ -127,6 +134,62 @@ public class FrmVenta extends javax.swing.JFrame {
                 quitarSeleccionado();
             }
         });
+    }
+
+    private void configurarHistorial() {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem comprobante = new JMenuItem("Ver comprobante");
+        comprobante.addActionListener(e -> verComprobante());
+        menu.add(comprobante);
+        boolean puedeAnular = Sesion.actual().map(s -> s.getTipo().puedeRegistrarTransacciones()).orElse(false);
+        if (puedeAnular) {
+            JMenuItem anular = new JMenuItem("Anular venta...");
+            anular.addActionListener(e -> anularVenta());
+            menu.add(anular);
+        }
+        this.tblCompraClie.setComponentPopupMenu(menu);
+        this.tblCompraClie.setToolTipText("Clic derecho para ver el comprobante o anular la venta");
+    }
+
+    private CabOrdenDeVenta ventaSeleccionada() {
+        int fila = Tablas.filaSeleccionada(this.tblCompraClie);
+        if (fila < 0) {
+            Dialogos.aviso(this, "Seleccione una venta en la tabla.");
+            return null;
+        }
+        return ventasCliente.get(fila);
+    }
+
+    private void verComprobante() {
+        CabOrdenDeVenta venta = ventaSeleccionada();
+        if (venta != null) {
+            Reportes.mostrar(this, "comprobante", "Comprobante N.º " + venta.getOrdenDeVentaID(),
+                    Map.of("ordenDeVentaID", venta.getOrdenDeVentaID()));
+        }
+    }
+
+    private void anularVenta() {
+        CabOrdenDeVenta venta = ventaSeleccionada();
+        if (venta == null) {
+            return;
+        }
+        if (venta.getEstado() == VentaDao.ESTADO_ANULADA) {
+            Dialogos.aviso(this, "La venta " + venta.getOrdenDeVentaID() + " ya está anulada.");
+            return;
+        }
+        String motivo = JOptionPane.showInputDialog(this, "Motivo de la anulación de la venta N.º "
+                + venta.getOrdenDeVentaID() + ":", "Anular venta", JOptionPane.WARNING_MESSAGE);
+        if (motivo == null) {
+            return;
+        }
+        int usuario = Sesion.actual().map(Sesion::getUsuarioID).orElseThrow();
+        ventaServicio.anular(venta.getOrdenDeVentaID(), motivo, usuario);
+        Dialogos.info(this, "Venta N.º " + venta.getOrdenDeVentaID() + " anulada. Se repusieron las existencias.");
+        int filaCliente = this.tblClientes.getSelectedRow();
+        cargarVentasCliente();
+        if (filaCliente >= 0) {
+            this.tblClientes.setRowSelectionInterval(filaCliente, filaCliente);
+        }
     }
 
     private String descripcionTipo(int id) {
@@ -908,6 +971,13 @@ public class FrmVenta extends javax.swing.JFrame {
         }
         Optional<LineaVenta> existente = carrito.stream()
                 .filter(l -> l.producto.getProductoID() == producto.getProductoID()).findFirst();
+        int pedida = cantidad.get() + existente.map(l -> l.cantidad).orElse(0);
+        if (pedida > producto.getCantidad()) {
+            Dialogos.aviso(this, "Solo hay " + producto.getCantidad() + " unidades de \"" + producto.getDescripProducto()
+                    + "\" disponibles.");
+            this.txtCantProd.requestFocusInWindow();
+            return;
+        }
         if (existente.isPresent()) {
             existente.get().cantidad += cantidad.get();
         } else {
@@ -1012,8 +1082,11 @@ public class FrmVenta extends javax.swing.JFrame {
             detalles.add(det);
         }
         BigDecimal importe = total();
-        int numero = this.ventaDao.registrarVenta(cab, ubicacion, detalles);
-        Dialogos.info(this, "Venta N.º " + numero + " registrada correctamente.\nTotal: " + Tablas.importe(importe));
+        int numero = this.ventaServicio.registrar(cab, ubicacion, detalles);
+        if (Dialogos.confirmar(this, "Venta N.º " + numero + " registrada correctamente.\nTotal: "
+                + Tablas.importe(importe) + "\n\n¿Desea ver el comprobante?")) {
+            Reportes.mostrar(this, "comprobante", "Comprobante N.º " + numero, Map.of("ordenDeVentaID", numero));
+        }
         this.limpiarVenta();
         this.llenaTblCliente(this.txtBuscaCliente.getText().trim());
     }
@@ -1071,7 +1144,8 @@ public class FrmVenta extends javax.swing.JFrame {
         DefaultTableModel modelo = Tablas.vaciar(this.tblCompraClie);
         for (CabOrdenDeVenta v : ventasCliente) {
             modelo.addRow(new Object[] {v.getOrdenDeVentaID(), v.getClienteID(), descripcionMesa(v.getMesaID()),
-                v.getFechaVenta(), v.getMetodoPago() == 1 ? EFECTIVO : CREDITO, descripcionEntrega(v.getTipEntrega())});
+                v.getFechaVenta(), v.getMetodoPago() == 1 ? EFECTIVO : CREDITO, descripcionEntrega(v.getTipEntrega()),
+                v.getEstado() == VentaDao.ESTADO_ANULADA ? "Anulada" : "Registrada"});
         }
         Tablas.vaciar(this.tblDetCompraClie);
     }
@@ -1083,12 +1157,14 @@ public class FrmVenta extends javax.swing.JFrame {
         }
         BigDecimal totalVenta = BigDecimal.ZERO;
         DefaultTableModel modelo = Tablas.vaciar(this.tblDetCompraClie);
-        for (Producto p : productoDao.listarPorVenta(ventasCliente.get(fila).getOrdenDeVentaID())) {
+        CabOrdenDeVenta venta = ventasCliente.get(fila);
+        for (Producto p : productoDao.listarPorVenta(venta.getOrdenDeVentaID())) {
             modelo.addRow(new Object[] {p.getProductoID(), p.getCantidad() + " x " + p.getDescripProducto(),
                 descripcionTipo(p.getTipo()), Tablas.importe(p.getPrecioUnit())});
             totalVenta = totalVenta.add(p.getPrecioUnit().multiply(BigDecimal.valueOf(p.getCantidad())));
         }
-        this.jScrollPane4.setBorder(BorderFactory.createTitledBorder("Total de la venta: " + Tablas.importe(totalVenta)));
+        this.jScrollPane4.setBorder(BorderFactory.createTitledBorder("Total de la venta: " + Tablas.importe(totalVenta)
+                + (venta.getEstado() == VentaDao.ESTADO_ANULADA ? "   (ANULADA: " + venta.getMotivoAnulacion() + ")" : "")));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

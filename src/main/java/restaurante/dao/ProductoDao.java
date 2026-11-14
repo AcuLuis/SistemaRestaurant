@@ -1,8 +1,10 @@
 package restaurante.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import restaurante.datos.Jdbc;
 import restaurante.modelo.Producto;
 
@@ -61,6 +63,28 @@ public class ProductoDao {
                 }, ordenDeVentaID);
     }
 
+
+    /**
+     * Resta existencias solo si hay suficientes. Devuelve false si no las hay
+     * (la comprobación y la actualización son una única sentencia atómica).
+     */
+    public boolean descontarExistencias(Connection c, int productoID, int cantidad) throws SQLException {
+        return Jdbc.actualizar(c, "UPDATE Producto SET cantidad = cantidad - ? WHERE productoID = ? AND cantidad >= ?",
+                cantidad, productoID, cantidad) == 1;
+    }
+
+    public void sumarExistencias(Connection c, int productoID, int cantidad) throws SQLException {
+        Jdbc.actualizar(c, "UPDATE Producto SET cantidad = cantidad + ? WHERE productoID = ?", cantidad, productoID);
+    }
+
+    public Optional<Producto> buscar(Connection c, int productoID) throws SQLException {
+        return Jdbc.uno(c, SELECT + " WHERE productoID = ?", ProductoDao::mapear, productoID);
+    }
+
+    /** Productos con existencias iguales o inferiores al mínimo indicado. */
+    public List<Producto> listarConPocasExistencias(int minimo) {
+        return Jdbc.lista(SELECT + " WHERE cantidad <= ? ORDER BY cantidad, descripProducto", ProductoDao::mapear, minimo);
+    }
 
     private static Producto mapear(ResultSet rs) throws SQLException {
         Producto pro = new Producto();

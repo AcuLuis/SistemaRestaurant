@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="comprobante" language="java" pageWidth="420" pageHeight="595" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="ordenDeVentaID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT v.ordenDeVentaID, CONVERT(varchar(16), v.fechaVenta, 120) AS fecha,
+       c.nombres + ' ' + c.apellidos AS cliente, e.nombres + ' ' + e.apellidos AS empleado,
+       v.tipEntrega, v.metodoPago, v.estado, v.motivoAnulacion, m.ubic AS mesa,
+       p.descripProducto, d.cantidad, COALESCE(d.precioUnit, p.precioUnit) AS precioUnit,
+       d.cantidad * COALESCE(d.precioUnit, p.precioUnit) AS importe
+FROM CabOrdenDeVenta v
+     INNER JOIN Cliente c ON c.clienteID = v.clienteID
+     LEFT JOIN Empleado e ON e.empleadoID = v.empleadoID
+     LEFT JOIN Mesa m ON m.mesaID = v.mesaID
+     INNER JOIN DetOrdenDeVenta d ON d.ordenDeVentaID = v.ordenDeVentaID
+     INNER JOIN Producto p ON p.productoID = d.productoID
+WHERE v.ordenDeVentaID = $P{ordenDeVentaID}
+ORDER BY p.descripProducto]]>
+	</queryString>
+	<field name="ordenDeVentaID" class="java.lang.Integer"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="empleado" class="java.lang.String"/>
+	<field name="tipEntrega" class="java.lang.String"/>
+	<field name="metodoPago" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.Integer"/>
+	<field name="motivoAnulacion" class="java.lang.String"/>
+	<field name="mesa" class="java.lang.String"/>
+	<field name="descripProducto" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="precioUnit" class="java.math.BigDecimal"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<variable name="total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="150">
+			<staticText>
+				<reportElement x="0" y="0" width="380" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA RESTAURANT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="26" width="380" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Comprobante de venta N.º " + $F{ordenDeVentaID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="56" width="380" height="15"/>
+				<textFieldExpression><![CDATA["Fecha: " + $F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="72" width="380" height="15"/>
+				<textFieldExpression><![CDATA["Cliente: " + $F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="88" width="380" height="15"/>
+				<textFieldExpression><![CDATA["Atendido por: " + ($F{empleado} == null ? "-" : $F{empleado})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="104" width="380" height="15"/>
+				<textFieldExpression><![CDATA["Entrega: " + ("ComerEnLocal".equals($F{tipEntrega}) ? "Comer en el local" + ($F{mesa} == null ? "" : " (" + $F{mesa} + ")") : "ParaLlevar".equals($F{tipEntrega}) ? "Para llevar" : "Delivery") + "    Pago: " + ($F{metodoPago} != null && $F{metodoPago} == 1 ? "Efectivo" : "Crédito")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="122" width="380" height="24" forecolor="#C0392B">
+					<printWhenExpression><![CDATA[$F{estado} != null && $F{estado} == 0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["VENTA ANULADA: " + $F{motivoAnulacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="200" height="18" backcolor="#E9EEF3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="200" y="0" width="40" height="18" backcolor="#E9EEF3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="240" y="0" width="70" height="18" backcolor="#E9EEF3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[P. unit.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="0" width="70" height="18" backcolor="#E9EEF3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<textField>
+				<reportElement x="0" y="0" width="200" height="16"/>
+				<textFieldExpression><![CDATA[$F{descripProducto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="40" height="16"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="240" y="0" width="70" height="16"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{precioUnit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="310" y="0" width="70" height="16"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50">
+			<line>
+				<reportElement x="0" y="4" width="380" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="200" y="10" width="110" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="310" y="10" width="70" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
