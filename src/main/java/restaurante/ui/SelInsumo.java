@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Insumo;
 import restaurante.dao.InsumoDao;
 import java.util.Vector;
@@ -18,7 +20,7 @@ public class SelInsumo extends javax.swing.JDialog {
     }
     
     public void llenaTblInsumo(boolean sw, String cad){
-        Vector<Insumo> listInsumo = insumoDao.ListaItem(sw, cad);
+        List<Insumo> listInsumo = insumoDao.ListaItem(sw, cad);
         dtm.setRowCount(0);
         for(int i = 0; i<listInsumo.size();i++){
             Vector vec = new Vector();

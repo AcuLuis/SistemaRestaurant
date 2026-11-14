@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Insumo;
 import restaurante.modelo.TipInsumo;
 import restaurante.dao.InsumoDao;
@@ -27,7 +29,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     public void llenaTblIns(boolean sw, String cad){
         
         this.txtInsumoID.setText(Integer.toString(util.idNext("Insumo", "insumoID")));
-        Vector<Insumo> listaInsumo;
+        List<Insumo> listaInsumo;
         listaInsumo = insuDao.ListaItem(sw, cad);
         dtmInsumo.setRowCount(0);
         
@@ -48,7 +50,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     
    public void llenaCmbTipo(){
 
-        Vector<TipInsumo> listaTipInsu = new Vector<TipInsumo>();
+        List<TipInsumo> listaTipInsu;
         listaTipInsu = this.tipinsu.llenaTipInsumo();
         this.cmbTipIns.addItem("");
         for (int i=0; i<listaTipInsu.size();i++){

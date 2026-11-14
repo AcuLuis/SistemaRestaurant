@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Area;
 import restaurante.dao.AreaDao;
 import restaurante.util.Util;
@@ -22,7 +24,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
     
     private void llenaTblArea(boolean valida, String cadena){
     
-        Vector<Area> listaArea;
+        List<Area> listaArea;
         
         this.txtAreaID.setText(Integer.toString(u.idNext("Area", "areaID")));
         

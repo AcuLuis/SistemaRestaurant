@@ -172,7 +172,7 @@ public class CrearCliente extends javax.swing.JFrame {
             clie.setApellidos(this.txtApellido.getText());
             clie.setDireccion(this.txtDireccion.getText());
             clie.setTelefono(Integer.parseInt(this.txtTelefono.getText()));
-            this.clieDao.procesaItem(clie, "insert");
+            this.clieDao.insertaCliente(clie);
             this.limpia();
             
             

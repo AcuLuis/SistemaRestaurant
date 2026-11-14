@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Producto;
 import restaurante.dao.ProductoDao;
 import java.util.Vector;
@@ -23,7 +25,7 @@ public class SelProducto extends javax.swing.JDialog {
     }
 
     public void llenaTblProducto(boolean sw, String cad){
-        Vector<Producto> listProducto = productoDao.ListaProducto(sw, cad);
+        List<Producto> listProducto = productoDao.ListaProducto(sw, cad);
         dtm.setRowCount(0);
         for(int i = 0; i<listProducto.size();i++){
             Vector vec = new Vector();

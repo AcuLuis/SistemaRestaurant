@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Empleado;
 import restaurante.modelo.LocalR;
 import restaurante.modelo.Usuario;
@@ -40,7 +42,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     
     private void llenaTblUsuario(boolean valida, String cadena){
     
-        Vector<Usuario> listaUsuario;
+        List<Usuario> listaUsuario;
         
         listaUsuario = uDao.listaUsuario(valida, cadena);
         dtmUsuario.setRowCount(0);
@@ -70,7 +72,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     }
    private void llenaTblEmpleado(boolean valida, String cadena){
     
-        Vector<Empleado> listaEmp;
+        List<Empleado> listaEmp;
         
         
         listaEmp = empDao.listaEmpleadoNoUsers(valida, cadena);
@@ -429,7 +431,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         
         this.panel1.setEnabledAt(1, true);
         this.panel1.setSelectedIndex(1);
-                Vector<LocalR> listaLocal = new Vector<LocalR>();
+                List<LocalR> listaLocal;
         listaLocal = lDao.listaLocal();
         int id=0;
         for (int i =0; i<listaLocal.size();i++){

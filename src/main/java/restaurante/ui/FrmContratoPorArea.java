@@ -2,6 +2,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Area;
 import restaurante.dao.AreaDao;
 import restaurante.util.DbBean;
@@ -20,7 +22,7 @@ public class FrmContratoPorArea extends javax.swing.JInternalFrame {
     
     private void llenaCmbArea(){
         
-        Vector<Area> listaArea = new Vector<Area>();
+        List<Area> listaArea;
         listaArea = this.areaDao.llenaArea();
         this.cmbArea.addItem("");
         

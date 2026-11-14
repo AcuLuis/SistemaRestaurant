@@ -24,7 +24,6 @@ public class LoginDefecto extends javax.swing.JFrame {
     LocalR local = new LocalR();
     Util util = new Util();
     Login login = new Login();
-    Servidor servi = new Servidor();
     public int idLocal;
     
     IniciaBdDao inicia = new IniciaBdDao();
@@ -156,7 +155,6 @@ public class LoginDefecto extends javax.swing.JFrame {
         public void creaPDF() throws FileNotFoundException{
         
         com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
-        DbBean con = new DbBean();
         String sql;
         String ruta = System.getProperty("user.home");
         String nombreArchivo = "BD_Restaurant.pdf";

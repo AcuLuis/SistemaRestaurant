@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.*;
 import restaurante.dao.*;
 import restaurante.util.Util;
@@ -57,7 +59,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     
     public void llenaTblEmpleado(boolean valida, String cadena){
     
-        Vector<Empleado> listaEmp;
+        List<Empleado> listaEmp;
         
         listaEmp = empDao.listaEmpleado(valida, cadena);     
         dtmEmpleado.setRowCount(0);
@@ -84,7 +86,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     
     public void llenaTblEmpleadoSinContrato(boolean valida, String cadena){
     
-        Vector<Empleado> listaEmp;
+        List<Empleado> listaEmp;
         
         listaEmp = empDao.sinContrato(valida, cadena);     
         this.dtmEmpleadoSinContrato.setRowCount(0);
@@ -112,7 +114,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     
     public void llenaTblContratos(boolean valida, String cadena){
     
-        Vector<Contrato> listaContrato;
+        List<Contrato> listaContrato;
         Util u = new Util();
         
         listaContrato = contratoDao.ListaItem(valida, cadena);
@@ -573,7 +575,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
     private void llenaCmbRol(){
         
-        Vector<Rol> listaRol = new Vector<Rol>();
+        List<Rol> listaRol;
         
         this.cmbRol.addItem("");
         
@@ -587,7 +589,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
     private void llenaCmbArea(){
         
-        Vector<Area> listaArea = new Vector<Area>();
+        List<Area> listaArea;
         
         this.cmbArea.addItem("");
         

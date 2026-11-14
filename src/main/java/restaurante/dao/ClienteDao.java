@@ -1,103 +1,80 @@
-
 package restaurante.dao;
 
-import restaurante.modelo.Cliente;
-import restaurante.util.DbBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.List;
+import restaurante.datos.Jdbc;
+import restaurante.modelo.Cliente;
 
 public class ClienteDao {
 
-    public Vector<Cliente> ListaCliente(boolean sw, String str){
-        Vector<Cliente> lista = new Vector<Cliente>();
-        DbBean con = new DbBean();
-        String sql = "Select * from Cliente";
-        if(sw == true){
-            sql = sql + " WHERE (apellidos LIKE '"+ str +"%') OR (nombres LIKE '" + str + "%')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
-            while(resultado.next()){
-                Cliente clie = new Cliente();
-                clie.setClienteID(resultado.getInt(1));
-                clie.setNombres(resultado.getString(2));
-                clie.setApellidos(resultado.getString(3));
-                clie.setDni(resultado.getString(4));
-                clie.setGenero(resultado.getInt(5));
-                clie.setEstadoCivil(resultado.getString(6));
-                clie.setTelefono(resultado.getInt(7));
-                clie.setCorreo(resultado.getString(8));
-                clie.setFechNaci(resultado.getString(9));
-                clie.setEstado(resultado.getInt(10));
-                clie.setDireccion(resultado.getString(11));
-                lista.addElement(clie);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    public Vector<Cliente> ListaCliente2(boolean sw, String str){
-        Vector<Cliente> lista = new Vector<Cliente>();
-        DbBean con = new DbBean();
-        String sql = "select distinct c.ClienteID, c.nombres, c.apellidos, c.estado ";
-                sql += "from Cliente as c inner join CabOrdenDeVenta as cb on c.ClienteID = cb.ClienteID";
-        if(sw == true){
-            sql = sql + " WHERE (apellidos LIKE '"+ str +"%') OR (nombres LIKE '" + str + "%')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
-            while(resultado.next()){
-                Cliente clie = new Cliente();
-                clie.setClienteID(resultado.getInt(1));
-                clie.setNombres(resultado.getString(2));
-                clie.setApellidos(resultado.getString(3));
-                clie.setEstado(resultado.getInt(4));
-                lista.addElement(clie);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    public int procesaItem(Cliente c, String proc){
-       int resultado=0;
-       String sql= "";
-       DbBean con=new DbBean();
-       if(proc.equals("insert")){
-            sql="INSERT INTO Cliente VALUES ("+ c.getClienteID() +", '"+ c.getNombres() +"', '"+ c.getApellidos() +"', '"+ c.getDni() +"', "+ c.getGenero() +", "+ c.getEstadoCivil() +", "+ c.getTelefono() +", '"+ c.getCorreo() +"', "+ c.getFechNaci() +", "+ c.getEstado() +", '"+ c.getDireccion() +"')";
-            System.out.println("uuuuuuu" + sql);
-       }
-       if(proc.equals("update")){
-            sql="UPDATE Cliente set nombres = '"+ c.getNombres() +"', apellidos = '"+ c.getApellidos() +"', dni = '"+ c.getDni() +"', genero = '"+ c.getGenero() +"', estadoCivil = '"+ c.getEstadoCivil() +"', telefono = '"+ c.getTelefono() +"', correo = '"+ c.getCorreo() +"', fechaNaci = '"+ c.getFechNaci() +"', estado = '"+ c.getEstado() +"', direccion = '"+ c.getDireccion() +"' where clienteID = '"+ c.getClienteID() +"'";
-       }
-       System.out.println("Observando el estado de la sentencia sql: "+sql);
+    /** Estado con el que se registran los clientes nuevos. */
+    public static final int ESTADO_ACTIVO = 1;
 
-       try{
-          resultado=con.ejecutaSQL(sql);
+    private static final String SELECT = "SELECT clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"
+            + " correo, fechNaci, estado, direccion FROM Cliente";
+
+    /** Todos los clientes (o los que coinciden con el nombre o apellido buscado). */
+    public List<Cliente> ListaCliente(boolean filtrar, String texto) {
+        if (!filtrar) {
+            return Jdbc.lista(SELECT + " ORDER BY apellidos, nombres", ClienteDao::mapear);
         }
-        catch(java.sql.SQLException e){
-            e.printStackTrace();
+        String patron = Jdbc.empiezaPor(texto);
+        return Jdbc.lista(SELECT + " WHERE apellidos LIKE ? OR nombres LIKE ? ORDER BY apellidos, nombres",
+                ClienteDao::mapear, patron, patron);
+    }
+
+    /** Clientes que tienen al menos una venta registrada. */
+    public List<Cliente> ListaCliente2(boolean filtrar, String texto) {
+        String sql = "SELECT c.clienteID, c.nombres, c.apellidos, c.estado FROM Cliente c"
+                + " WHERE EXISTS (SELECT 1 FROM CabOrdenDeVenta v WHERE v.clienteID = c.clienteID)";
+        Jdbc.Mapeador<Cliente> mapeador = rs -> {
+            Cliente clie = new Cliente();
+            clie.setClienteID(rs.getInt("clienteID"));
+            clie.setNombres(rs.getString("nombres"));
+            clie.setApellidos(rs.getString("apellidos"));
+            clie.setEstado(rs.getInt("estado"));
+            return clie;
+        };
+        if (!filtrar) {
+            return Jdbc.lista(sql + " ORDER BY c.apellidos, c.nombres", mapeador);
         }
-        try{
-        con.desconecta();
-        }
-        catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-          return resultado;
+        String patron = Jdbc.empiezaPor(texto);
+        return Jdbc.lista(sql + " AND (c.apellidos LIKE ? OR c.nombres LIKE ?) ORDER BY c.apellidos, c.nombres",
+                mapeador, patron, patron);
+    }
+
+    /** Registra un cliente nuevo y devuelve su identificador. */
+    public int insertaCliente(Cliente c) {
+        return Jdbc.transaccion(con -> {
+            int id = Jdbc.siguienteId(con, "Cliente", "clienteID");
+            Jdbc.actualizar(con, "INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"
+                    + " correo, fechNaci, estado, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    id, c.getNombres(), c.getApellidos(), vacioANulo(c.getDni()), null, vacioANulo(c.getEstadoCivil()),
+                    c.getTelefono(), vacioANulo(c.getCorreo()), null, ESTADO_ACTIVO, vacioANulo(c.getDireccion()));
+            c.setClienteID(id);
+            c.setEstado(ESTADO_ACTIVO);
+            return id;
+        });
+    }
+
+    private static String vacioANulo(String texto) {
+        return texto == null || texto.isBlank() ? null : texto.trim();
+    }
+
+    private static Cliente mapear(ResultSet rs) throws SQLException {
+        Cliente clie = new Cliente();
+        clie.setClienteID(rs.getInt("clienteID"));
+        clie.setNombres(rs.getString("nombres"));
+        clie.setApellidos(rs.getString("apellidos"));
+        clie.setDni(rs.getString("dni"));
+        clie.setGenero(rs.getInt("genero"));
+        clie.setEstadoCivil(rs.getString("estadoCivil"));
+        clie.setTelefono(rs.getInt("telefono"));
+        clie.setCorreo(rs.getString("correo"));
+        clie.setFechNaci(rs.getString("fechNaci"));
+        clie.setEstado(rs.getInt("estado"));
+        clie.setDireccion(rs.getString("direccion"));
+        return clie;
     }
 }

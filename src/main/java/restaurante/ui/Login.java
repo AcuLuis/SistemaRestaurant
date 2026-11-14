@@ -3,7 +3,6 @@ package restaurante.ui;
 
 import restaurante.modelo.*;
 import restaurante.dao.*;
-import restaurante.util.DbBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -12,9 +11,6 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
     
     UsuarioDao usuarioDao = new UsuarioDao();
-    DbBean con = new DbBean();
-    DbBeanDao conexion = new DbBeanDao ();
-    ServidorDao serviDao = new ServidorDao();
     Usuario user = new Usuario();
     public Login() {
         

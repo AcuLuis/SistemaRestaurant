@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.*;
 import restaurante.dao.*;
 import restaurante.util.Util;
@@ -27,7 +29,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }
     
     private void llenaCmbTipo(){
-        Vector<TipProducto>listaTip;
+        List<TipProducto> listaTip;
         listaTip = tipProbDao.listaTip();
         cmbTipProduct.addItem("");
         for(int i=0;i<listaTip.size();i++){
@@ -35,7 +37,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         }
     }
     private void llenaCmbPlato(){
-        Vector <Plato> listaPlato;
+        List<Plato> listaPlato;
         listaPlato = platDao.listaPlato();
         cmbPlato.addItem("");
         for(int i=0;i<listaPlato.size();i++){
@@ -44,7 +46,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }
     private void llenaTblProducto(boolean valida, String Cadena){
         
-        Vector<Producto> listProduct;
+        List<Producto> listProduct;
         
         listProduct = prodDao.ListaProducto(valida, Cadena);
         dtm.setRowCount(0);

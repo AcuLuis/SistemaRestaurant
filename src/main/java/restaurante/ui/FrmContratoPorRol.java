@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Rol;
 import restaurante.dao.RolDao;
 import restaurante.util.DbBean;
@@ -19,7 +21,7 @@ public class FrmContratoPorRol extends javax.swing.JInternalFrame {
 
     private void llenaCmbRol(){
     
-        Vector<Rol> listaRol = new Vector<Rol>();
+        List<Rol> listaRol;
         
         this.cmbRol.addItem("");
         listaRol = rolDao.llenaRol();

@@ -2,7 +2,6 @@ package restaurante.util;
 import restaurante.config.Configuracion;
 import restaurante.config.Configuracion.Claves;
 import restaurante.datos.ConexionBD;
-import restaurante.dao.DbBeanDao;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;

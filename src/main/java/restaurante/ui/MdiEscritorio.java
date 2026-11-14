@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.LocalR;
 import restaurante.dao.UsuarioDao;
 import restaurante.dao.IniciaBdDao;
@@ -709,7 +711,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
     private void menuItemBDPorDefectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBDPorDefectoActionPerformed
         
         IniciaBdDao ini = new IniciaBdDao();
-        Vector<LocalR> listaLocal = new Vector<LocalR>();
+        List<LocalR> listaLocal;
         listaLocal = lDao.listaLocal();
         int id=0;
         for (int i =0; i<listaLocal.size();i++){

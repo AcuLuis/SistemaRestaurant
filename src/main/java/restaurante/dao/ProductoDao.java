@@ -1,163 +1,78 @@
-
 package restaurante.dao;
 
-import restaurante.modelo.Producto;
-import restaurante.util.DbBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.List;
+import restaurante.datos.Jdbc;
+import restaurante.modelo.Producto;
 
 public class ProductoDao {
-    public void insertaProducto(Producto p){
-        
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "insert into Producto values ( ";
-        sql = sql +p.getProductoID()+", "+p.getPlato()+", "+p.getTipo()+", '"+p.getDescripProducto()+"', ";
-        sql = sql +p.getCantidad()+", "+p.getPrecioUnit()+")";
 
-        try{
-            System.out.println(sql);
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-    }
-    
-    public void actualizarProducto(Producto p){
+    private static final String SELECT =
+            "SELECT productoID, idPlato, idTipProducto, descripProducto, cantidad, precioUnit FROM Producto";
 
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "update Producto set ";
-        sql = sql+ " idPlato = "+p.getPlato()+" ";
-        sql = sql+ " idTipProducto = "+p.getTipo()+" ";
-        sql = sql+ " descripProducto = '"+p.getDescripProducto()+"' ";
-        sql = sql+ " cantidad = "+p.getCantidad()+" ";
-        sql = sql+ " precioUnit = "+p.getPrecioUnit()+" ";
-        sql = sql+ " where productoID = "+p.getProductoID()+" ";
-        
-        try{
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
+    /** Inserta el producto asignándole un identificador nuevo, que se devuelve. */
+    public int insertaProducto(Producto p) {
+        return Jdbc.transaccion(c -> {
+            int id = Jdbc.siguienteId(c, "Producto", "productoID");
+            Jdbc.actualizar(c, "INSERT INTO Producto (productoID, idPlato, idTipProducto, descripProducto, cantidad,"
+                    + " precioUnit) VALUES (?, ?, ?, ?, ?, ?)",
+                    id, p.getPlato(), p.getTipo(), p.getDescripProducto(), p.getCantidad(), p.getPrecioUnit());
+            p.setProductoID(id);
+            return id;
+        });
     }
-     public void eliminarProducto(Producto p){
-    
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "delete from Producto";
-        sql = sql+ " where areaID = "+p.getProductoID()+" ";
-        
-        try{
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-    }
-    
-    public Vector<Producto> ListaProducto(boolean sw, String str){
-        Vector<Producto> lista = new Vector<Producto>();
-        DbBean con = new DbBean();
-        String sql = "Select * from Producto";
-        if(sw == true){
-            sql = sql + " WHERE (descripProducto LIKE '"+ str +"%')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
-            while(resultado.next()){
-                Producto pro = new Producto();
-                pro.setProductoID(resultado.getInt(1));
-                pro.setPlato(resultado.getInt(2));
-                pro.setTipo(resultado.getInt(3));
-                pro.setDescripProducto(resultado.getString(4));
-                pro.setCantidad(resultado.getInt(5));
-                pro.setPrecioUnit(resultado.getDouble(6));
-                lista.addElement(pro);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    public Vector<Producto> ListaProducto2(boolean sw, String str){
-        Vector<Producto> lista = new Vector<Producto>();
-        DbBean con = new DbBean();
-        String sql = "select p.productoId, p.descripProducto, p.idTipProducto, p.precioUnit\n" +
-                     "from Producto as p inner join DetOrdenDeVenta as do on p.productoID = do.productoID";
-        if(sw == true){
-            sql = sql + " WHERE (do.OrdenDeVentaID = '"+ str +"')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
-            while(resultado.next()){
-                Producto pro = new Producto();
-                pro.setProductoID(resultado.getInt(1));
-                pro.setDescripProducto(resultado.getString(2));
-                pro.setTipo(resultado.getInt(3));
-                pro.setPrecioUnit(resultado.getDouble(4));
-                lista.addElement(pro);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    public int procesaItem(Producto cv, String proc){
-       int resultado = 0;
-       String sql = "";
-       DbBean con = new DbBean();
-       if(proc.equals("insert")){
-            sql="INSERT INTO Producto VALUES ('"+ cv.getProductoID() +"', '"+ cv.getPlato() +"', '"+ cv.getTipo()+"', '"+ cv.getDescripProducto() +"', '"+ cv.getCantidad() +"', '"+ cv.getPrecioUnit() +"')";
-            System.out.println("uuuuuuu" + sql);
-       }
-       if(proc.equals("update")){
-            sql="UPDATE Producto set idPlato  = '"+ cv.getPlato() +"', idTipProducto = '"+ cv.getTipo()+"', descripProducto = '"+ cv.getDescripProducto() +"', cantidad = '"+ cv.getCantidad() +"', precioUnit = '"+ cv.getPrecioUnit() +"' where productoID = '"+ cv.getProductoID() +"'";
-       }
-       System.out.println("Observando el estado de la sentencia sql: "+sql);
 
-       try{
-          resultado = con.ejecutaSQL(sql);
-       }catch(java.sql.SQLException e){
-          e.printStackTrace();
-       }
-       try{
-           con.desconecta();
-       }catch(java.sql.SQLException e){
-          e.printStackTrace();
-       }
-          return resultado;
+    public void actualizarProducto(Producto p) {
+        Jdbc.actualizar("UPDATE Producto SET idPlato = ?, idTipProducto = ?, descripProducto = ?, cantidad = ?,"
+                + " precioUnit = ? WHERE productoID = ?",
+                p.getPlato(), p.getTipo(), p.getDescripProducto(), p.getCantidad(), p.getPrecioUnit(), p.getProductoID());
     }
-    
-    
+
+    public void eliminarProducto(Producto p) {
+        Jdbc.actualizar("DELETE FROM Producto WHERE productoID = ?", p.getProductoID());
+    }
+
+    public List<Producto> ListaProducto(boolean filtrar, String texto) {
+        if (!filtrar) {
+            return Jdbc.lista(SELECT + " ORDER BY descripProducto", ProductoDao::mapear);
+        }
+        return Jdbc.lista(SELECT + " WHERE descripProducto LIKE ? ORDER BY descripProducto",
+                ProductoDao::mapear, Jdbc.empiezaPor(texto));
+    }
+
+    /**
+     * Productos incluidos en una orden de venta, con la cantidad vendida y el
+     * precio aplicado en la venta (o el precio actual si la venta es antigua).
+     */
+    public List<Producto> ListaProducto2(int ordenDeVentaID) {
+        return Jdbc.lista("SELECT p.productoID, p.descripProducto, p.idTipProducto, p.idPlato, d.cantidad,"
+                + " COALESCE(d.precioUnit, p.precioUnit) AS precioUnit"
+                + " FROM DetOrdenDeVenta d INNER JOIN Producto p ON p.productoID = d.productoID"
+                + " WHERE d.ordenDeVentaID = ? ORDER BY p.descripProducto", rs -> {
+                    Producto pro = new Producto();
+                    pro.setProductoID(rs.getInt("productoID"));
+                    pro.setDescripProducto(rs.getString("descripProducto"));
+                    pro.setTipo(rs.getInt("idTipProducto"));
+                    pro.setPlato(rs.getInt("idPlato"));
+                    pro.setCantidad(rs.getInt("cantidad"));
+                    pro.setPrecioUnit(rs.getDouble("precioUnit"));
+                    return pro;
+                }, ordenDeVentaID);
+    }
+
+    public int siguienteId() {
+        return Jdbc.siguienteIdSugerido("Producto", "productoID");
+    }
+
+    private static Producto mapear(ResultSet rs) throws SQLException {
+        Producto pro = new Producto();
+        pro.setProductoID(rs.getInt("productoID"));
+        pro.setPlato(rs.getInt("idPlato"));
+        pro.setTipo(rs.getInt("idTipProducto"));
+        pro.setDescripProducto(rs.getString("descripProducto"));
+        pro.setCantidad(rs.getInt("cantidad"));
+        pro.setPrecioUnit(rs.getDouble("precioUnit"));
+        return pro;
+    }
 }

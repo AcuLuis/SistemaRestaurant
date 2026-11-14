@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Utilidades de JDBC.
@@ -26,11 +29,12 @@ public final class Jdbc {
      * Tablas cuyo identificador genera la aplicación. Se usa como lista blanca
      * porque los nombres de tabla y columna no pueden enviarse como parámetros.
      */
-    private static final Set<String> TABLAS_CON_ID = Set.of(
+    private static final Map<String, String> TABLAS_CON_ID = Stream.of(
             "Area.areaID", "Rol.rolID", "TipInsumo.idTipInsumo", "Insumo.insumoID",
             "Producto.productoID", "Cliente.clienteID", "Contrato.contratoID",
             "Empleado.empleadoID", "Usuario.usuarioID", "CabOrdenDeVenta.ordenDeVentaID",
-            "Pedidos.idPedidos", "Mesa.mesaID", "LocalR.idLocalR");
+            "Pedidos.idPedidos", "Mesa.mesaID", "LocalR.idLocalR")
+            .collect(Collectors.toMap(t -> t.toLowerCase(Locale.ROOT), t -> t));
 
     /** Convierte la fila actual de un {@link ResultSet} en un objeto. */
     @FunctionalInterface
@@ -123,10 +127,12 @@ public final class Jdbc {
      * obtengan el mismo identificador a la vez.
      */
     public static int siguienteId(Connection c, String tabla, String columna) throws SQLException {
-        if (!TABLAS_CON_ID.contains(tabla + "." + columna)) {
+        String canonico = TABLAS_CON_ID.get((tabla + "." + columna).toLowerCase(Locale.ROOT));
+        if (canonico == null) {
             throw new IllegalArgumentException("Tabla no admitida para generar identificadores: " + tabla);
         }
-        String sql = "SELECT ISNULL(MAX(" + columna + "), 0) + 1 FROM " + tabla + " WITH (UPDLOCK, HOLDLOCK)";
+        String[] partes = canonico.split("[.]");
+        String sql = "SELECT ISNULL(MAX(" + partes[1] + "), 0) + 1 FROM " + partes[0] + " WITH (UPDLOCK, HOLDLOCK)";
         return uno(c, sql, rs -> rs.getInt(1)).orElse(1);
     }
 

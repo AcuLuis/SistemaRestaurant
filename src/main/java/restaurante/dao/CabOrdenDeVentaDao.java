@@ -1,98 +1,57 @@
-
 package restaurante.dao;
 
+import java.util.List;
+import restaurante.datos.DatosException;
+import restaurante.datos.Jdbc;
 import restaurante.modelo.CabOrdenDeVenta;
-import restaurante.util.DbBean;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Vector;
+import restaurante.modelo.DetOrdenDeVenta;
 
 public class CabOrdenDeVentaDao {
-    
-    
-        public Vector<CabOrdenDeVenta> ListaCodv(boolean sw, String str){
-        Vector<CabOrdenDeVenta> lista = new Vector<CabOrdenDeVenta>();
-        DbBean con = new DbBean();
-        String sql = "Select * from CabOrdenDeVenta";
-        if(sw == true){
-            sql = sql + " where (clienteID = '"+ str +"')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
-            while(resultado.next()){
-                CabOrdenDeVenta cabOrVen = new CabOrdenDeVenta();
-                cabOrVen.setOrdenDeVentaID(resultado.getInt(1));
-                cabOrVen.setEmpleadoID(resultado.getInt(2));
-                cabOrVen.setClienteID(resultado.getInt(3));
-                cabOrVen.setMesaID(resultado.getInt(4));
-                cabOrVen.setFechaVenta(resultado.getString(5));
-                cabOrVen.setMetodoPago(resultado.getInt(6));
-                cabOrVen.setTipEntrega(resultado.getString(7));
-                lista.addElement(cabOrVen);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    public Vector<CabOrdenDeVenta> ListaItem(boolean sw, String str){
-        Vector<CabOrdenDeVenta> item = new Vector<CabOrdenDeVenta>();
-        DbBean con = new DbBean();
-        String sql = "Select * from CabOrdenDeVenta";
-        if(sw == true){
-            sql = sql + " WHERE (empleadoID = '"+ str +"')";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
 
-            while(resultado.next()){
-                CabOrdenDeVenta cabOrdenDeVenta = new CabOrdenDeVenta();
-                cabOrdenDeVenta.setOrdenDeVentaID(resultado.getInt(1));
-                cabOrdenDeVenta.setEmpleadoID(resultado.getInt(2));
-                    cabOrdenDeVenta.setClienteID(resultado.getInt(3));
-                    cabOrdenDeVenta.setMesaID(resultado.getInt(4));
-                    cabOrdenDeVenta.setFechaVenta(resultado.getString(5));
-                item.addElement(cabOrdenDeVenta);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(SQLException e){}
-        return item;
+    /** Ventas de un cliente, de la más reciente a la más antigua. */
+    public List<CabOrdenDeVenta> ListaCodv(int clienteID) {
+        return Jdbc.lista("SELECT ordenDeVentaID, empleadoID, clienteID, mesaID,"
+                + " CONVERT(varchar(19), fechaVenta, 120) AS fechaVenta, metodoPago, tipEntrega"
+                + " FROM CabOrdenDeVenta WHERE clienteID = ? ORDER BY fechaVenta DESC", rs -> {
+                    CabOrdenDeVenta v = new CabOrdenDeVenta();
+                    v.setOrdenDeVentaID(rs.getInt("ordenDeVentaID"));
+                    v.setEmpleadoID(rs.getInt("empleadoID"));
+                    v.setClienteID(rs.getInt("clienteID"));
+                    v.setMesaID(rs.getInt("mesaID"));
+                    v.setFechaVenta(rs.getString("fechaVenta"));
+                    v.setMetodoPago(rs.getInt("metodoPago"));
+                    v.setTipEntrega(rs.getString("tipEntrega"));
+                    return v;
+                }, clienteID);
     }
-    
-    public int procesaItem(CabOrdenDeVenta codv, String proc){
-       int resultado=0;
-       String sql= "";
-       DbBean con=new DbBean();
-       if(proc.equals("insert")){
-            sql="INSERT INTO CabOrdenDeVenta VALUES ("+ codv.getOrdenDeVentaID()+", "+ codv.getEmpleadoID()+", "+ codv.getClienteID()+", "+ codv.getMesaID()+", '"+ codv.getFechaVenta()+"')";
-            System.out.println("uuuuuuu" + sql);
-       }
-       if(proc.equals("update")){
-            sql="UPDATE CabOrdenDeVenta set OrdenDeVentaID  = "+ codv.getOrdenDeVentaID() +", empleadoID = "+ codv.getEmpleadoID()+", clienteID = "+ codv.getClienteID()+", mesaID = "+ codv.getMesaID()+", fechaDeVenta = '"+ codv.getFechaVenta()+"'";
-       }
-       System.out.println("Observando el estado de la sentencia sql: "+sql);
 
-       try{
-          resultado=con.ejecutaSQL(sql);
+    /**
+     * Registra una venta completa (cabecera, pedido y detalle) en una única
+     * transacción: si cualquier paso falla no queda ninguna venta a medias.
+     *
+     * @return identificador de la orden de venta creada
+     */
+    public int registrarVenta(CabOrdenDeVenta cab, String ubicacionPedido, List<DetOrdenDeVenta> detalles) {
+        if (detalles == null || detalles.isEmpty()) {
+            throw new DatosException("La venta debe incluir al menos un producto.");
         }
-        catch(java.sql.SQLException e){e.printStackTrace();
-        }
-        try{
-        con.desconecta();
-        }
-        catch(SQLException e){
-        }
-          return resultado;
-      }      
+        return Jdbc.transaccion(c -> {
+            int idVenta = Jdbc.siguienteId(c, "CabOrdenDeVenta", "ordenDeVentaID");
+            Jdbc.actualizar(c, "INSERT INTO CabOrdenDeVenta (ordenDeVentaID, empleadoID, clienteID, mesaID, fechaVenta,"
+                    + " metodoPago, tipEntrega) VALUES (?, ?, ?, ?, GETDATE(), ?, ?)",
+                    idVenta, cab.getEmpleadoID(), cab.getClienteID(), cab.getMesaID() > 0 ? cab.getMesaID() : null,
+                    cab.getMetodoPago(), cab.getTipEntrega());
+
+            int idPedido = Jdbc.siguienteId(c, "Pedidos", "idPedidos");
+            Jdbc.actualizar(c, "INSERT INTO Pedidos (idPedidos, empleadoID, ubic, estado) VALUES (?, ?, ?, ?)",
+                    idPedido, cab.getEmpleadoID(), ubicacionPedido, 0);
+
+            for (DetOrdenDeVenta det : detalles) {
+                Jdbc.actualizar(c, "INSERT INTO DetOrdenDeVenta (ordenDeVentaID, productoID, idPedidos, cantidad)"
+                        + " VALUES (?, ?, ?, ?)", idVenta, det.getProductoID(), idPedido, det.getCantidad());
+            }
+            cab.setOrdenDeVentaID(idVenta);
+            return idVenta;
+        });
+    }
 }

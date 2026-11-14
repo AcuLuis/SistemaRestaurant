@@ -1,5 +1,8 @@
 package restaurante.ui;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import restaurante.modelo.CabOrdenDeVenta;
 import restaurante.modelo.Cliente;
 import restaurante.modelo.DetOrdenDeVenta;
@@ -9,10 +12,8 @@ import restaurante.modelo.Pedidos;
 import restaurante.modelo.Producto;
 import restaurante.dao.CabOrdenDeVentaDao;
 import restaurante.dao.ClienteDao;
-import restaurante.dao.DetOrdVentaDao;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.MesaDao;
-import restaurante.dao.PedidosDao;
 import restaurante.dao.ProductoDao;
 
 import restaurante.util.Util;
@@ -24,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 public class FrmVenta extends javax.swing.JFrame {
     
     CabOrdenDeVentaDao CabOrdenDeVentaDao= new CabOrdenDeVentaDao();
-    DetOrdVentaDao DetOrdenDeVentaDao= new DetOrdVentaDao();
     DefaultTableModel dtm1;
     DefaultTableModel dtm2;
     DefaultTableModel dtm3;
@@ -32,7 +32,6 @@ public class FrmVenta extends javax.swing.JFrame {
     ClienteDao clieDao= new ClienteDao();
     MesaDao mesaDao= new MesaDao();
     EmpleadoDao empleadoDao= new EmpleadoDao();
-    PedidosDao pedidosDao= new PedidosDao();
     ProductoDao productoDao= new ProductoDao();
     
     public FrmVenta() {
@@ -53,9 +52,9 @@ public class FrmVenta extends javax.swing.JFrame {
         
     }
 
-    private void llenaCompraCliente(boolean sw, String str){
-        Vector<CabOrdenDeVenta> listCabVenta;
-        listCabVenta = CabOrdenDeVentaDao.ListaCodv(sw, str);
+    private void llenaCompraCliente(int clienteID){
+        List<CabOrdenDeVenta> listCabVenta;
+        listCabVenta = CabOrdenDeVentaDao.ListaCodv(clienteID);
         
         dtm2.setRowCount(0);
         
@@ -70,9 +69,9 @@ public class FrmVenta extends javax.swing.JFrame {
             dtm2.addRow(vec);
         }
     }
-    private void llenaDetCompraCliente(boolean sw, String str){
-        Vector<Producto>listDetVenta;
-        listDetVenta = productoDao.ListaProducto2(sw, str);
+    private void llenaDetCompraCliente(int ordenDeVentaID){
+        List<Producto> listDetVenta;
+        listDetVenta = productoDao.ListaProducto2(ordenDeVentaID);
         
         dtm3.setRowCount(0);
         for(int i = 0;i<listDetVenta.size();i++){
@@ -107,7 +106,7 @@ public class FrmVenta extends javax.swing.JFrame {
         this.buttonGroup1.clearSelection();
     }
     private void llenaTblCliente(boolean sw, String str){
-        Vector<Cliente> listaClie;
+        List<Cliente> listaClie;
         listaClie = clieDao.ListaCliente2(sw, str);
         
         dtm1.setRowCount(0);
@@ -123,7 +122,7 @@ public class FrmVenta extends javax.swing.JFrame {
         
     }
     private void llenaCmbMesa(){
-        Vector<Mesa> listMesa;
+        List<Mesa> listMesa;
         listMesa = mesaDao.ListaMesa();
         this.cmbMesa.addItem("");
         for(int i = 0;i<listMesa.size();i++){
@@ -131,7 +130,7 @@ public class FrmVenta extends javax.swing.JFrame {
         }
     }
     private void llenaCmbEmpleado(){
-        Vector<Empleado> listEmp;
+        List<Empleado> listEmp;
         listEmp = empleadoDao.listaEmpleado(false, "");
         this.cmbEmpleado.addItem("");
         for(int i = 0;i<listEmp.size();i++){
@@ -872,61 +871,27 @@ public class FrmVenta extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe selecionarar el tipo de entrega, un cliente y por lo menos un producto");
         }else{
             CabOrdenDeVenta cv = new CabOrdenDeVenta();
-            DetOrdenDeVenta dv = new DetOrdenDeVenta();
-            Pedidos pe = new Pedidos();
-            
-            Util u = new Util();
-            int idVenta;
-            int idEmpleado;
-            int idMesa;
-            int idPedido;
-            String fech;
-
-            //Grabando en Cab_Venta
-            idVenta = u.idNext("CabOrdenDeVenta", "OrdenDeVentaID");
-            idEmpleado = empleadoDao.devuelveIdEmpleado(this.cmbEmpleado.getSelectedItem().toString());
-            idMesa = mesaDao.devuelveIdMesa(this.cmbMesa.getSelectedItem().toString());
-            fech = u.obtenerFecha();
-            cv.setOrdenDeVentaID(idVenta);
-            cv.setEmpleadoID(idEmpleado);
+            cv.setEmpleadoID(empleadoDao.devuelveIdEmpleado(this.cmbEmpleado.getSelectedItem().toString()));
             cv.setClienteID(Integer.parseInt(this.txtIdCliente.getText()));
-            cv.setMesaID(idMesa);
-            cv.setFechaVenta(fech);
-            if(this.cmbMetodoPago.getSelectedItem().toString().equals("efectivo")){
-                cv.setMetodoPago(1);
-            }
-            if(this.cmbMetodoPago.getSelectedItem().toString().equals("credito")){
-                cv.setMetodoPago(0);
-            }
-            if(this.rbtnComerEnLocal.isSelected() == true){
+            cv.setMesaID(mesaDao.devuelveIdMesa(this.cmbMesa.getSelectedItem().toString()));
+            // Se conserva la codificación original: 1 = efectivo, 0 = crédito.
+            cv.setMetodoPago("Efectivo".equalsIgnoreCase(this.cmbMetodoPago.getSelectedItem().toString()) ? 1 : 0);
+            if(this.rbtnComerEnLocal.isSelected()){
                 cv.setTipEntrega("ComerEnLocal");
-            }
-            if(this.rbtnDelivery.isSelected() == true){
-                cv.setTipEntrega("Delibery");
-            }
-            if(this.rbtnParaLlevar.isSelected() == true){
+            }else if(this.rbtnDelivery.isSelected()){
+                cv.setTipEntrega("Delivery");
+            }else{
                 cv.setTipEntrega("ParaLlevar");
             }
-            this.CabOrdenDeVentaDao.procesaItem(cv, "insert");
-            
-            //Actualizando en Cab_Venta
-            
-            //grabar en tabla pedidos
-            idPedido = u.idNext("Pedidos", "idPedidos");
-            pe.setIdPedidos(idPedido);
-            pe.setEmpleadoID(idEmpleado);
-            pe.setUbic(this.txtDireccionClie.getText());
-            this.pedidosDao.procesaItem(pe, "insert"); 
-            
 
-            //Grabando en Det_Venta
-            dv.setOrdenDeVentaID(idVenta);
+            List<DetOrdenDeVenta> detalles = new ArrayList<>();
             for(int i=0;i<dtm4.getRowCount();i++){
-               dv.setProductoID(Integer.parseInt(this.dtm4.getValueAt(i, 0).toString()));
-               dv.setIdPedidos(idPedido);
-               dv.setCantidad(Integer.parseInt(this.dtm4.getValueAt(i, 4).toString()));
-               this.DetOrdenDeVentaDao.procesaItem(dv, "insert");
+                DetOrdenDeVenta dv = new DetOrdenDeVenta();
+                dv.setProductoID(Integer.parseInt(this.dtm4.getValueAt(i, 0).toString()));
+                dv.setCantidad(Integer.parseInt(this.dtm4.getValueAt(i, 4).toString()));
+                detalles.add(dv);
             }
+            this.CabOrdenDeVentaDao.registrarVenta(cv, this.txtDireccionClie.getText(), detalles);
             this.limpiaCab();
             this.limpiaDet();
             this.dtm4.setRowCount(0);
@@ -952,7 +917,7 @@ public class FrmVenta extends javax.swing.JFrame {
         idx = this.tblClientes.getSelectedRow();
         cad = dtm1.getValueAt(idx, 0).toString();
         
-        llenaCompraCliente(true,cad);
+        llenaCompraCliente(Integer.parseInt(cad));
     }//GEN-LAST:event_tblClientesMouseClicked
 
     private void tblCompraClieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCompraClieMouseClicked
@@ -962,7 +927,7 @@ public class FrmVenta extends javax.swing.JFrame {
         idx = this.tblCompraClie.getSelectedRow();
         cad = dtm2.getValueAt(idx, 0).toString();
         
-        llenaDetCompraCliente(true,cad);
+        llenaDetCompraCliente(Integer.parseInt(cad));
     }//GEN-LAST:event_tblCompraClieMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

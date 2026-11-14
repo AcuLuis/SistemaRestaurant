@@ -1,5 +1,7 @@
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Cliente;
 import restaurante.dao.ClienteDao;
 import java.util.Vector;
@@ -147,7 +149,7 @@ public class SelCliente extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_tblClienteMouseClicked
     private void llenaTblClientes(boolean sw, String cad){
-        Vector<Cliente> listaClie;
+        List<Cliente> listaClie;
         listaClie = this.clieDao.ListaCliente(sw, cad);
         dtm.setRowCount(0);
         for(int i=0;i<listaClie.size();i++){

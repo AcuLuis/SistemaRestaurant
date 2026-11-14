@@ -1,108 +1,60 @@
-
 package restaurante.dao;
 
-import restaurante.modelo.Insumo;
-import restaurante.util.DbBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
-import javax.swing.JOptionPane;
+import java.util.List;
+import restaurante.datos.Jdbc;
+import restaurante.modelo.Insumo;
 
 public class InsumoDao {
-   
-    public Vector<Insumo> ListaItem(boolean sw, String str){
-        Vector<Insumo> item = new Vector<Insumo>();
-        DbBean con = new DbBean();
-        String sql = "Select * from Insumo";
-        if(sw == true){
-            sql = sql + " WHERE descripInsumo LIKE '"+ str +"%' or insumoID Like '"+str+"%' or unidadMedida like '"+str+"%' ";
-        }
-        System.out.println(sql);
-        try{
-            ResultSet resultado = con.resultadoSQL(sql);
 
-            while(resultado.next()){
-                Insumo insumo = new Insumo();
-                insumo.setInsumoID(resultado.getInt(1));
-                insumo.setIdTipInsumo(resultado.getInt(2));
-                insumo.setUnidadMedida(resultado.getString(3));
-                insumo.setDescripInsumo(resultado.getString(4));
-                insumo.setPrecioUnit(resultado.getDouble(5));
-                insumo.setCantidad(resultado.getInt(6));
-                item.addElement(insumo);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(SQLException e){}
+    private static final String SELECT =
+            "SELECT insumoID, idTipInsumo, unidadMedida, descripInsumo, precioUnit, cantidad FROM Insumo";
 
-        return item;
-    }
-    
-    public void insertaInsumo(Insumo i){
-    
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "insert into Insumo values ( ";
-        sql = sql +i.getInsumoID()+", "+i.getIdTipInsumo()+", '"+i.getUnidadMedida()+"', '"+i.getDescripInsumo()+"', "+i.getPrecioUnit()+", "+i.getCantidad()+") ";
-
-        try{
-            System.out.println(sql);
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
+    public List<Insumo> ListaItem(boolean filtrar, String texto) {
+        if (!filtrar) {
+            return Jdbc.lista(SELECT + " ORDER BY descripInsumo", InsumoDao::mapear);
         }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
+        String patron = Jdbc.empiezaPor(texto);
+        return Jdbc.lista(SELECT + " WHERE descripInsumo LIKE ? OR CAST(insumoID AS varchar(11)) LIKE ?"
+                + " OR unidadMedida LIKE ? ORDER BY descripInsumo", InsumoDao::mapear, patron, patron, patron);
     }
 
-    public void actualizarInsumo(Insumo i){
+    /** Inserta el insumo asignándole un identificador nuevo, que se devuelve. */
+    public int insertaInsumo(Insumo i) {
+        return Jdbc.transaccion(c -> {
+            int id = Jdbc.siguienteId(c, "Insumo", "insumoID");
+            Jdbc.actualizar(c, "INSERT INTO Insumo (insumoID, idTipInsumo, unidadMedida, descripInsumo, precioUnit, cantidad)"
+                    + " VALUES (?, ?, ?, ?, ?, ?)",
+                    id, i.getIdTipInsumo(), i.getUnidadMedida(), i.getDescripInsumo(), i.getPrecioUnit(), i.getCantidad());
+            i.setInsumoID(id);
+            return id;
+        });
+    }
 
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "update Insumo set ";
-        sql = sql+ " idTipInsumo = "+i.getIdTipInsumo()+", ";
-        sql = sql+ " unidadMedida = '"+i.getUnidadMedida()+"', ";
-        sql = sql+ " descripInsumo = '"+i.getDescripInsumo()+"', ";
-        sql = sql+ " precioUnit = "+i.getPrecioUnit()+ ", ";
-        sql = sql+ " cantidad = "+i.getCantidad()+" ";
-        sql = sql+ " where insumoID = "+i.getInsumoID()+" ";
-        
-        try{
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
+    public void actualizarInsumo(Insumo i) {
+        Jdbc.actualizar("UPDATE Insumo SET idTipInsumo = ?, unidadMedida = ?, descripInsumo = ?, precioUnit = ?,"
+                + " cantidad = ? WHERE insumoID = ?",
+                i.getIdTipInsumo(), i.getUnidadMedida(), i.getDescripInsumo(), i.getPrecioUnit(), i.getCantidad(),
+                i.getInsumoID());
     }
-    
-    public void eliminarInsumo(int ins){
-        
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "delete from Insumo ";
-        sql = sql + " where insumoID = "+ ins+" ";
-    try{
-        con.ejecutaSQL(sql);
-        
-    }catch(java.sql.SQLException e){
-        e.printStackTrace();
-    }try{
-        con.desconecta();
-    }catch(java.sql.SQLException e){
-     e.printStackTrace();
+
+    public void eliminarInsumo(int insumoID) {
+        Jdbc.actualizar("DELETE FROM Insumo WHERE insumoID = ?", insumoID);
     }
+
+    public int siguienteId() {
+        return Jdbc.siguienteIdSugerido("Insumo", "insumoID");
+    }
+
+    private static Insumo mapear(ResultSet rs) throws SQLException {
+        Insumo insumo = new Insumo();
+        insumo.setInsumoID(rs.getInt("insumoID"));
+        insumo.setIdTipInsumo(rs.getInt("idTipInsumo"));
+        insumo.setUnidadMedida(rs.getString("unidadMedida"));
+        insumo.setDescripInsumo(rs.getString("descripInsumo"));
+        insumo.setPrecioUnit(rs.getDouble("precioUnit"));
+        insumo.setCantidad(rs.getInt("cantidad"));
+        return insumo;
     }
 }

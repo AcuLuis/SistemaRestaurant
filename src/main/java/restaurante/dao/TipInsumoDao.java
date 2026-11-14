@@ -1,160 +1,27 @@
-
 package restaurante.dao;
 
+import java.util.List;
+import restaurante.datos.Jdbc;
 import restaurante.modelo.TipInsumo;
-import restaurante.util.DbBean;
-import restaurante.util.Util;
-import java.sql.ResultSet;
-import java.util.Vector;
 
 public class TipInsumoDao {
-    
-    
-    public String devTipInsumo(int idInsu){
-    
-        Util util = new Util();
-        
-        String idInsumo = Integer.toString(idInsu);
-        String insumo = util.cadExp("TipInsumo", "idTipInsumo", "descripcion", idInsumo);
-        
-        return insumo;
-    
-    }
-    
-   public int devIDTipInsumo(String tipInsu){
-    
-        Util util = new Util();
-        
-        int idTipInsu = util.idExp("TipInsumo", "idTipInsumo", "descripcion", tipInsu);
-    
-        return idTipInsu;
-    }
-    
-     public void eliminarTipInsumo(TipInsumo tipInsumo){
-    
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "delete from TipInsumo";
-        sql = sql+ " where idTipInsumo = "+tipInsumo.getIdInsumo()+" ";
-        
-        try{
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-    }
-    
-    public void actualizarTipInsumo(TipInsumo tipInsu){
 
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "update TipInsumo set ";
-        sql = sql+ " descripcion = '"+tipInsu.getDescripcion()+"' ";
-        sql = sql+ " where idTipInsumo = "+tipInsu.getIdInsumo()+" ";
-        
-        try{
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-    }
-    
-    public void insertaTipInsumo(TipInsumo tipInsu){
-        
-        String sql;
-        DbBean con = new DbBean();
-        
-        sql = "insert into TipInsumo values ( ";
-        sql = sql +tipInsu.getIdInsumo()+", '"+tipInsu.getDescripcion()+"')" ;
-
-        try{
-            System.out.println(sql);
-            con.ejecutaSQL(sql);
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
+    public List<TipInsumo> llenaTipInsumo() {
+        return Jdbc.lista("SELECT idTipInsumo, descripcion FROM TipInsumo ORDER BY descripcion", rs -> {
+            TipInsumo tipo = new TipInsumo();
+            tipo.setIdInsumo(rs.getInt("idTipInsumo"));
+            tipo.setDescripcion(rs.getString("descripcion"));
+            return tipo;
+        });
     }
 
-    
-    public Vector<TipInsumo> llenaTipInsumo(){
-    
-        String sql;
-        Vector<TipInsumo> listaTipInsumo = new Vector<TipInsumo>();
-        DbBean con = new DbBean();
-    
-        sql = "select * from TipInsumo ";
-            
-        try {
-                ResultSet resul = con.resultadoSQL(sql);
-            
-            while(resul.next()){
-                TipInsumo tipInsu = new TipInsumo();
-                
-                tipInsu.setIdInsumo(resul.getInt(1));
-                tipInsu.setDescripcion(resul.getString(2));
-
-                listaTipInsumo.addElement(tipInsu);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return listaTipInsumo;
+    public String devTipInsumo(int idTipInsumo) {
+        return Jdbc.uno("SELECT descripcion FROM TipInsumo WHERE idTipInsumo = ?",
+                rs -> rs.getString(1), idTipInsumo).orElse("");
     }
-    
-    
-    public Vector<TipInsumo> listaTipInsumo(boolean valida, String cadena){
-    
-        String sql;
-        Vector<TipInsumo> listaTipInsumo = new Vector<TipInsumo>();
-        DbBean con = new DbBean();
-    
-        sql = "select * from TipInsumo ";
-   
-        if (valida == true){
-           sql = sql + " where idTipInsumo like '"+ cadena +"%'"+ " or "+ " descripcion like '"+cadena+"%' ";
-        }
-            
-        try {
-                ResultSet resul = con.resultadoSQL(sql);
-            
-            while(resul.next()){
-                TipInsumo tipInsu = new TipInsumo();
-                
-                tipInsu.setIdInsumo(resul.getInt(1));
-                tipInsu.setDescripcion(resul.getString(2));
 
-                listaTipInsumo.addElement(tipInsu);
-            }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        try{
-            con.desconecta();
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
-        return listaTipInsumo;
+    public int devIDTipInsumo(String descripcion) {
+        return Jdbc.uno("SELECT idTipInsumo FROM TipInsumo WHERE descripcion = ?",
+                rs -> rs.getInt(1), descripcion).orElse(0);
     }
 }

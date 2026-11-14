@@ -1,13 +1,13 @@
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.CabOrdenDeProduccionSemanal;
 import restaurante.modelo.DetOrdenDeProduccionSemanal;
 import restaurante.modelo.Empleado;
 import restaurante.modelo.Insumo;
 import restaurante.modelo.Plato;
 import restaurante.modelo.Producto;
-import restaurante.dao.CabOrdenDeProduccionSemanalDAO;
-import restaurante.dao.DetOrdenDeProduccionSemanalDAO;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.InsumoDao;
 import restaurante.dao.PlatoDao;
@@ -26,8 +26,6 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
     InsumoDao insumoDao= new InsumoDao();
     PlatoDao platoDao= new PlatoDao();
     EmpleadoDao empleadoDao= new EmpleadoDao();
-    CabOrdenDeProduccionSemanalDAO cabOrdenDeProduccionSemanalDao= new CabOrdenDeProduccionSemanalDAO();
-    DetOrdenDeProduccionSemanalDAO detOrdenDeProduccionSemanalDao= new DetOrdenDeProduccionSemanalDAO();
     public OrdenCompra() {
         initComponents();
         
@@ -42,7 +40,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
     }
 
     private void llenaTblInsumo(boolean sw, String str){
-        Vector<Insumo> listaInsu;
+        List<Insumo> listaInsu;
         listaInsu = insumoDao.ListaItem(sw, str);
         
         dtm1.setRowCount(0);
@@ -60,7 +58,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
         
     }
     private void llenaTblProducto(boolean sw, String str){
-        Vector<Producto> listaProd;
+        List<Producto> listaProd;
         listaProd = productoDao.ListaProducto(sw, str);
         
         dtm2.setRowCount(0);

@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+
+import java.util.List;
 import restaurante.modelo.Rol;
 import restaurante.dao.RolDao;
 import restaurante.util.Util;
@@ -22,7 +24,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
     
     private void llenaTblRol(boolean valida, String cadena){
     
-        Vector<Rol> listaRol;
+        List<Rol> listaRol;
         
         this.txtRolID.setText(Integer.toString(u.idNext("Rol", "rolID")));
         
