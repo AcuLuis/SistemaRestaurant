@@ -1,0 +1,32 @@
+# Compilación
+target/
+build/
+dist/
+out/
+*.class
+
+# NetBeans
+**/nbproject/private/
+nbactions.xml
+nb-configuration.xml
+
+# Otros IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# Sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Configuración local con credenciales (usar config/app.properties.example como plantilla)
+config/app.properties
+
+# Copias de seguridad de base de datos y registros
+*.bak
+*.log

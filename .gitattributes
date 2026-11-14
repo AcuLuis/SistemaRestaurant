@@ -1,0 +1,18 @@
+# Normaliza los finales de línea en el repositorio
+* text=auto
+
+# Scripts con finales de línea fijos
+*.sh    text eol=lf
+mvnw    text eol=lf
+*.cmd   text eol=crlf
+*.bat   text eol=crlf
+
+# Binarios
+*.jpg    binary
+*.jpeg   binary
+*.png    binary
+*.gif    binary
+*.ico    binary
+*.jar    binary
+*.jasper binary
+*.pdf    binary
