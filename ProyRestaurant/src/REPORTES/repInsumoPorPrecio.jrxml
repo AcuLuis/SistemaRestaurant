@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e6b15ef-4a70-4610-a191-6a6ec9a562eb">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="precioMin" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="precioMax" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     Insumo."insumoID" AS Insumo_insumoID,
+     Insumo."idTipInsumo" AS Insumo_idTipInsumo,
+     Insumo."unidadMedida" AS Insumo_unidadMedida,
+     Insumo."descripInsumo" AS Insumo_descripInsumo,
+     Insumo."precioUnit" AS Insumo_precioUnit,
+     Insumo."cantidad" AS Insumo_cantidad
+FROM
+     "dbo"."Insumo" Insumo
+Where
+     Insumo."precioUnit"  >= $P{precioMin} and Insumo."precioUnit" <= $P{precioMax}]]>
+	</queryString>
+	<field name="Insumo_insumoID" class="java.lang.Integer"/>
+	<field name="Insumo_idTipInsumo" class="java.lang.Integer"/>
+	<field name="Insumo_unidadMedida" class="java.lang.String"/>
+	<field name="Insumo_descripInsumo" class="java.lang.String"/>
+	<field name="Insumo_precioUnit" class="java.lang.Double"/>
+	<field name="Insumo_cantidad" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="182" y="59" width="204" height="20" uuid="264cee60-8679-4ac6-b94b-9309b0e26e35"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESPORTE DE INSUMOS POR PRECIO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="24" y="0" width="49" height="20" uuid="6bb57c94-b04f-4734-8e35-641db090e543"/>
+				<text><![CDATA[InsumoID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="76" height="20" uuid="fe9ad9ef-c6ea-48b9-8b91-2755caf9b61a"/>
+				<text><![CDATA[TipoInsumoID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="0" width="90" height="20" uuid="3f7fde99-102b-4e09-8f53-a81cce1cb425"/>
+				<text><![CDATA[Unidad de Medida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="0" width="72" height="20" uuid="47d3cd7d-25aa-417a-9c7f-b20f856d3029"/>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="0" width="72" height="20" uuid="81187165-14e5-44c2-9eb7-8e94a2beeea7"/>
+				<text><![CDATA[PrecioUnitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="0" width="50" height="20" uuid="8d8c6b30-4c6f-4069-8677-1df3e7e21f93"/>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="24" y="0" width="49" height="20" uuid="eee58e8c-c156-4720-94ca-ea7a44c08b02"/>
+				<textFieldExpression><![CDATA[$F{Insumo_insumoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="76" height="20" uuid="90740fe0-9b1d-4788-a24f-e4b7143dea4e"/>
+				<textFieldExpression><![CDATA[$F{Insumo_idTipInsumo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="188" y="0" width="90" height="20" uuid="49ba1837-bfd8-469a-a6e5-e0ff406d8369"/>
+				<textFieldExpression><![CDATA[$F{Insumo_unidadMedida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="0" width="72" height="20" uuid="d601b1a7-fb74-4f3d-8ce1-09fef5be568f"/>
+				<textFieldExpression><![CDATA[$F{Insumo_descripInsumo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="386" y="0" width="72" height="20" uuid="64bea583-9087-48ea-b8c8-f8996e32a41b"/>
+				<textFieldExpression><![CDATA[$F{Insumo_precioUnit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="478" y="0" width="50" height="20" uuid="8f650a92-864c-416f-bde0-d81763bf110f"/>
+				<textFieldExpression><![CDATA[$F{Insumo_cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

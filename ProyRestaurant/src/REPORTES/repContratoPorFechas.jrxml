@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14f4c272-065f-445d-b138-70e7cf607bc8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaIni" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     Contrato."contratoID" AS Contrato_contratoID,
+     Contrato."empleadoID" AS Contrato_empleadoID,
+     Contrato."rolID" AS Contrato_rolID,
+     Contrato."areaID" AS Contrato_areaID,
+     Contrato."fechaIni" AS Contrato_fechaIni,
+     Contrato."fechaFin" AS Contrato_fechaFin,
+     Contrato."estado" AS Contrato_estado,
+     Contrato."sueldo" AS Contrato_sueldo
+FROM
+     "dbo"."Contrato" Contrato
+WHERE
+     Contrato."fechaIni">= $P{fechaIni} and 
+     Contrato."fechaFin" <= $P{fechaFin}]]>
+	</queryString>
+	<field name="Contrato_contratoID" class="java.lang.Integer"/>
+	<field name="Contrato_empleadoID" class="java.lang.Integer"/>
+	<field name="Contrato_rolID" class="java.lang.Integer"/>
+	<field name="Contrato_areaID" class="java.lang.Integer"/>
+	<field name="Contrato_fechaIni" class="java.sql.Date"/>
+	<field name="Contrato_fechaFin" class="java.sql.Date"/>
+	<field name="Contrato_estado" class="java.lang.Integer"/>
+	<field name="Contrato_sueldo" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="173" y="59" width="195" height="20" uuid="4579dfb8-7b8d-44f8-8ed8-23628a875d9b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRATOS POR RANGO DE FECHAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="57" height="20" uuid="2de91dd1-89a4-4158-82cb-9b80edcc5f29"/>
+				<text><![CDATA[ContratoID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="0" width="62" height="20" uuid="e3bcda42-c746-453a-aa3f-be32d237a097"/>
+				<text><![CDATA[EmpleadoID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="32" height="20" uuid="46e5ad5e-e9f0-4a7a-9445-9e557730bed1"/>
+				<text><![CDATA[RolID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="189" y="0" width="36" height="20" uuid="f0f2a0fe-31d6-455d-9582-38dd0b6bcab5"/>
+				<text><![CDATA[AreaID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="71" height="20" forecolor="#666600" uuid="85438505-a150-43d3-aa5d-090f7c6e28b3"/>
+				<box>
+					<pen lineColor="#0000FF"/>
+					<topPen lineColor="#0000FF"/>
+					<leftPen lineColor="#0000FF"/>
+					<bottomPen lineColor="#0000FF"/>
+					<rightPen lineColor="#0000FF"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FechaInicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="0" width="62" height="20" forecolor="#990000" uuid="f9e5b713-3223-4fc2-9508-6562a72692f3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FechaFin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="0" width="37" height="20" uuid="4c98920a-0af9-4772-9abb-68e43167ece3"/>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="466" y="0" width="57" height="20" uuid="3b5d4c02-a419-4e43-ba30-0dc636563bf2"/>
+				<text><![CDATA[Sueldo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="39" splitType="Stretch">
+			<textField>
+				<reportElement x="12" y="0" width="45" height="20" uuid="c34e732d-2dd5-408f-b65a-0f9601bfc045"/>
+				<textFieldExpression><![CDATA[$F{Contrato_contratoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="0" width="62" height="20" uuid="62a3565e-1485-425a-80ee-2dea8ce69040"/>
+				<textFieldExpression><![CDATA[$F{Contrato_empleadoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="0" width="32" height="20" uuid="90ac7add-6cce-433f-9a8d-e7534d39fc9e"/>
+				<textFieldExpression><![CDATA[$F{Contrato_rolID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="4" width="36" height="20" uuid="968ad16a-844e-451f-84f6-1aea405dcffb"/>
+				<textFieldExpression><![CDATA[$F{Contrato_areaID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="71" height="20" forecolor="#666600" backcolor="#FFFFFF" uuid="bb60b459-9e91-4d62-aeec-5c53fa071872"/>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="324" y="0" width="62" height="20" forecolor="#990000" uuid="31da66c5-e7e7-4817-8bd3-29bee4fd90d3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Contrato_fechaFin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="4" width="37" height="20" uuid="1f252711-1b48-4c07-bc08-663720341588"/>
+				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="4" width="57" height="20" uuid="05dc1519-3d16-4d78-928a-c411a799cc65"/>
+				<textFieldExpression><![CDATA[$F{Contrato_sueldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="37" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

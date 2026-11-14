@@ -1,0 +1,139 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4c1858a7-f096-427b-92f7-06ffbf83e399">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<queryString>
+		<![CDATA[select u.usuarioID, u.tipoUsuario, l.Ubicacion, l.idLocalR
+from Usuario as u inner join LocalR as l on u.idLocalR = l.idLocalR]]>
+	</queryString>
+	<field name="usuarioID" class="java.lang.Integer"/>
+	<field name="tipoUsuario" class="java.lang.Integer"/>
+	<field name="Ubicacion" class="java.lang.String"/>
+	<field name="idLocalR" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="145" y="29" width="339" height="20" uuid="64fbb7f8-ac53-476b-b4d1-30a7bcfe93db"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE TIPO DE USUARIOS SEGÚN EL LOCAL]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="347" splitType="Stretch">
+			<crosstab>
+				<reportElement x="67" y="0" width="802" height="347" uuid="8fa93def-b6ae-4c97-a596-de4b7b196504"/>
+				<rowGroup name="Ubicacion" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{Ubicacion}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="042ec281-ec19-463c-a44d-fda734d406cc"/>
+								<textFieldExpression><![CDATA[$V{Ubicacion}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25" uuid="4708aab0-61cc-48e7-9902-bdc1beccdb67"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total Ubicacion]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="tipoUsuario" height="52" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{tipoUsuario}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="30" uuid="3926fcf8-384f-461b-baa7-2b74b0c52c5c"/>
+								<textFieldExpression><![CDATA[$V{tipoUsuario}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="39" y="0" width="50" height="30" uuid="4f9453f5-6ae2-4a97-bf14-f26abe4e3f16"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total tipoUsuario]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="usuarioIDMeasure" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{usuarioID}]]></measureExpression>
+				</measure>
+				<crosstabCell width="154" height="50">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="14e3d096-8a08-4694-9d1f-010737cfbcb2"/>
+							<textFieldExpression><![CDATA[$V{usuarioIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="154" height="45" rowTotalGroup="Ubicacion">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="b682b1ca-bf7a-44a0-8832-1f0250ac1ae4"/>
+							<textFieldExpression><![CDATA[$V{usuarioIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="137" height="50" columnTotalGroup="tipoUsuario">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="39" y="0" width="50" height="25" uuid="8704621b-1376-4589-a8f4-2840e68fdb6a"/>
+							<textFieldExpression><![CDATA[$V{usuarioIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="137" height="45" rowTotalGroup="Ubicacion" columnTotalGroup="tipoUsuario">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="39" y="0" width="50" height="25" uuid="dcb3a37c-e34f-4376-b09f-5f3a904771fa"/>
+							<textFieldExpression><![CDATA[$V{usuarioIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

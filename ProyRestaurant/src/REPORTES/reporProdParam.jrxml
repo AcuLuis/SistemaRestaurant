@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="950" pageHeight="842" columnWidth="910" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9d81b443-0c4f-4ab9-9588-93070919e156">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parPrecMin" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parPrecMax" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     Producto."productoID" AS Producto_productoID,
+     Producto."descripProducto" AS Producto_descripProducto,
+     Producto."cantidad" AS Producto_cantidad,
+     Producto."precioUnit" AS Producto_precioUnit,
+     Producto."IdPlato" AS Producto_IdPlato,
+     Producto."idTipProducto" AS Producto_idTipProducto
+FROM
+     "dbo"."Producto" Producto
+WHERE
+     producto."precioUnit">=$P{parPrecMin} and
+     producto."precioUnit"<=$P{parPrecMax}]]>
+	</queryString>
+	<field name="Producto_productoID" class="java.lang.Integer"/>
+	<field name="Producto_descripProducto" class="java.lang.String"/>
+	<field name="Producto_cantidad" class="java.lang.Integer"/>
+	<field name="Producto_precioUnit" class="java.lang.Double"/>
+	<field name="Producto_IdPlato" class="java.lang.Integer"/>
+	<field name="Producto_idTipProducto" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="351" y="27" width="409" height="20" uuid="6cb18602-0d56-429d-9809-03c25d8112b8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORSTE DE PRECIOS UNITARIOS MAX O MIN]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="a09c8371-2992-4356-8c88-3ed1bf33fde6"/>
+				<text><![CDATA[Producto_productoID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="0" width="100" height="20" uuid="ec4a83bf-d419-4656-a976-ca13cbc1667b"/>
+				<text><![CDATA[Producto_descripProducto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="0" width="100" height="20" uuid="ce5c9f32-2d80-40cc-93f9-25de117edad5"/>
+				<text><![CDATA[Producto_cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="0" width="100" height="20" uuid="e75a77a6-57ce-4d91-9696-ec76b0b691d4"/>
+				<text><![CDATA[Producto_precioUnit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="626" y="0" width="100" height="20" uuid="aa029048-a2e9-4ddd-aba5-e74aeb87f47b"/>
+				<text><![CDATA[Producto_IdPlato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="760" y="0" width="100" height="20" uuid="d7c7d25c-0c3c-41b5-b6d2-957ea3db0052"/>
+				<text><![CDATA[Producto_idTipProducto]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="71" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="19" width="100" height="34" uuid="55581e33-d331-41f9-89c2-f12417f70443"/>
+				<textFieldExpression><![CDATA[$F{Producto_productoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="142" y="19" width="138" height="46" uuid="354d20d3-1666-4b41-84c4-30dfce0388e2"/>
+				<textFieldExpression><![CDATA[$F{Producto_descripProducto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="19" width="100" height="34" uuid="d34d4062-e439-439b-a2a3-e888d7bad969"/>
+				<textFieldExpression><![CDATA[$F{Producto_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="483" y="19" width="100" height="34" uuid="b03ed718-e804-41d6-8cb4-c44560e70239"/>
+				<textFieldExpression><![CDATA[$F{Producto_precioUnit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="626" y="19" width="100" height="20" uuid="5db831f1-3f5d-49ee-a530-9f4eb2029202"/>
+				<textFieldExpression><![CDATA[$F{Producto_IdPlato}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="760" y="19" width="115" height="34" uuid="5c4a3fbb-6ad7-4c3e-badc-6b3cebff5a05"/>
+				<textFieldExpression><![CDATA[$F{Producto_idTipProducto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

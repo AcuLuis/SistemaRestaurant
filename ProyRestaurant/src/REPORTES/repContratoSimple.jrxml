@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c7d77a1b-b680-427c-be46-04fa51c0ea6b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     Contrato."contratoID" AS Contrato_contratoID,
+     Contrato."empleadoID" AS Contrato_empleadoID,
+     Rol."descripRol" AS Rol_descripRol,
+     Area."descripArea" AS Area_descripArea,
+     Contrato."fechaIni" AS Contrato_fechaIni,
+     Contrato."fechaFin" AS Contrato_fechaFin,
+     Contrato."estado" AS Contrato_estado,
+     Contrato."sueldo" AS Contrato_sueldo,
+     Rol."rolID" AS Rol_rolID,
+     Rol."descripRol" AS Rol_descripRol,
+     Area."areaID" AS Area_areaID,
+     Area."descripArea" AS Area_descripArea
+FROM
+     "dbo"."Rol" Rol INNER JOIN "dbo"."Contrato" Contrato ON Rol."rolID" = Contrato."rolID"
+     INNER JOIN "dbo"."Area" Area ON Contrato."areaID" = Area."areaID"]]>
+	</queryString>
+	<field name="Contrato_contratoID" class="java.lang.Integer"/>
+	<field name="Contrato_empleadoID" class="java.lang.Integer"/>
+	<field name="Rol_descripRol" class="java.lang.String"/>
+	<field name="Area_descripArea" class="java.lang.String"/>
+	<field name="Contrato_fechaIni" class="java.sql.Date"/>
+	<field name="Contrato_fechaFin" class="java.sql.Date"/>
+	<field name="Contrato_estado" class="java.lang.Integer"/>
+	<field name="Contrato_sueldo" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement x="186" y="42" width="168" height="20" uuid="4ca7885b-3038-41a9-bf1c-1085a1311e08"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE SIMPLE CONTRATOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="14" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="52" height="20" uuid="344ddd51-1174-49f6-ae83-889763fcbe50"/>
+				<text><![CDATA[IDContrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="0" width="62" height="20" uuid="849f31f7-7721-4e0c-802a-493db02f49b6"/>
+				<text><![CDATA[IDEmpleado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="0" width="30" height="20" uuid="a833d955-a97a-4430-b828-ffc19dff9b5f"/>
+				<text><![CDATA[Rol]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="0" width="34" height="20" uuid="eb10ba06-2f12-455e-8751-de981bd03413"/>
+				<text><![CDATA[Área]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="0" width="63" height="20" uuid="5be13275-f477-484f-acbb-0305945649b4"/>
+				<text><![CDATA[FechaInicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="0" width="50" height="20" uuid="92c3336b-a1f1-4fa6-9ce0-b0724569f87d"/>
+				<text><![CDATA[FechaFin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="37" height="20" uuid="dfb7bce9-5ecb-4d0c-8147-0d1e17c88ff4"/>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="501" y="0" width="54" height="20" uuid="4d06c611-14b2-4d46-a431-eb025aad92fc"/>
+				<text><![CDATA[Sueldo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="76" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="31" height="40" uuid="365dff5e-b6b7-4b3c-a2c8-65f99af84283"/>
+				<textFieldExpression><![CDATA[$F{Contrato_contratoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="0" width="62" height="40" uuid="a18b9998-adbb-442c-8235-08b322b48058"/>
+				<textFieldExpression><![CDATA[$F{Contrato_empleadoID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="64" height="40" uuid="1bdffa76-fcf6-4200-b2cc-effab7c61882"/>
+				<textFieldExpression><![CDATA[$F{Rol_descripRol}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="0" width="62" height="40" uuid="dfb7ef1c-603a-40d6-852e-d09986d83d66"/>
+				<textFieldExpression><![CDATA[$F{Area_descripArea}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="0" width="63" height="40" uuid="2a1b3dee-6107-4a49-b3a9-7db4e25e4c5c"/>
+				<textFieldExpression><![CDATA[$F{Contrato_fechaIni}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="373" y="0" width="61" height="40" uuid="0a6332c7-f3c6-45bb-8ee8-8fb715a6f4c0"/>
+				<textFieldExpression><![CDATA[$F{Contrato_fechaFin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="37" height="40" uuid="edf79abd-cbe4-4cf4-9cb5-c5a511a28897"/>
+				<textFieldExpression><![CDATA[$F{Contrato_estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="501" y="0" width="54" height="40" uuid="12d9beb0-00e1-44e8-9f32-5bb6d0f6792a"/>
+				<textFieldExpression><![CDATA[$F{Contrato_sueldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a93ff75a-ed9b-47ad-b879-5cb6a2504a8c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<queryString language="SQL">
+		<![CDATA[select p.productoID, pla.descPlato, t.descripcion, p.cantidad, p.precioUnit 
+from TipProducto as t inner join Producto as p on t.idTipProducto = p.idTipProducto
+inner join Plato as pla on pla.idPlato = p.idPlato]]>
+	</queryString>
+	<field name="productoID" class="java.lang.Integer"/>
+	<field name="descPlato" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="precioUnit" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="44" y="24" width="452" height="20" uuid="0fdefbff-ce35-4f16-a477-05d03f8690f8"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE CANTIDAD TIPOS DE PRODUCTOS SEGUN EL TIPO DE PLATO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="469" splitType="Stretch">
+			<crosstab>
+				<reportElement x="95" y="0" width="802" height="469" uuid="b4440387-5a9c-4212-b4a9-380f46c8b79f"/>
+				<rowGroup name="descripcion" width="71" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{descripcion}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="277452c4-032f-4a8a-9682-170bd1dab806"/>
+								<textFieldExpression><![CDATA[$V{descripcion}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25" uuid="76cc9bf8-260c-4a5b-b135-0f0c2a910754"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total descripcion]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="descPlato" height="57" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{descPlato}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="19" y="0" width="50" height="30" uuid="3fcb1678-20ab-4688-9d7c-e39c81e5a9d1"/>
+								<textFieldExpression><![CDATA[$V{descPlato}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="20" y="0" width="50" height="30" uuid="fd4e783f-1f53-41b7-8e57-da67fa1edbde"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total descPlato]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="productoIDMeasure" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{productoID}]]></measureExpression>
+				</measure>
+				<crosstabCell width="121" height="86">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="19" y="0" width="50" height="25" uuid="bd8253e5-371f-4685-90d4-36127ac89b1f"/>
+							<textFieldExpression><![CDATA[$V{productoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="121" height="115" rowTotalGroup="descripcion">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="19" y="0" width="50" height="25" uuid="1e2a006b-89ae-4c4f-bfb0-4a6cfd29627c"/>
+							<textFieldExpression><![CDATA[$V{productoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="126" height="86" columnTotalGroup="descPlato">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="20" y="0" width="50" height="25" uuid="4483dc07-67f7-42e8-be0f-caa5d91d4847"/>
+							<textFieldExpression><![CDATA[$V{productoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="126" height="115" rowTotalGroup="descripcion" columnTotalGroup="descPlato">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="20" y="0" width="50" height="25" uuid="399dc4a5-b9bd-4064-a0ef-39033feaa0ce"/>
+							<textFieldExpression><![CDATA[$V{productoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

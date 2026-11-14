@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="01083b9f-2d80-48cc-b0de-f550648c1a73">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<queryString language="SQL">
+		<![CDATA[select c.contratoID, a.descripArea, r.descripRol 
+from  Contrato as c inner join Area as a on c.areaID = a.areaID 
+inner join Rol as r on c.rolID = r.rolID]]>
+	</queryString>
+	<field name="contratoID" class="java.lang.Integer"/>
+	<field name="descripArea" class="java.lang.String"/>
+	<field name="descripRol" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="177" y="25" width="364" height="34" uuid="7e39a234-f9ce-42f0-b1e3-b080690ff4a2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE NUMERO DE CONTRATOS SEGUN EL ÁREA ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="378" splitType="Stretch">
+			<crosstab>
+				<reportElement x="101" y="0" width="802" height="378" uuid="bd125df6-f3b5-48b9-aba4-8b86273d86d1"/>
+				<rowGroup name="descripArea" width="81" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{descripArea}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25" uuid="7b315d84-a07b-46dd-bb7e-8996f785dac2"/>
+								<textFieldExpression><![CDATA[$V{descripArea}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="25" uuid="83700721-2730-4081-90fc-82efa95e0f0f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total descripArea]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="descripRol" height="51" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{descripRol}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="50" y="0" width="78" height="30" uuid="3f4f61f2-b3f6-4ce9-8e25-17c62a9f2b22"/>
+								<textFieldExpression><![CDATA[$V{descripRol}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="50" y="0" width="89" height="30" uuid="c4248d84-a519-4aa3-afc2-3c3a6fb1b9fa"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total descripRol]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="contratoIDMeasure" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{contratoID}]]></measureExpression>
+				</measure>
+				<crosstabCell width="159" height="90">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="8b427206-0862-4e11-b7eb-8039235e2df2"/>
+							<textFieldExpression><![CDATA[$V{contratoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="159" height="82" rowTotalGroup="descripArea">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="952aea3a-cad6-41c3-819f-68c4b2fdf668"/>
+							<textFieldExpression><![CDATA[$V{contratoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="201" height="90" columnTotalGroup="descripRol">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="5ad5ca42-42f7-4ab2-97ed-d8834655bd2b"/>
+							<textFieldExpression><![CDATA[$V{contratoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="201" height="82" rowTotalGroup="descripArea" columnTotalGroup="descripRol">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="829a310a-0729-42b2-8118-0ce80564b07b"/>
+							<textFieldExpression><![CDATA[$V{contratoIDMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>
