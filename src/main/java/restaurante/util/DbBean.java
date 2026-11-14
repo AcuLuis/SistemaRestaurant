@@ -1,4 +1,7 @@
 package restaurante.util;
+import restaurante.config.Configuracion;
+import restaurante.config.Configuracion.Claves;
+import restaurante.datos.ConexionBD;
 import restaurante.dao.DbBeanDao;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -51,68 +54,34 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.swing.JRViewer;
 import net.sf.jasperreports.view.JasperViewer;
 public class DbBean {
-    String emailFrom = "";
-    String passwordFrom = "";
+    private static final Logger LOG = Logger.getLogger(DbBean.class.getName());
+    private final Configuracion cfg = Configuracion.get();
     private Connection dbCon;
-    private String login = "sa";
-    private String password = ""; 
     String rutaCompletada;
 
     public DbBean() {
         this.conecta();
-    }   
+    }
 
-    public boolean conecta(){ //CONEXION A BASE DE DATOS POR DEFAULT
-        
-        String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=BD_Restaurant;encrypt=true;trustServerCertificate=true";
-        String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        
+    /** Abre la conexión a la base de datos usando la configuración externa. */
+    public boolean conecta(){
         try{
-            Class.forName(dbDriver);
-        }catch(java.lang.ClassNotFoundException e){
-            System.out.println("Error en clase");
-            return false;
-        }
-        try{
-            this.dbCon = DriverManager.getConnection(dbURL, login, this.password);
-            
+            this.dbCon = ConexionBD.abrir();
         }catch(SQLException ex){
-            System.out.println("No hay conexion al servidor");
+            LOG.log(Level.WARNING, "No hay conexión con la base de datos", ex);
             return false;
         }
         return true;
     }
-    
-    public boolean conectaConBd(String nombreServidor){
-        
-        String dbURLConBD = "jdbc:sqlserver://"+nombreServidor+":1433;databaseName=BD_Restaurant;encrypt=true;trustServerCertificate=true";
-        String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-            try{
-                Class.forName(dbDriver);
-            }catch(java.lang.ClassNotFoundException e){
-                System.out.println("Error en clase");
-                return false;
-            }
-            try{
-                this.dbCon = DriverManager.getConnection(dbURLConBD, this.login, this.password);
 
-            }catch(SQLException ex){
-                System.out.println("No hay conexion al servidor");
-                return false;
-            }
-            return true;
+    public boolean conectaConBd(String nombreServidor){
+        return conecta();
     }
-    
-    public  boolean databaseExiste() {
-        String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=BD_Restaurant;encrypt=true;trustServerCertificate=true";
-        String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        try (Connection connection = DriverManager.getConnection(dbURL, this.login, this.password)) {
-            return true;
-        } catch (SQLException e) {
-            return false;
-        }
+
+    public boolean databaseExiste() {
+        return ConexionBD.verificar() == ConexionBD.Estado.DISPONIBLE;
     }
-    
+
     public void desconecta()throws SQLException{
         this.dbCon.close();
     }
@@ -262,20 +231,20 @@ botoPdf.addActionListener(new ActionListener() {
                 Properties props = new Properties();
                 props.put("mail.smtp.auth", "true");
                 props.put("mail.smtp.starttls.enable", "true");
-                props.put("mail.smtp.host", "smtp.gmail.com");
-                props.put("mail.smtp.port", "587");
+                props.put("mail.smtp.host", cfg.texto(Claves.SMTP_HOST, "smtp.gmail.com"));
+                props.put("mail.smtp.port", cfg.texto(Claves.SMTP_PUERTO, "587"));
 
                 // Autenticación del remitente
                 Session session = Session.getInstance(props, new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(emailFrom, passwordFrom);
+                        return new PasswordAuthentication(cfg.texto(Claves.SMTP_USUARIO, ""), cfg.texto(Claves.SMTP_CONTRASENA, ""));
                     }
                 });
 
                 try {
                     // Creación del mensaje de correo electrónico
                     MimeMessage message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress(emailFrom));
+                    message.setFrom(new InternetAddress(cfg.texto(Claves.SMTP_REMITENTE, "").isEmpty() ? cfg.texto(Claves.SMTP_USUARIO, "") : cfg.texto(Claves.SMTP_REMITENTE, "")));
                     message.setRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
 
                     message.setSubject(subject); 

@@ -1,5 +1,8 @@
 package restaurante.ui;
 
+import restaurante.config.Configuracion;
+import restaurante.config.Configuracion.Claves;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 public class Compartir extends javax.swing.JInternalFrame {
 
-    private static String emailFrom = "";
-    private static String passwordFrom = "";
+    private final Configuracion cfg = Configuracion.get();
+    private final String emailFrom = cfg.texto(Claves.SMTP_REMITENTE, "").isEmpty()
+            ? cfg.texto(Claves.SMTP_USUARIO, "") : cfg.texto(Claves.SMTP_REMITENTE, "");
     private String paraEmail;
     private String asunto;
     private String contenido;
@@ -54,10 +58,10 @@ public class Compartir extends javax.swing.JInternalFrame {
         asunto = this.txtAsunto.getText().trim();
         contenido = this.txtAComentarios.getText().trim();
 
-        mProperties.put("mail.smtp.host", "smtp.gmail.com");
-        mProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        mProperties.put("mail.smtp.host", cfg.texto(Claves.SMTP_HOST, "smtp.gmail.com"));
+        mProperties.put("mail.smtp.ssl.trust", cfg.texto(Claves.SMTP_HOST, "smtp.gmail.com"));
         mProperties.setProperty("mail.smtp.starttls.enable", "true");
-        mProperties.setProperty("mail.smtp.port", "587");
+        mProperties.setProperty("mail.smtp.port", cfg.texto(Claves.SMTP_PUERTO, "587"));
         mProperties.setProperty("mail.smtp.user", emailFrom);
         mProperties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
         mProperties.setProperty("mail.smtp.auth", "true");
@@ -88,7 +92,7 @@ public class Compartir extends javax.swing.JInternalFrame {
     private void enviarEmail() throws NoSuchProviderException, MessagingException {
 
         Transport mTransport = mSesion.getTransport("smtp");
-        mTransport.connect(emailFrom, passwordFrom);
+        mTransport.connect(cfg.texto(Claves.SMTP_USUARIO, ""), cfg.texto(Claves.SMTP_CONTRASENA, ""));
         mTransport.sendMessage(mCorreo, mCorreo.getRecipients(Message.RecipientType.TO));
         mTransport.close();
 

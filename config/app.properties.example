@@ -1,0 +1,36 @@
+# -----------------------------------------------------------------------------
+# Configuración de Sistema Restaurant
+#
+# Copie este archivo como "config/app.properties" y complete los valores.
+# El archivo app.properties está excluido del control de versiones porque
+# contiene credenciales. Cualquier clave puede sobrescribirse con una variable
+# de entorno: por ejemplo, db.password -> RESTAURANTE_DB_PASSWORD.
+# -----------------------------------------------------------------------------
+
+# --- Base de datos (SQL Server) ---------------------------------------------
+db.host=localhost
+db.port=1433
+# Instancia con nombre (opcional). Si se indica, se ignora el puerto.
+db.instance=
+db.name=BD_Restaurant
+db.user=sa
+db.password=
+# Cifrado de la conexión. En un servidor local sin certificado propio,
+# trustServerCertificate=true permite conectarse con el certificado autofirmado.
+db.encrypt=true
+db.trustServerCertificate=true
+
+# --- Correo saliente (SMTP) para compartir reportes -----------------------------
+# Con Gmail es necesario usar una "contraseña de aplicación".
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.user=
+smtp.password=
+# Dirección del remitente (si se deja vacía se usa smtp.user).
+smtp.from=
+
+# --- Redes sociales (opcional) ---------------------------------------------------
+# Los enlaces vacíos se ocultan en el menú "Redes".
+redes.facebook=
+redes.instagram=
+redes.twitter=
