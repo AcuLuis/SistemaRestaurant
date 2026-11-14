@@ -1,10 +1,13 @@
 
 package restaurante.ui;
 
-import restaurante.util.DbBean;
-import java.sql.SQLException;
+import java.util.Map;
+import java.util.Optional;
+import restaurante.reportes.Reportes;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Validaciones;
+
 import java.util.HashMap;
-import net.sf.jasperreports.engine.JRException;
 
 public class FrmInsumoPorPrecioUnitario extends javax.swing.JInternalFrame {
 
@@ -91,22 +94,27 @@ public class FrmInsumoPorPrecioUnitario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-         Double d,a;
-        d=Double.parseDouble(this.txtDesde.getText());
-        a=Double.parseDouble(this.txtHasta.getText());
-        HashMap map = new HashMap();
-        map.put("precioMin",d);
-        map.put("precioMax",a);
-        try{
-            String r = "src/main/resources/reportes/repInsumoPorPrecio.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, map, true);
-        }catch(SQLException e){
-            e.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
+        Optional<Double> desde = Validaciones.decimalNoNegativo(this.txtDesde.getText());
+        Optional<Double> hasta = Validaciones.decimalNoNegativo(this.txtHasta.getText());
+        if (desde.isEmpty()) {
+            Dialogos.aviso(this, "Indique un precio mínimo válido (número mayor o igual que cero).");
+            this.txtDesde.requestFocusInWindow();
+            return;
         }
-        this.dispose();
+        if (hasta.isEmpty()) {
+            Dialogos.aviso(this, "Indique un precio máximo válido (número mayor o igual que cero).");
+            this.txtHasta.requestFocusInWindow();
+            return;
+        }
+        if (hasta.get() < desde.get()) {
+            Dialogos.aviso(this, "El precio máximo no puede ser menor que el mínimo.");
+            this.txtHasta.requestFocusInWindow();
+            return;
+        }
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("precioMin", desde.get());
+        parametros.put("precioMax", hasta.get());
+        Reportes.mostrar(this, "repInsumoPorPrecio", "Insumos con precio entre " + desde.get() + " y " + hasta.get(), parametros);
     }//GEN-LAST:event_btnReporteActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed

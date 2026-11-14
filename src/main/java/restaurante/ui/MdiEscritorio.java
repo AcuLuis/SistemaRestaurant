@@ -1,12 +1,13 @@
 
 package restaurante.ui;
 
+import restaurante.reportes.Reportes;
+
 
 import java.util.List;
 import restaurante.modelo.LocalR;
 import restaurante.dao.UsuarioDao;
 import restaurante.dao.LocalDao;
-import restaurante.util.DbBean;
 import restaurante.util.Util;
 import restaurante.datos.InstaladorBD;
 import restaurante.seguridad.Sesion;
@@ -17,13 +18,11 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JRException;
 
 public class MdiEscritorio extends javax.swing.JFrame {
     
@@ -38,7 +37,6 @@ public class MdiEscritorio extends javax.swing.JFrame {
     FrmRepProdRango frmProdRango;
     FrmInsumo frmInsumo;
     FrmInsumoPorPrecioUnitario frmInsuPrecio;
-    Compartir compartir;
     FrmVenta frmVenta;
     OrdenCompra frmOrdenCompra;
     FrmUsuario frmUser;
@@ -480,15 +478,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
     private void menuItemReporteContratoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReporteContratoActionPerformed
 
-        try{
-            String r = "src/main/resources/reportes/repContratoSimple.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "repContratoSimple", "Contratos");
 
     }//GEN-LAST:event_menuItemReporteContratoActionPerformed
 
@@ -529,40 +519,16 @@ public class MdiEscritorio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemContratoPorRolActionPerformed
 
     private void menuItemReporteSimpleAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReporteSimpleAreaActionPerformed
-        try{
-            String r = "src/main/resources/reportes/repAreaSimple.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "repAreaSimple", "Áreas");
     }//GEN-LAST:event_menuItemReporteSimpleAreaActionPerformed
 
     private void menuItemSimpleRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSimpleRolActionPerformed
-        try{
-            String r = "src/main/resources/reportes/repRolSimple.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "repRolSimple", "Roles");
     }//GEN-LAST:event_menuItemSimpleRolActionPerformed
 
     private void menuItemSimpleProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSimpleProductoActionPerformed
         
-        try{
-            String r = "src/main/resources/reportes/reportProdSimp.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "reportProdSimp", "Productos");
     }//GEN-LAST:event_menuItemSimpleProductoActionPerformed
 
     private void menuItemProductoPorPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemProductoPorPrecioActionPerformed
@@ -577,41 +543,17 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
     private void ProductoTipPlatoCruzadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProductoTipPlatoCruzadoActionPerformed
         
-        try{
-            String r = "src/main/resources/reportes/reporTblCruzProd.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "reporTblCruzProd", "Productos por tipo y plato");
     }//GEN-LAST:event_ProductoTipPlatoCruzadoActionPerformed
 
     private void ContratoÁreaCruzadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContratoÁreaCruzadoActionPerformed
         
-        try{
-            String r = "src/main/resources/reportes/reportContratoTblCruz.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }
+        Reportes.mostrar(this, "reportContratoTblCruz", "Contratos por área");
     }//GEN-LAST:event_ContratoÁreaCruzadoActionPerformed
 
     private void TipoUsuarioUbicacionCruzadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoUsuarioUbicacionCruzadoActionPerformed
         
-        try{
-            String r = "src/main/resources/reportes/reportTblCruzUsuarios.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        }  
+        Reportes.mostrar(this, "reportTblCruzUsuarios", "Usuarios por tipo y ubicación");
     }//GEN-LAST:event_TipoUsuarioUbicacionCruzadoActionPerformed
 
     private void menuItemInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemInsumoActionPerformed
@@ -625,15 +567,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
 
     private void menuItemReporteInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemReporteInsumoActionPerformed
         
-        try{
-            String r = "src/main/resources/reportes/repInsSimp.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, null, false);
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }catch(JRException ex){
-            ex.printStackTrace();
-        } 
+        Reportes.mostrar(this, "repInsSimp", "Insumos");
     }//GEN-LAST:event_menuItemReporteInsumoActionPerformed
 
     private void menuItemInsumoPorPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemInsumoPorPrecioActionPerformed
@@ -646,12 +580,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemInsumoPorPrecioActionPerformed
 
     private void menuItemGmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGmailActionPerformed
-        compartir = new Compartir();
-        this.desktopPane.add(compartir);
-        Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension ventana = compartir.getSize();
-        compartir.setLocation((pantalla.width-ventana.width)/2, (pantalla.height-ventana.height)/2);
-        compartir.setVisible(true);
+        EnviarCorreoDialog.abrir(this, "", java.util.List.of());
     }//GEN-LAST:event_menuItemGmailActionPerformed
 
     private void facebookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_facebookActionPerformed

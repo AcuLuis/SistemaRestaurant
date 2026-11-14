@@ -1,10 +1,14 @@
 
 package restaurante.ui;
 
-import restaurante.util.DbBean;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.Optional;
+import restaurante.reportes.Reportes;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Validaciones;
+
 import java.util.HashMap;
-import net.sf.jasperreports.engine.JRException;
 
 public class FrmContratoPorFechas extends javax.swing.JInternalFrame {
 
@@ -113,31 +117,27 @@ public class FrmContratoPorFechas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        
-        String fechaIni, fechaFin;
-        
-        fechaIni = this.txtFechaIni.getText();
-        fechaFin = this.txtFechaFin.getText();
-        
-        HashMap map = new HashMap();
-        
-        map.put("fechaIni", fechaIni);
-        map.put("fechaFin", fechaFin);
-        
-        try{
-        
-            String r = "src/main/resources/reportes/repContratoPorFechas.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, map, true);
-        }catch(SQLException e){
-        
-            e.printStackTrace();
-        }catch(JRException ex){
-        
-            ex.printStackTrace();
+        Optional<LocalDate> inicio = Validaciones.fecha(this.txtFechaIni.getText());
+        Optional<LocalDate> fin = Validaciones.fecha(this.txtFechaFin.getText());
+        if (inicio.isEmpty()) {
+            Dialogos.aviso(this, "Indique una fecha inicial válida (" + Validaciones.FORMATO_FECHA + ").");
+            this.txtFechaIni.requestFocusInWindow();
+            return;
         }
-        this.dispose();
-        
+        if (fin.isEmpty()) {
+            Dialogos.aviso(this, "Indique una fecha final válida (" + Validaciones.FORMATO_FECHA + ").");
+            this.txtFechaFin.requestFocusInWindow();
+            return;
+        }
+        if (fin.get().isBefore(inicio.get())) {
+            Dialogos.aviso(this, "La fecha final no puede ser anterior a la inicial.");
+            this.txtFechaFin.requestFocusInWindow();
+            return;
+        }
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("fechaIni", inicio.get().toString());
+        parametros.put("fechaFin", fin.get().toString());
+        Reportes.mostrar(this, "repContratoPorFechas", "Contratos del " + inicio.get() + " al " + fin.get(), parametros);
     }//GEN-LAST:event_btnReporteActionPerformed
 
 

@@ -13,7 +13,6 @@ import restaurante.modelo.Usuario;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.UsuarioDao;
 import restaurante.dao.LocalDao;
-import restaurante.util.DbBean;
 import restaurante.util.Util;
 import java.sql.ResultSet;
 import java.util.Vector;

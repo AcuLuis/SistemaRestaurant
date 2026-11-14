@@ -2,15 +2,16 @@
 
 package restaurante.ui;
 
+import java.util.Map;
+import restaurante.reportes.Reportes;
+import restaurante.ui.util.Dialogos;
+
 
 import java.util.List;
 import restaurante.modelo.Area;
 import restaurante.dao.AreaDao;
-import restaurante.util.DbBean;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Vector;
-import net.sf.jasperreports.engine.JRException;
 
 public class FrmContratoPorArea extends javax.swing.JInternalFrame {
 
@@ -110,28 +111,15 @@ public class FrmContratoPorArea extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        
-        String seleccionArea;
-        
-        seleccionArea = this.cmbArea.getSelectedItem().toString();
-        
-        HashMap map = new HashMap();
-        
-        map.put("descripArea", seleccionArea);
-        
-        try{
-        
-            String r = "src/main/resources/reportes/repContratoPorArea.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, map, true);
-        }catch(SQLException e){
-        
-            e.printStackTrace();
-        }catch(JRException ex){
-        
-            ex.printStackTrace();
+        Object area = this.cmbArea.getSelectedItem();
+        if (area == null || area.toString().isEmpty()) {
+            Dialogos.aviso(this, "Seleccione un área.");
+            this.cmbArea.requestFocusInWindow();
+            return;
         }
-        this.dispose();
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("descripArea", area.toString());
+        Reportes.mostrar(this, "repContratoPorArea", "Contratos del área " + area, parametros);
     }//GEN-LAST:event_btnReporteActionPerformed
 
 

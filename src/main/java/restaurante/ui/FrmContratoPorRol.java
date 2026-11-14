@@ -1,15 +1,16 @@
 
 package restaurante.ui;
 
+import java.util.Map;
+import restaurante.reportes.Reportes;
+import restaurante.ui.util.Dialogos;
+
 
 import java.util.List;
 import restaurante.modelo.Rol;
 import restaurante.dao.RolDao;
-import restaurante.util.DbBean;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Vector;
-import net.sf.jasperreports.engine.JRException;
 
 public class FrmContratoPorRol extends javax.swing.JInternalFrame {
 
@@ -108,28 +109,15 @@ public class FrmContratoPorRol extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnProducirReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProducirReporteActionPerformed
-        
-        String seleccionRol;
-        
-        seleccionRol = this.cmbRol.getSelectedItem().toString();
-        
-        HashMap map = new HashMap();
-        
-        map.put("Descripcion", seleccionRol);
-        
-        try{
-        
-            String r = "src/main/resources/reportes/repContratoPorRol.jasper";
-            DbBean db = new DbBean();
-            db.connectRep(r, map, true);
-        }catch(SQLException e){
-        
-            e.printStackTrace();
-        }catch(JRException ex){
-        
-            ex.printStackTrace();
+        Object rol = this.cmbRol.getSelectedItem();
+        if (rol == null || rol.toString().isEmpty()) {
+            Dialogos.aviso(this, "Seleccione un rol.");
+            this.cmbRol.requestFocusInWindow();
+            return;
         }
-        this.dispose();
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("Descripcion", rol.toString());
+        Reportes.mostrar(this, "repContratoPorRol", "Contratos del rol " + rol, parametros);
     }//GEN-LAST:event_btnProducirReporteActionPerformed
 
 
