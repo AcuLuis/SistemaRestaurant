@@ -1,65 +1,57 @@
-
 package restaurante.ui;
 
-
 import java.util.List;
-import restaurante.modelo.Insumo;
-import restaurante.modelo.TipInsumo;
+import java.util.Optional;
+import javax.swing.table.DefaultTableModel;
 import restaurante.dao.InsumoDao;
 import restaurante.dao.TipInsumoDao;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import restaurante.modelo.Insumo;
+import restaurante.modelo.TipInsumo;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
+import restaurante.ui.util.Validaciones;
 
+/**
+ * Mantenimiento de insumos (materia prima).
+ */
 public class FrmInsumo extends javax.swing.JInternalFrame {
-    
-    TipInsumoDao tipinsu = new TipInsumoDao();
-    InsumoDao insuDao = new InsumoDao();
-    DefaultTableModel dtmInsumo;
-    String tipInsumo;
-    Util util = new Util();
-    public FrmInsumo() {
-        
-        initComponents();
-        dtmInsumo = (DefaultTableModel) this.tblIns.getModel();
-        this.llenaTblIns(false, "");
-        this.llenaCmbTipo();
-    }
-    public void llenaTblIns(boolean sw, String cad){
-        
-        this.txtInsumoID.setText(Integer.toString(util.idNext("Insumo", "insumoID")));
-        List<Insumo> listaInsumo;
-        listaInsumo = insuDao.ListaItem(sw, cad);
-        dtmInsumo.setRowCount(0);
-        
-        for(int i=0;i<listaInsumo.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaInsumo.get(i).getInsumoID());
-            tipInsumo = tipinsu.devTipInsumo(listaInsumo.get(i).getIdTipInsumo());
-            vector.addElement(tipInsumo);
-            vector.addElement(listaInsumo.get(i).getUnidadMedida());
-            vector.addElement(listaInsumo.get(i).getDescripInsumo());
-            vector.addElement(listaInsumo.get(i).getPrecioUnit());
-            vector.addElement(listaInsumo.get(i).getCantidad());
-            dtmInsumo.addRow(vector);
-        }
-        
-    }
-    
-   public void llenaCmbTipo(){
 
-        List<TipInsumo> listaTipInsu;
-        listaTipInsu = this.tipinsu.llenaTipInsumo();
+    private final InsumoDao insuDao = new InsumoDao();
+    private final BusquedaDiferida busqueda;
+    private final List<TipInsumo> tipos;
+    private List<Insumo> insumos = List.of();
+    private Insumo seleccionado;
+
+    public FrmInsumo() {
+        initComponents();
+        this.tipos = new TipInsumoDao().llenaTipInsumo();
         this.cmbTipIns.addItem("");
-        for (int i=0; i<listaTipInsu.size();i++){
-            this.cmbTipIns.addItem(listaTipInsu.get(i).getDescripcion());
-        }
-        
+        this.tipos.forEach(t -> this.cmbTipIns.addItem(t.getDescripcion()));
+        Tablas.configurar(this.tblIns);
+        Tablas.alSeleccionar(this.tblIns, this::cargarSeleccion);
+        this.txtInsumoID.setEditable(false);
+        this.txtInsumoID.setToolTipText("El código se asigna automáticamente al grabar");
+        this.txtUnidadMed.setToolTipText("Por ejemplo: kg, litro, unidad (máximo 10 caracteres)");
+        this.busqueda = new BusquedaDiferida(this.txtBuscar, this::llenaTblIns);
+        this.getRootPane().setDefaultButton(this.btnGrabar);
+        this.llenaTblIns("");
+        this.limpiar();
     }
-   
-   
+
+    private void llenaTblIns(String texto) {
+        insumos = insuDao.ListaItem(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblIns);
+        for (Insumo i : insumos) {
+            modelo.addRow(new Object[] {i.getInsumoID(), descripcionTipo(i.getIdTipInsumo()), i.getUnidadMedida(),
+                i.getDescripInsumo(), Tablas.importe(i.getPrecioUnit()), i.getCantidad()});
+        }
+    }
+
+    private String descripcionTipo(int id) {
+        return tipos.stream().filter(t -> t.getIdInsumo() == id).map(TipInsumo::getDescripcion).findFirst().orElse("");
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -310,146 +302,126 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
-        if (valida() == true){
-        
-                Insumo insumo = new Insumo();
-
-                insumo.setInsumoID(Integer.parseInt(this.txtInsumoID.getText()));
-                
-                this.insuDao.eliminarInsumo(insumo.getInsumoID());
-                this.llenaTblIns(false, "");
-                this.limpiar();
-        }
-
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void txtUnidadMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUnidadMedActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtUnidadMedActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        limpiar();
+        this.limpiar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        
-        if(this.txtBuscar.getText().isEmpty()){
-        
-            this.llenaTblIns(false, "");
-        }else{
-        
-            this.llenaTblIns(true, this.txtBuscar.getText());
-        }
- 
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     private void tblInsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInsMouseClicked
-
-        int idx;
-        
-        this.btnGrabar.setText("Actualizar");
-        idx = this.tblIns.getSelectedRow();
-        
-        this.txtInsumoID.setText(this.dtmInsumo.getValueAt(idx, 0).toString());
-        this.cmbTipIns.setSelectedItem(this.dtmInsumo.getValueAt(idx, 1).toString());
-        this.txtUnidadMed.setText(this.dtmInsumo.getValueAt(idx, 2).toString());
-        this.txtDesc.setText(this.dtmInsumo.getValueAt(idx, 3).toString());
-        this.txtPrecU.setText(this.dtmInsumo.getValueAt(idx, 4).toString());
-        this.txtCant.setText(this.dtmInsumo.getValueAt(idx, 5).toString());
-        
+        this.cargarSeleccion();
     }//GEN-LAST:event_tblInsMouseClicked
 
     private void txtDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtDescActionPerformed
 
     private void cmbTipInsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipInsActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_cmbTipInsActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-
-        if(this.valida() == true){
-        
-            if(this.btnGrabar.getText().equals("Grabar")){
-                
-                Insumo insumo = new Insumo();
-
-                insumo.setInsumoID(Integer.parseInt(this.txtInsumoID.getText()));
-                
-                insumo.setIdTipInsumo(this.tipinsu.devIDTipInsumo(this.cmbTipIns.getSelectedItem().toString()));
-
-                insumo.setUnidadMedida(this.txtUnidadMed.getText());
-                insumo.setDescripInsumo(this.txtDesc.getText());
-                insumo.setPrecioUnit(Double.parseDouble(this.txtPrecU.getText()));
-                insumo.setCantidad(Integer.parseInt(this.txtCant.getText()));
-                
-                this.insuDao.insertaInsumo(insumo);
-                this.limpiar();
-                
-                this.llenaTblIns(false, "");
-            }else{
-                
-                Insumo insumo = new Insumo();
-
-                insumo.setInsumoID(Integer.parseInt(this.txtInsumoID.getText()));
-                
-                insumo.setIdTipInsumo(this.tipinsu.devIDTipInsumo(this.cmbTipIns.getSelectedItem().toString()));
-
-                insumo.setUnidadMedida(this.txtUnidadMed.getText());
-                insumo.setDescripInsumo(this.txtDesc.getText());
-                insumo.setPrecioUnit(Double.parseDouble(this.txtPrecU.getText()));
-                insumo.setCantidad(Integer.parseInt(this.txtCant.getText()));
-                
-                this.insuDao.actualizarInsumo(insumo);
-                this.limpiar();
-                
-                this.llenaTblIns(false, "");           
-            }
-        }
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
-    public void limpiar(){
-    
-        this.cmbTipIns.setSelectedItem("");
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+        this.llenaTblIns(this.txtBuscar.getText().trim());
+    }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void grabar() {
+        String unidad = this.txtUnidadMed.getText().trim();
+        String descripcion = this.txtDesc.getText().trim();
+        Optional<Double> precio = Validaciones.decimalNoNegativo(this.txtPrecU.getText());
+        Optional<Integer> cantidad = Validaciones.enteroNoNegativo(this.txtCant.getText());
+        if (this.cmbTipIns.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el tipo de insumo.");
+            this.cmbTipIns.requestFocusInWindow();
+            return;
+        }
+        if (unidad.isEmpty() || unidad.length() > 10) {
+            Dialogos.aviso(this, "Indique la unidad de medida (máximo 10 caracteres).");
+            this.txtUnidadMed.requestFocusInWindow();
+            return;
+        }
+        if (descripcion.isEmpty() || descripcion.length() > 60) {
+            Dialogos.aviso(this, "Indique la descripción del insumo (máximo 60 caracteres).");
+            this.txtDesc.requestFocusInWindow();
+            return;
+        }
+        if (precio.isEmpty()) {
+            Dialogos.aviso(this, "El precio debe ser un número mayor o igual que cero.");
+            this.txtPrecU.requestFocusInWindow();
+            return;
+        }
+        if (cantidad.isEmpty()) {
+            Dialogos.aviso(this, "La cantidad debe ser un número entero mayor o igual que cero.");
+            this.txtCant.requestFocusInWindow();
+            return;
+        }
+        Insumo insumo = new Insumo();
+        insumo.setIdTipInsumo(tipos.get(this.cmbTipIns.getSelectedIndex() - 1).getIdInsumo());
+        insumo.setUnidadMedida(unidad);
+        insumo.setDescripInsumo(descripcion);
+        insumo.setPrecioUnit(precio.get());
+        insumo.setCantidad(cantidad.get());
+        if (seleccionado == null) {
+            this.insuDao.insertaInsumo(insumo);
+            Dialogos.info(this, "Insumo registrado con el código " + insumo.getInsumoID() + ".");
+        } else {
+            insumo.setInsumoID(seleccionado.getInsumoID());
+            this.insuDao.actualizarInsumo(insumo);
+            Dialogos.info(this, "Insumo actualizado.");
+        }
+        this.llenaTblIns(this.txtBuscar.getText().trim());
+        this.limpiar();
+    }
+
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla el insumo que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar el insumo \"" + seleccionado.getDescripInsumo() + "\"?")) {
+            return;
+        }
+        this.insuDao.eliminarInsumo(seleccionado.getInsumoID());
+        this.llenaTblIns(this.txtBuscar.getText().trim());
+        this.limpiar();
+    }
+
+    private void cargarSeleccion() {
+        int fila = Tablas.filaSeleccionada(this.tblIns);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = insumos.get(fila);
+        this.txtInsumoID.setText(String.valueOf(seleccionado.getInsumoID()));
+        this.cmbTipIns.setSelectedItem(descripcionTipo(seleccionado.getIdTipInsumo()));
+        this.txtUnidadMed.setText(seleccionado.getUnidadMedida());
+        this.txtDesc.setText(seleccionado.getDescripInsumo());
+        this.txtPrecU.setText(Tablas.importe(seleccionado.getPrecioUnit()));
+        this.txtCant.setText(String.valueOf(seleccionado.getCantidad()));
+        this.btnGrabar.setText("Actualizar");
+    }
+
+    /** Deja el formulario listo para registrar un insumo nuevo (antes conservaba el código anterior). */
+    public void limpiar() {
+        seleccionado = null;
+        this.tblIns.clearSelection();
+        this.txtInsumoID.setText(String.valueOf(insuDao.siguienteId()));
+        this.cmbTipIns.setSelectedIndex(0);
         this.txtUnidadMed.setText("");
         this.txtPrecU.setText("");
         this.txtDesc.setText("");
         this.txtCant.setText("");
         this.btnGrabar.setText("Grabar");
-    
     }
-    
-    public boolean valida(){
-    
-        if(this.cmbTipIns.getSelectedItem().equals("") && this.txtUnidadMed.getText().isEmpty() &&
-           this.txtDesc.getText().isEmpty() && this.txtCant.getText().isEmpty() && this.txtPrecU.getText().isEmpty()){
-            
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LOS CAMPOS...");
-        }else if(this.cmbTipIns.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR TIPO INSUMO...");
-        }else if(this.txtUnidadMed.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR UNIDAD DE MEDIDA...");
-        }else if(this.txtDesc.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR DESCRIPCION...");
-        }else if(this.txtCant.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR CANTIDAD...");
-        }else if(this.txtPrecU.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR PRECIO...");
-        }else{
-            return true;
-        }
-        
-        return false;
-    }
-    
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarActionPerformed
-     
-
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;

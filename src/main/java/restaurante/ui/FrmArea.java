@@ -1,45 +1,45 @@
-
 package restaurante.ui;
 
-
 import java.util.List;
-import restaurante.modelo.Area;
-import restaurante.dao.AreaDao;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.AreaDao;
+import restaurante.modelo.Area;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
 
+/**
+ * Mantenimiento de áreas.
+ */
 public class FrmArea extends javax.swing.JInternalFrame {
 
-    DefaultTableModel dtmArea;
-    AreaDao areaDao = new AreaDao();
-    Util u = new Util();
-    
+    private static final int LONGITUD_MAXIMA = 40;
+
+    private final AreaDao dao = new AreaDao();
+    private final BusquedaDiferida busqueda;
+    private List<Area> registros = List.of();
+    private Area seleccionado;
+
     public FrmArea() {
         initComponents();
-        dtmArea = (DefaultTableModel) this.tblArea.getModel();
-        this.llenaTblArea(false, "");
+        Tablas.configurar(this.tblArea);
+        Tablas.alSeleccionar(this.tblArea, this::cargarSeleccion);
+        this.txtAreaID.setEditable(false);
+        this.txtAreaID.setToolTipText("El código se asigna automáticamente al grabar");
+        this.txtDescripcionArea.setToolTipText("Máximo " + LONGITUD_MAXIMA + " caracteres");
+        this.btnLimpiar.addActionListener(e -> this.limpia());
+        this.busqueda = new BusquedaDiferida(this.txtBuscarArea, this::buscar);
+        this.getRootPane().setDefaultButton(this.btnGrabar);
+        this.buscar("");
+        this.limpia();
     }
-    
-    private void llenaTblArea(boolean valida, String cadena){
-    
-        List<Area> listaArea;
-        
-        this.txtAreaID.setText(Integer.toString(u.idNext("Area", "areaID")));
-        
-        listaArea = areaDao.listaArea(valida, cadena);
-        dtmArea.setRowCount(0);
-        
-        for(int i=0;i<listaArea.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaArea.get(i).getAreaID());
-            vector.addElement(listaArea.get(i).getDescripArea());
-            
-            dtmArea.addRow(vector);
+
+    private void buscar(String texto) {
+        registros = dao.listaArea(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblArea);
+        for (Area r : registros) {
+            modelo.addRow(new Object[] {r.getAreaID(), r.getDescripArea()});
         }
-    
     }
 
     @SuppressWarnings("unchecked")
@@ -198,88 +198,83 @@ public class FrmArea extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarAreaKeyReleased
-        
-        if(this.txtBuscarArea.getText().isEmpty()){
-            this.llenaTblArea(false, "");
-        }else{
-            this.llenaTblArea(true, this.txtBuscarArea.getText());
-        }
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtBuscarAreaKeyReleased
 
     private void tblAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAreaMouseClicked
-        
-        int idx = this.tblArea.getSelectedRow();
-        
-        this.txtAreaID.setText(this.dtmArea.getValueAt(idx, 0).toString());
-        this.txtDescripcionArea.setText(this.dtmArea.getValueAt(idx, 1).toString());
-        
-        this.btnGrabar.setText("Actualizar");
+        this.cargarSeleccion();
     }//GEN-LAST:event_tblAreaMouseClicked
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        
         this.dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        
-        Area area = new Area();
-        if(this.valida() == true){
-            
-            if(this.btnGrabar.getText().equals("Grabar")){
-            
-                area.setAreaID(Integer.parseInt(this.txtAreaID.getText()));
-                area.setDescripArea(this.txtDescripcionArea.getText());
-                
-                this.areaDao.insertaArea(area);
-                this.limpia();
-                this.llenaTblArea(false, "");
-            }else{
-            
-                area.setAreaID(Integer.parseInt(this.txtAreaID.getText()));
-                area.setDescripArea(this.txtDescripcionArea.getText());
-                
-                this.areaDao.actualizarArea(area);
-                this.limpia();
-                this.llenaTblArea(false, "");
-            }
-        
-        }
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        
-        Area area = new Area();
-        area.setAreaID(Integer.parseInt(this.txtAreaID.getText()));
-        this.areaDao.eliminarArea(area);
-        this.limpia();
-        this.llenaTblArea(false, "");
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void limpia(){
-    
-        this.txtDescripcionArea.setText("");
-        
-        this.btnGrabar.setText("Grabar");
-    }
-    
-    private boolean valida(){
-    
-        if (this.txtAreaID.getText().isEmpty() && this.txtDescripcionArea.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta llenar campos...");
-        }else if(this.txtAreaID.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Falta llenar area ID...");
-        }else if(this.txtDescripcionArea.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Falta llenar Descripción...");
-        }else {
-            return true;
+    private void grabar() {
+        String descripcion = this.txtDescripcionArea.getText().trim();
+        if (descripcion.isEmpty()) {
+            Dialogos.aviso(this, "Falta indicar la descripción.");
+            this.txtDescripcionArea.requestFocusInWindow();
+            return;
         }
-        
-        return false;
-    
+        if (descripcion.length() > LONGITUD_MAXIMA) {
+            Dialogos.aviso(this, "La descripción admite como máximo " + LONGITUD_MAXIMA + " caracteres.");
+            this.txtDescripcionArea.requestFocusInWindow();
+            return;
+        }
+        Area registro = new Area();
+        registro.setDescripArea(descripcion);
+        if (seleccionado == null) {
+            dao.insertaArea(registro);
+            Dialogos.info(this, "Área registrado con el código " + registro.getAreaID() + ".");
+        } else {
+            registro.setAreaID(seleccionado.getAreaID());
+            dao.actualizarArea(registro);
+            Dialogos.info(this, "Área actualizado.");
+        }
+        this.buscar(this.txtBuscarArea.getText().trim());
+        this.limpia();
     }
 
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla el registro que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar \"" + seleccionado.getDescripArea() + "\"?")) {
+            return;
+        }
+        dao.eliminarArea(seleccionado);
+        this.buscar(this.txtBuscarArea.getText().trim());
+        this.limpia();
+    }
+
+    private void cargarSeleccion() {
+        int fila = Tablas.filaSeleccionada(this.tblArea);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = registros.get(fila);
+        this.txtAreaID.setText(String.valueOf(seleccionado.getAreaID()));
+        this.txtDescripcionArea.setText(seleccionado.getDescripArea());
+        this.btnGrabar.setText("Actualizar");
+    }
+
+    private void limpia() {
+        seleccionado = null;
+        this.tblArea.clearSelection();
+        this.txtAreaID.setText(String.valueOf(dao.siguienteId()));
+        this.txtDescripcionArea.setText("");
+        this.btnGrabar.setText("Grabar");
+        this.txtDescripcionArea.requestFocusInWindow();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;

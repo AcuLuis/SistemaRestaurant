@@ -1,70 +1,72 @@
 package restaurante.ui;
 
-
 import java.util.List;
-import restaurante.modelo.*;
-import restaurante.dao.*;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
+import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.PlatoDao;
+import restaurante.dao.ProductoDao;
+import restaurante.dao.TipProductoDao;
+import restaurante.modelo.Plato;
+import restaurante.modelo.Producto;
+import restaurante.modelo.TipProducto;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
+import restaurante.ui.util.Validaciones;
 
+/**
+ * Mantenimiento de productos de la carta.
+ *
+ * <p>Los tipos de plato y de producto se leen de la base de datos; antes sus
+ * identificadores estaban escritos en el código y no coincidían con los de la
+ * tabla al editar un producto.</p>
+ */
 public class FrmProducto extends javax.swing.JInternalFrame {
-    PlatoDao platDao;
-    ProductoDao prodDao;
-    TipProductoDao tipProbDao;
-    DefaultTableModel dtm;
-    private int idProducto;
-    
-    public FrmProducto() {
-        platDao = new PlatoDao();
-        prodDao = new ProductoDao();
-        tipProbDao = new TipProductoDao();
-        initComponents();
-        dtm = (DefaultTableModel)this.tblProducto.getModel();
-        llenaTblProducto(false,"");
-        llenaCmbPlato();
-        llenaCmbTipo(); 
-        
-    }
-    
-    private void llenaCmbTipo(){
-        List<TipProducto> listaTip;
-        listaTip = tipProbDao.listaTip();
-        cmbTipProduct.addItem("");
-        for(int i=0;i<listaTip.size();i++){
-            this.cmbTipProduct.addItem(listaTip.get(i).getDescripcion());
-        }
-    }
-    private void llenaCmbPlato(){
-        List<Plato> listaPlato;
-        listaPlato = platDao.listaPlato();
-        cmbPlato.addItem("");
-        for(int i=0;i<listaPlato.size();i++){
-            this.cmbPlato.addItem(listaPlato.get(i).getDescPlat());
-        }
-    }
-    private void llenaTblProducto(boolean valida, String Cadena){
-        
-        List<Producto> listProduct;
-        
-        listProduct = prodDao.ListaProducto(valida, Cadena);
-        dtm.setRowCount(0);
-        
-        for(int i=0; i<listProduct.size();i++){
-            Vector v = new Vector();
-            v.addElement(listProduct.get(i).getProductoID());
-            v.addElement(listProduct.get(i).getDescripProducto());
-            v.addElement(listProduct.get(i).getCantidad());
-            v.addElement(listProduct.get(i).getPrecioUnit());
-            v.addElement(listProduct.get(i).getPlato());
-            v.addElement(listProduct.get(i).getTipo());
-            dtm.addRow(v);
-        }
-        
 
+    private final ProductoDao prodDao = new ProductoDao();
+    private final BusquedaDiferida busqueda;
+    private final List<Plato> platos;
+    private final List<TipProducto> tipos;
+    private List<Producto> productos = List.of();
+    private Producto seleccionado;
+
+    public FrmProducto() {
+        initComponents();
+        this.platos = new PlatoDao().listaPlato();
+        this.tipos = new TipProductoDao().listaTip();
+        this.cmbPlato.addItem("");
+        this.platos.forEach(p -> this.cmbPlato.addItem(p.getDescPlat()));
+        this.cmbTipProduct.addItem("");
+        this.tipos.forEach(t -> this.cmbTipProduct.addItem(t.getDescripcion()));
+        Tablas.configurar(this.tblProducto);
+        Tablas.alSeleccionar(this.tblProducto, this::cargarSeleccion);
+        this.txtProductoID.setEditable(false);
+        this.txtProductoID.setToolTipText("El código se asigna automáticamente al grabar");
+        this.txtPrecioUnit.setToolTipText("Por ejemplo: 25.50");
+        this.busqueda = new BusquedaDiferida(this.txtBuscar, this::buscar);
+        this.getRootPane().setDefaultButton(this.btnGrabar);
+        this.buscar("");
+        this.limpiar();
     }
-    
+
+    private void buscar(String texto) {
+        productos = prodDao.ListaProducto(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblProducto);
+        for (Producto p : productos) {
+            modelo.addRow(new Object[] {p.getProductoID(), p.getDescripProducto(), p.getCantidad(),
+                Tablas.importe(p.getPrecioUnit()), descripcionPlato(p.getPlato()), descripcionTipo(p.getTipo())});
+        }
+    }
+
+    private String descripcionPlato(int id) {
+        return platos.stream().filter(p -> p.getIdPlato() == id).map(Plato::getDescPlat).findFirst().orElse("");
+    }
+
+    private String descripcionTipo(int id) {
+        return tipos.stream().filter(t -> t.getIdTipProducto() == id).map(TipProducto::getDescripcion)
+                .findFirst().orElse("");
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -316,164 +318,118 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
-    
+
     private void btnLimpiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiaActionPerformed
-        limpiar();
+        this.limpiar();
     }//GEN-LAST:event_btnLimpiaActionPerformed
 
     private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
-        if(txtBuscar.getText().isEmpty()){
-            llenaTblProducto(false,"");
-        }else{
-            llenaTblProducto(true,this.txtBuscar.getText());
-        } 
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtBuscarKeyReleased
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        if(this.verificaCamposLlenos()== true){
-        Producto prod = new Producto();
-        Util util = new Util();
-
-        if(this.btnGrabar.getText().equals("Grabar")){
-        idProducto = util.idNext("producto","productoID");
-        
-        prod.setProductoID(idProducto);
-        
-        if (this.cmbPlato.getSelectedItem().equals("entrada")){
-        
-            prod.setPlato(30);
-        }else if(this.cmbPlato.getSelectedItem().equals("menú")){
-        
-            prod.setPlato(31);
-        }else if(this.cmbPlato.getSelectedItem().equals("sopa")){
-        
-            prod.setPlato(32);
-        }
-        
-        if(this.cmbTipProduct.getSelectedItem().equals("envasado")){
-            prod.setTipo(40);
-        }else{
-            prod.setTipo(41);
-        }
-        
-        prod.setDescripProducto(this.txtDescripcion.getText());
-        prod.setCantidad(Integer.parseInt(this.txtCantidad.getText()));
-        prod.setPrecioUnit(Double.parseDouble(this.txtPrecioUnit.getText()));
-        
-
-        this.prodDao.insertaProducto(prod);
-        }else{
-            
-            prod.setProductoID(Integer.parseInt(this.txtProductoID.getText()));
-                   if (this.cmbPlato.getSelectedItem().equals("entrada")){
-        
-            prod.setPlato(30);
-        }else if(this.cmbPlato.getSelectedItem().equals("menú")){
-        
-            prod.setPlato(31);
-        }else if(this.cmbPlato.getSelectedItem().equals("sopa")){
-        
-            prod.setPlato(32);
-        }
-        
-        if(this.cmbTipProduct.getSelectedItem().equals("envasado")){
-            prod.setTipo(40);
-        }else{
-            prod.setTipo(41);
-        }
-        
-        prod.setDescripProducto(this.txtDescripcion.getText());
-        prod.setCantidad(Integer.parseInt(this.txtCantidad.getText()));
-        prod.setPrecioUnit(Double.parseDouble(this.txtPrecioUnit.getText()));
-        
-           
-           this.prodDao.actualizarProducto(prod);
-           this.btnGrabar.setText("Grabar");
-        }
-        this.llenaTblProducto(false,"");
-        this.limpiar();
-        }
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
-     int idx;
-     idx = this.tblProducto.getSelectedRow();
-     this.idProducto = Integer.parseInt(dtm.getValueAt(idx, 0).toString());
-     this.txtProductoID.setText(dtm.getValueAt(idx, 0).toString());
-     this.txtDescripcion.setText(dtm.getValueAt(idx, 1).toString());
-     this.txtCantidad.setText(dtm.getValueAt(idx, 2).toString());
-     this.txtPrecioUnit.setText(dtm.getValueAt(idx, 3).toString());
-     /*this.cmbPlato.setSelectedItem(tblProducto.getValueAt(idx, 4).toString());
-     this.cmbTipProduct.setSelectedItem(tblProducto.getValueAt(idx, 5).toString());
-     */
-     if(dtm.getValueAt(idx, 4).equals(10)){
-         this.cmbPlato.setSelectedItem("Fondo");
-     }else if (dtm.getValueAt(idx, 4).equals(11)){
-         this.cmbPlato.setSelectedItem("Entrada");
-     }else{
-         this.cmbPlato.setSelectedItem("Postre");
-     }
-     
-     if(dtm.getValueAt(idx, 5).equals(1)){
-         this.cmbTipProduct.setSelectedItem("perecible");
-     }else{
-         this.cmbTipProduct.setSelectedItem("No perecible");
-     }
-
-     this.btnGrabar.setText("Actualizar");
+        this.cargarSeleccion();
     }//GEN-LAST:event_tblProductoMouseClicked
-    
+
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-              if (this.verificaCamposLlenos() == true){
-            Producto prod = new Producto();
-        
-            prod.setProductoID(this.idProducto);
-            this.prodDao.eliminarProducto(prod);
-       }
-       this.llenaTblProducto(false, "");
-       this.limpiar();
-       this.btnGrabar.setText("GRABAR"); 
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-        // TODO add your handling code here:
+        this.buscar(this.txtBuscar.getText().trim());
     }//GEN-LAST:event_txtBuscarActionPerformed
-    
-    private boolean verificaCamposLlenos(){
-        boolean valida = false;
-        if(this.txtDescripcion.getText().isEmpty() && this.txtCantidad.getText().isEmpty()
-           && this.txtPrecioUnit.getText().isEmpty() && this.cmbPlato.getSelectedItem().toString().isEmpty()
-           && this.cmbTipProduct.getSelectedItem().toString().isEmpty()){
-        JOptionPane.showMessageDialog(this, "FALTA LLENAR TODOS LOS CAMPOS...");
-        }else{
-            if(this.txtDescripcion.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "FALTA LLENAR LA DESCRIPCION DEL PRODUCTO...");
-            }else if(this.txtCantidad.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "FALTA LLENAR LA CANTIDAD...");
-            }else if(this.txtPrecioUnit.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this, "FALTA LLENAR EL PRECIO UNITARIO...");
-            }
-            else if(this.cmbPlato.getSelectedItem().toString().isEmpty()){
-            JOptionPane.showMessageDialog(this, "FALTA LLENAR EL TIPO DE PLATO...");
-            }
-            else if(this.cmbTipProduct.getSelectedItem().toString().isEmpty()){
-            JOptionPane.showMessageDialog(this, "FALTA LLENAR EL TIPO DE PRODUCTO...");
-            }else{
-                valida = true;
-            }
+
+    private void grabar() {
+        String descripcion = this.txtDescripcion.getText().trim();
+        Optional<Integer> cantidad = Validaciones.enteroNoNegativo(this.txtCantidad.getText());
+        Optional<Double> precio = Validaciones.decimalNoNegativo(this.txtPrecioUnit.getText());
+        if (descripcion.isEmpty() || descripcion.length() > 40) {
+            Dialogos.aviso(this, "Indique la descripción del producto (máximo 40 caracteres).");
+            this.txtDescripcion.requestFocusInWindow();
+            return;
         }
-        return valida;
-    } 
-    
-    private void limpiar(){
-        this.txtProductoID.setText("");
+        if (cantidad.isEmpty()) {
+            Dialogos.aviso(this, "La cantidad debe ser un número entero mayor o igual que cero.");
+            this.txtCantidad.requestFocusInWindow();
+            return;
+        }
+        if (precio.isEmpty()) {
+            Dialogos.aviso(this, "El precio unitario debe ser un número mayor o igual que cero.");
+            this.txtPrecioUnit.requestFocusInWindow();
+            return;
+        }
+        if (this.cmbPlato.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el tipo de plato.");
+            this.cmbPlato.requestFocusInWindow();
+            return;
+        }
+        if (this.cmbTipProduct.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el tipo de producto.");
+            this.cmbTipProduct.requestFocusInWindow();
+            return;
+        }
+        Producto prod = new Producto();
+        prod.setDescripProducto(descripcion);
+        prod.setCantidad(cantidad.get());
+        prod.setPrecioUnit(precio.get());
+        prod.setPlato(platos.get(this.cmbPlato.getSelectedIndex() - 1).getIdPlato());
+        prod.setTipo(tipos.get(this.cmbTipProduct.getSelectedIndex() - 1).getIdTipProducto());
+        if (seleccionado == null) {
+            prodDao.insertaProducto(prod);
+            Dialogos.info(this, "Producto registrado con el código " + prod.getProductoID() + ".");
+        } else {
+            prod.setProductoID(seleccionado.getProductoID());
+            prodDao.actualizarProducto(prod);
+            Dialogos.info(this, "Producto actualizado.");
+        }
+        this.buscar(this.txtBuscar.getText().trim());
+        this.limpiar();
+    }
+
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla el producto que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar el producto \"" + seleccionado.getDescripProducto() + "\"?")) {
+            return;
+        }
+        prodDao.eliminarProducto(seleccionado);
+        this.buscar(this.txtBuscar.getText().trim());
+        this.limpiar();
+    }
+
+    private void cargarSeleccion() {
+        int fila = Tablas.filaSeleccionada(this.tblProducto);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = productos.get(fila);
+        this.txtProductoID.setText(String.valueOf(seleccionado.getProductoID()));
+        this.txtDescripcion.setText(seleccionado.getDescripProducto());
+        this.txtCantidad.setText(String.valueOf(seleccionado.getCantidad()));
+        this.txtPrecioUnit.setText(Tablas.importe(seleccionado.getPrecioUnit()));
+        this.cmbPlato.setSelectedItem(descripcionPlato(seleccionado.getPlato()));
+        this.cmbTipProduct.setSelectedItem(descripcionTipo(seleccionado.getTipo()));
+        this.btnGrabar.setText("Actualizar");
+    }
+
+    private void limpiar() {
+        seleccionado = null;
+        this.tblProducto.clearSelection();
+        this.txtProductoID.setText(String.valueOf(prodDao.siguienteId()));
         this.txtDescripcion.setText("");
         this.txtCantidad.setText("");
         this.txtPrecioUnit.setText("");
-        this.cmbPlato.setSelectedItem("");
-        this.cmbTipProduct.setSelectedItem("");
+        this.cmbPlato.setSelectedIndex(0);
+        this.cmbTipProduct.setSelectedIndex(0);
+        this.btnGrabar.setText("Grabar");
+        this.txtDescripcion.requestFocusInWindow();
     }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;

@@ -1,45 +1,44 @@
-
 package restaurante.ui;
 
-
 import java.util.List;
-import restaurante.modelo.Rol;
-import restaurante.dao.RolDao;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.RolDao;
+import restaurante.modelo.Rol;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
 
+/**
+ * Mantenimiento de roles.
+ */
 public class FrmRol extends javax.swing.JInternalFrame {
 
-    DefaultTableModel dtmRol;
-    RolDao rolDao = new RolDao();
-    Util u = new Util();
+    private static final int LONGITUD_MAXIMA = 25;
+
+    private final RolDao dao = new RolDao();
+    private final BusquedaDiferida busqueda;
+    private List<Rol> registros = List.of();
+    private Rol seleccionado;
+
     public FrmRol() {
         initComponents();
-        dtmRol = (DefaultTableModel) this.tblRol.getModel();
-        this.llenaTblRol(false, "");
-        
+        Tablas.configurar(this.tblRol);
+        Tablas.alSeleccionar(this.tblRol, this::cargarSeleccion);
+        this.txtRolID.setEditable(false);
+        this.txtRolID.setToolTipText("El código se asigna automáticamente al grabar");
+        this.txtDescripcionRol.setToolTipText("Máximo " + LONGITUD_MAXIMA + " caracteres");
+        this.busqueda = new BusquedaDiferida(this.txtBuscarRol, this::buscar);
+        this.getRootPane().setDefaultButton(this.btnGrabar);
+        this.buscar("");
+        this.limpia();
     }
-    
-    private void llenaTblRol(boolean valida, String cadena){
-    
-        List<Rol> listaRol;
-        
-        this.txtRolID.setText(Integer.toString(u.idNext("Rol", "rolID")));
-        
-        listaRol = rolDao.listaRol(valida, cadena);
-        dtmRol.setRowCount(0);
-        
-        for(int i=0;i<listaRol.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaRol.get(i).getRolID());
-            vector.addElement(listaRol.get(i).getDescripRol());
-            
-            dtmRol.addRow(vector);
+
+    private void buscar(String texto) {
+        registros = dao.listaRol(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblRol);
+        for (Rol r : registros) {
+            modelo.addRow(new Object[] {r.getRolID(), r.getDescripRol()});
         }
-    
     }
 
     @SuppressWarnings("unchecked")
@@ -203,96 +202,87 @@ public class FrmRol extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarRolKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarRolKeyReleased
-        
-        if(this.txtBuscarRol.getText().isEmpty()){
-            this.llenaTblRol(false, "");
-        }else{
-            this.llenaTblRol(true, this.txtBuscarRol.getText());
-        }
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtBuscarRolKeyReleased
 
     private void tblRolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRolMouseClicked
-        
-        int idx = this.tblRol.getSelectedRow();
-        
-        this.txtRolID.setText(this.dtmRol.getValueAt(idx, 0).toString());
-        this.txtDescripcionRol.setText(this.dtmRol.getValueAt(idx, 1).toString());
-        
-        this.btnGrabar.setText("Actualizar");
+        this.cargarSeleccion();
     }//GEN-LAST:event_tblRolMouseClicked
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        
         this.dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        
-        Rol rol = new Rol();
-        if(this.valida() == true){
-            
-            if(this.btnGrabar.getText().equals("Grabar")){
-            
-                rol.setRolID(Integer.parseInt(this.txtRolID.getText()));
-                rol.setDescripRol(this.txtDescripcionRol.getText());
-                
-                this.rolDao.insertaRol(rol);
-                this.limpia();
-                this.llenaTblRol(false, "");
-            }else{
-            
-                rol.setRolID(Integer.parseInt(this.txtRolID.getText()));
-                rol.setDescripRol(this.txtDescripcionRol.getText());
-                
-                this.rolDao.actualizarRol(rol);
-                this.limpia();
-                this.llenaTblRol(false, "");
-            }
-        
-        }
-        
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        
-        this.limpia();
-        this.llenaTblRol(false, "");
-    }//GEN-LAST:event_btnLimpiarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        
-        Rol rol = new Rol();
-        rol.setRolID(Integer.parseInt(this.txtRolID.getText()));
-        this.rolDao.eliminarRol(rol);
-        this.limpia();
-        this.llenaTblRol(false, "");
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private boolean valida(){
-    
-        if (this.txtRolID.getText().isEmpty() && this.txtDescripcionRol.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta llenar campos...");
-        }else if(this.txtRolID.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Falta llenar rol ID...");
-        }else if(this.txtDescripcionRol.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Falta llenar Descripción...");
-        }else {
-            return true;
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        this.limpia();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void grabar() {
+        String descripcion = this.txtDescripcionRol.getText().trim();
+        if (descripcion.isEmpty()) {
+            Dialogos.aviso(this, "Falta indicar la descripción.");
+            this.txtDescripcionRol.requestFocusInWindow();
+            return;
         }
-        
-        return false;
-    
+        if (descripcion.length() > LONGITUD_MAXIMA) {
+            Dialogos.aviso(this, "La descripción admite como máximo " + LONGITUD_MAXIMA + " caracteres.");
+            this.txtDescripcionRol.requestFocusInWindow();
+            return;
+        }
+        Rol registro = new Rol();
+        registro.setDescripRol(descripcion);
+        if (seleccionado == null) {
+            dao.insertaRol(registro);
+            Dialogos.info(this, "Rol registrado con el código " + registro.getRolID() + ".");
+        } else {
+            registro.setRolID(seleccionado.getRolID());
+            dao.actualizarRol(registro);
+            Dialogos.info(this, "Rol actualizado.");
+        }
+        this.buscar(this.txtBuscarRol.getText().trim());
+        this.limpia();
     }
-    
-    private void limpia(){
-    
+
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla el registro que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar \"" + seleccionado.getDescripRol() + "\"?")) {
+            return;
+        }
+        dao.eliminarRol(seleccionado);
+        this.buscar(this.txtBuscarRol.getText().trim());
+        this.limpia();
+    }
+
+    private void cargarSeleccion() {
+        int fila = Tablas.filaSeleccionada(this.tblRol);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = registros.get(fila);
+        this.txtRolID.setText(String.valueOf(seleccionado.getRolID()));
+        this.txtDescripcionRol.setText(seleccionado.getDescripRol());
+        this.btnGrabar.setText("Actualizar");
+    }
+
+    private void limpia() {
+        seleccionado = null;
+        this.tblRol.clearSelection();
+        this.txtRolID.setText(String.valueOf(dao.siguienteId()));
         this.txtDescripcionRol.setText("");
-        
         this.btnGrabar.setText("Grabar");
+        this.txtDescripcionRol.requestFocusInWindow();
     }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
