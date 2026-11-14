@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+import restaurante.ui.util.Dialogos;
+
 import restaurante.util.DbBean;
 import javax.swing.JOptionPane;
 
@@ -95,6 +97,8 @@ public class Entrada extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Entrada.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+
+        Dialogos.instalarManejadorGlobal();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

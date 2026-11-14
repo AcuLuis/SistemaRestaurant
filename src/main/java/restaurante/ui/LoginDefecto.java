@@ -1,6 +1,8 @@
 
 package restaurante.ui;
 
+import restaurante.seguridad.Contrasenas;
+
 import restaurante.modelo.*;
 import restaurante.dao.*;
 import restaurante.util.*;
@@ -84,7 +86,7 @@ public class LoginDefecto extends javax.swing.JFrame {
             usuario.setUsuarioID(101);
             usuario.setIdLocalR(Integer.parseInt(this.txtIDLOCALDEFECTO.getText()));
             usuario.setUsuario(this.txtNOMBREUSERDEFECTO.getText());
-            usuario.setContraseña(this.txtCONTRADEFECTO.getText());
+            usuario.setContraseña(Contrasenas.hash(this.txtCONTRADEFECTO.getPassword()));
             usuario.setTipUsuaruario(1);
             usuario.setEmpleadoID(1001);
             
@@ -105,7 +107,7 @@ public class LoginDefecto extends javax.swing.JFrame {
     public boolean valida(){
     
         if(this.txtIDLOCALDEFECTO.getText().isEmpty() && this.txtNOMBREUSERDEFECTO.getText().isEmpty() && 
-           this.txtCONTRADEFECTO.getText().isEmpty() && 
+           this.txtCONTRADEFECTO.getPassword().length == 0 && 
            this.txtAPELLIDOS.getText().isEmpty() && this.txtNACIMIENTO.getText().isEmpty() &&
            this.cmbGenero.getSelectedItem().toString().isEmpty() && this.txtDNI.getText().isEmpty() &&
            this.cmbEstadoCivil.getSelectedItem().toString().isEmpty() && this.txtUBICACION.getText().isEmpty() &&
@@ -117,9 +119,8 @@ public class LoginDefecto extends javax.swing.JFrame {
         }else if(this.txtNOMBREUSERDEFECTO.getText().isEmpty()){
         
             JOptionPane.showMessageDialog(null, "Falta el NOMBRE USUARIO...");
-        }else if(this.txtCONTRADEFECTO.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta la CONTRASEÑA...");
+        }else if(Contrasenas.validarNueva(this.txtCONTRADEFECTO.getPassword()) != null){
+            JOptionPane.showMessageDialog(this, Contrasenas.validarNueva(this.txtCONTRADEFECTO.getPassword()));
         }else  if(this.txtAPELLIDOS.getText().isEmpty()){
         
             JOptionPane.showMessageDialog(null, "Falta el APELLIDO...");
@@ -441,7 +442,7 @@ public class LoginDefecto extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtIDLOCALDEFECTO = new javax.swing.JTextField();
         txtNOMBREUSERDEFECTO = new javax.swing.JTextField();
-        txtCONTRADEFECTO = new javax.swing.JTextField();
+        txtCONTRADEFECTO = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -713,7 +714,7 @@ public class LoginDefecto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField txtAPELLIDOS;
     private javax.swing.JTextField txtCAPACIDAD;
-    private javax.swing.JTextField txtCONTRADEFECTO;
+    private javax.swing.JPasswordField txtCONTRADEFECTO;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtIDLOCALDEFECTO;
     private javax.swing.JTextField txtNACIMIENTO;

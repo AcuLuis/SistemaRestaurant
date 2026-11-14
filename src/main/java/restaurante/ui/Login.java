@@ -1,6 +1,11 @@
 
 package restaurante.ui;
 
+import java.util.Arrays;
+import java.util.Optional;
+import restaurante.seguridad.Sesion;
+import restaurante.ui.util.Dialogos;
+
 import restaurante.modelo.*;
 import restaurante.dao.*;
 import java.sql.ResultSet;
@@ -11,7 +16,6 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
     
     UsuarioDao usuarioDao = new UsuarioDao();
-    Usuario user = new Usuario();
     public Login() {
         
         initComponents();
@@ -195,41 +199,34 @@ public class Login extends javax.swing.JFrame {
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         
 
-            if(valida() == true){
-                String Pass = new String(this.passContraseña.getPassword());
-                if(usuarioDao.consultaLogin(this.txtUsuario.getText(), Pass, this.txtIdLocal.getText())){
-                    
-                    if(usuarioDao.confirmaUsuario(this.txtUsuario.getText(), Pass, this.txtIdLocal.getText()) ==1){
-                        //admin
-                        int n=1;
-                        MdiEscritorio mdi = new MdiEscritorio(n);
-                        mdi.setVisible(true);
-                        dispose();                         
-                    }else if (usuarioDao.confirmaUsuario(this.txtUsuario.getText(), Pass, this.txtIdLocal.getText()) ==2){
-                        //mantenimiento
-                        int n=2;
-                        MdiEscritorio mdi = new MdiEscritorio(n);
-                        mdi.setVisible(true);
-                        dispose(); 
-                    }else if(usuarioDao.confirmaUsuario(this.txtUsuario.getText(), Pass, this.txtIdLocal.getText()) ==3){
-                        //reportes
-                        int n=3;
-                        MdiEscritorio mdi = new MdiEscritorio(n);
-                        mdi.setVisible(true);
-                        dispose(); 
-                    }else{
-                        //transacciones
-                        int n=4;
-                        MdiEscritorio mdi = new MdiEscritorio(n);
-                        mdi.setVisible(true);
-                        dispose(); 
-                    }
-                    
-                }else{
-
-                    JOptionPane.showMessageDialog(null, "ID LOCAL/USUARIO/CONTRASEÑA --> INCORRECTOS");
-                }  
-            } 
+            if(!valida()){
+                return;
+            }
+            int idLocal;
+            try{
+                idLocal = Integer.parseInt(this.txtIdLocal.getText().trim());
+            }catch(NumberFormatException e){
+                Dialogos.aviso(this, "El ID del local debe ser un número.");
+                this.txtIdLocal.requestFocusInWindow();
+                return;
+            }
+            char[] contrasena = this.passContraseña.getPassword();
+            Optional<Sesion> sesion;
+            try{
+                sesion = usuarioDao.autenticar(this.txtUsuario.getText().trim(), contrasena, idLocal);
+            }finally{
+                Arrays.fill(contrasena, '\0');
+            }
+            if(sesion.isPresent()){
+                Sesion.iniciar(sesion.get());
+                MdiEscritorio mdi = new MdiEscritorio(sesion.get().getTipo().getCodigo());
+                mdi.setVisible(true);
+                dispose();
+            }else{
+                this.passContraseña.setText("");
+                Dialogos.aviso(this, "ID de local, usuario o contraseña incorrectos.");
+                this.passContraseña.requestFocusInWindow();
+            }
     }//GEN-LAST:event_btnEntrarActionPerformed
     
     

@@ -1,6 +1,10 @@
 
 package restaurante.ui;
 
+import java.util.Arrays;
+import restaurante.seguridad.Contrasenas;
+import restaurante.ui.util.Dialogos;
+
 
 import java.util.List;
 import restaurante.modelo.Empleado;
@@ -128,7 +132,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        txtPassWord = new javax.swing.JTextField();
+        txtPassWord = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuario = new javax.swing.JTable();
 
@@ -460,7 +464,6 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
                 user.setUsuarioID(Integer.parseInt(this.txtUsuarioId.getText()));
                 user.setIdLocalR(Integer.parseInt(this.txtIdLocal.getText()));
                 user.setUsuario(this.txtUsuario.getText());
-                user.setContraseña(this.txtPassWord.getText());
                 if(this.cmbTipoUsuario.getSelectedItem().equals("Administrador")){
                     user.setTipUsuaruario(1);
                 }else if(this.cmbTipoUsuario.getSelectedItem().equals("Mantenimiento")){
@@ -472,7 +475,15 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
                 }
                 user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
                 
-                this.uDao.insertaUsuario(user);
+                char[] contrasena = this.txtPassWord.getPassword();
+                String errorContrasena = Contrasenas.validarNueva(contrasena);
+                if(errorContrasena != null){
+                    Dialogos.aviso(this, errorContrasena);
+                    this.txtPassWord.requestFocusInWindow();
+                    return;
+                }
+                this.uDao.insertaUsuario(user, contrasena);
+                Arrays.fill(contrasena, '\0');
                 this.limpiar();
                 this.llenaTblUsuario(false, "");
                 this.llenaTblEmpleado(false, "");
@@ -494,7 +505,20 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
                 }
                 user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
                 
+                char[] nueva = this.txtPassWord.getPassword();
+                if(nueva.length > 0){
+                    String errorContrasena = Contrasenas.validarNueva(nueva);
+                    if(errorContrasena != null){
+                        Dialogos.aviso(this, errorContrasena);
+                        this.txtPassWord.requestFocusInWindow();
+                        return;
+                    }
+                }
                 this.uDao.actualizarUsuario(user);
+                if(nueva.length > 0){
+                    this.uDao.cambiarContrasena(user.getUsuarioID(), nueva);
+                    Arrays.fill(nueva, '\0');
+                }
                 this.llenaTblUsuario(false, "");
                 this.limpiar();
                 
@@ -517,7 +541,8 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         this.txtUsuario.setText(this.dtmUsuario.getValueAt(idx, 2).toString());
         this.cmbTipoUsuario.setSelectedItem(this.dtmUsuario.getValueAt(idx, 3).toString());
         this.txtEmpleadoID.setText(this.dtmUsuario.getValueAt(idx, 4).toString());
-        this.txtPassWord.setEnabled(false);
+        this.txtPassWord.setText("");
+        this.txtPassWord.setToolTipText("Déjela vacía para conservar la contraseña actual");
         this.panel1.setEnabledAt(0, false);
     }//GEN-LAST:event_tblUsuarioMouseClicked
 
@@ -561,7 +586,8 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
         this.panel1.setEnabledAt(1, false);
         this.panel1.setEnabledAt(0, true);
         this.btnGrabar.setText("Grabar");
-        this.txtPassWord.setEnabled(true);
+        this.txtPassWord.setText("");
+        this.txtPassWord.setToolTipText(null);
     }
     
     
@@ -592,7 +618,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtBuscarUsuario;
     private javax.swing.JTextField txtEmpleadoID;
     private javax.swing.JTextField txtIdLocal;
-    private javax.swing.JTextField txtPassWord;
+    private javax.swing.JPasswordField txtPassWord;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txtUsuarioId;
     // End of variables declaration//GEN-END:variables

@@ -371,7 +371,7 @@
                 <Property name="text" type="java.lang.String" value="Contrase&#xf1;a"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtPassWord">
+            <Component class="javax.swing.JPasswordField" name="txtPassWord">
             </Component>
           </SubComponents>
         </Container>
