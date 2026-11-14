@@ -38,9 +38,9 @@ public class FrmContratoPorFechas extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Fecha de Finalización");
 
-        jLabel4.setText("Fechas: año - mes - dia");
+        jLabel4.setText("Formato de fecha: aaaa-mm-dd");
 
-        btnReporte.setText("Producir Reporte");
+        btnReporte.setText("Generar reporte");
         btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReporteActionPerformed(evt);
@@ -48,7 +48,7 @@ public class FrmContratoPorFechas extends javax.swing.JInternalFrame {
         });
 
         btnCerrar.setBackground(new java.awt.Color(51, 51, 51));
-        btnCerrar.setText("CERRAR");
+        btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarActionPerformed(evt);

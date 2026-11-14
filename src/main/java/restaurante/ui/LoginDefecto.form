@@ -253,7 +253,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Genero"/>
+        <Property name="text" type="java.lang.String" value="G&#xe9;nero"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
@@ -278,7 +278,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel13">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Capacidad max"/>
+        <Property name="text" type="java.lang.String" value="Capacidad m&#xe1;x."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtAPELLIDOS">
@@ -298,7 +298,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel17">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ubicacion"/>
+        <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtUBICACION">

@@ -70,7 +70,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Área_ID", "Descripción"
+                "Código", "Descripción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -96,7 +96,7 @@ public class FrmArea extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel3.setText("Área ID");
+        jLabel3.setText("Código");
 
         txtAreaID.setEnabled(false);
 

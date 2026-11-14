@@ -119,8 +119,8 @@
         <Container class="javax.swing.JPanel" name="panelEmpleado">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="BuscaEmpleado">
-                <Property name="tabTitle" type="java.lang.String" value="BuscaEmpleado"/>
+              <JTabbedPaneConstraints tabName="Empleados sin usuario">
+                <Property name="tabTitle" type="java.lang.String" value="Empleados sin usuario"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -169,10 +169,10 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="0">
-                        <Column editable="true" title="EmpleadoID" type="java.lang.Object"/>
+                        <Column editable="true" title="Empleado" type="java.lang.Object"/>
                         <Column editable="true" title="Nombres" type="java.lang.Object"/>
                         <Column editable="true" title="Apellidos" type="java.lang.Object"/>
-                        <Column editable="true" title="Dni" type="java.lang.Object"/>
+                        <Column editable="true" title="DNI" type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>
@@ -292,7 +292,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="usuarioID"/>
+                <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtUsuarioId">
@@ -302,7 +302,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="idLocal"/>
+                <Property name="text" type="java.lang.String" value="Local"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtIdLocal">
@@ -312,7 +312,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="usuario"/>
+                <Property name="text" type="java.lang.String" value="Usuario"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtUsuario">
@@ -334,7 +334,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
-                <Property name="text" type="java.lang.String" value="empleadoID"/>
+                <Property name="text" type="java.lang.String" value="Empleado"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtEmpleadoID">
@@ -388,11 +388,11 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="0">
-                <Column editable="false" title="UsuarioID" type="java.lang.Object"/>
-                <Column editable="false" title="IdLocal" type="java.lang.Object"/>
+                <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
+                <Column editable="false" title="Local" type="java.lang.Object"/>
                 <Column editable="false" title="Usuario" type="java.lang.Object"/>
-                <Column editable="false" title="TipoUsuario" type="java.lang.Object"/>
-                <Column editable="false" title="EmpleadoID" type="java.lang.Object"/>
+                <Column editable="false" title="Tipo de usuario" type="java.lang.Object"/>
+                <Column editable="false" title="Empleado" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>

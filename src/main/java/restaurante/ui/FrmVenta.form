@@ -74,7 +74,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="24" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Registro Venta"/>
+        <Property name="text" type="java.lang.String" value="Registro de venta"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
@@ -84,8 +84,8 @@
         <Container class="javax.swing.JPanel" name="jPanel1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Buscar Ventas">
-                <Property name="tabTitle" type="java.lang.String" value="Buscar Ventas"/>
+              <JTabbedPaneConstraints tabName="Historial de ventas">
+                <Property name="tabTitle" type="java.lang.String" value="Historial de ventas"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -183,7 +183,7 @@
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="4" rowCount="0">
-                            <Column editable="false" title="Codigo" type="java.lang.Object"/>
+                            <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
                             <Column editable="false" title="Nombre" type="java.lang.Object"/>
                             <Column editable="false" title="Apellidos" type="java.lang.Object"/>
                             <Column editable="false" title="Estado" type="java.lang.Object"/>
@@ -202,7 +202,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Compras Cliente"/>
+                    <TitledBorder title="Compras del cliente"/>
                   </Border>
                 </Property>
               </Properties>
@@ -239,12 +239,12 @@
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="6" rowCount="0">
-                            <Column editable="false" title="IdVenta" type="java.lang.Object"/>
-                            <Column editable="false" title="IdCliente" type="java.lang.Object"/>
+                            <Column editable="false" title="N.&#xba; venta" type="java.lang.Object"/>
+                            <Column editable="false" title="Cliente" type="java.lang.Object"/>
                             <Column editable="false" title="Mesa" type="java.lang.Object"/>
                             <Column editable="false" title="Fecha" type="java.lang.Object"/>
-                            <Column editable="false" title="Metodo Pago" type="java.lang.Object"/>
-                            <Column editable="false" title="Tipo Entrega" type="java.lang.Object"/>
+                            <Column editable="false" title="M&#xe9;todo de pago" type="java.lang.Object"/>
+                            <Column editable="false" title="Tipo de entrega" type="java.lang.Object"/>
                           </Table>
                         </Property>
                       </Properties>
@@ -260,7 +260,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Detalle Compras"/>
+                    <TitledBorder title="Detalle de la compra"/>
                   </Border>
                 </Property>
               </Properties>
@@ -297,8 +297,8 @@
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="4" rowCount="0">
-                            <Column editable="false" title="IdProducto" type="java.lang.Object"/>
-                            <Column editable="false" title="Descripcion" type="java.lang.Object"/>
+                            <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
+                            <Column editable="false" title="Descripci&#xf3;n" type="java.lang.Object"/>
                             <Column editable="false" title="Tipo" type="java.lang.Object"/>
                             <Column editable="false" title="Precio" type="java.lang.Object"/>
                           </Table>
@@ -379,7 +379,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Tipo Entrega"/>
+                <Property name="text" type="java.lang.String" value="Tipo de entrega"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbtnDelivery">
@@ -406,14 +406,14 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="buttonGroup1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Comer en Local"/>
+                <Property name="text" type="java.lang.String" value="Comer en el local"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel3">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Datos Cliente"/>
+                    <TitledBorder title="Datos del cliente"/>
                   </Border>
                 </Property>
               </Properties>
@@ -568,7 +568,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="IdCliente:"/>
+                    <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNombreClie">
@@ -591,7 +591,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarCliente">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Buscar Cliente"/>
+                    <Property name="text" type="java.lang.String" value="Buscar cliente"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarClienteActionPerformed"/>
@@ -599,17 +599,14 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Direccion:"/>
+                    <Property name="text" type="java.lang.String" value="Direcci&#xf3;n:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDireccionClie">
-                  <Properties>
-                    <Property name="enabled" type="boolean" value="false"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Telefono:"/>
+                    <Property name="text" type="java.lang.String" value="Tel&#xe9;fono:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtTelefonoClie">
@@ -634,7 +631,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel14">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Metodo pago:"/>
+                    <Property name="text" type="java.lang.String" value="M&#xe9;todo de pago:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmbMetodoPago">
@@ -649,7 +646,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnCrearCliente">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Crear Nuevo Cliente"/>
+                    <Property name="text" type="java.lang.String" value="Nuevo cliente"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearClienteActionPerformed"/>
@@ -774,12 +771,12 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="IdProducto:"/>
+                    <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Descripcion:"/>
+                    <Property name="text" type="java.lang.String" value="Descripci&#xf3;n:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
@@ -827,7 +824,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarProducto">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Buscar Producto"/>
+                    <Property name="text" type="java.lang.String" value="Buscar producto"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProductoActionPerformed"/>
@@ -835,7 +832,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnAgregarProducto">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Agregar Producto"/>
+                    <Property name="text" type="java.lang.String" value="Agregar producto"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarProductoActionPerformed"/>
@@ -891,8 +888,8 @@
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="5" rowCount="0">
-                                <Column editable="false" title="IdProducto" type="java.lang.Object"/>
-                                <Column editable="false" title="Descripcion" type="java.lang.Object"/>
+                                <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
+                                <Column editable="false" title="Descripci&#xf3;n" type="java.lang.Object"/>
                                 <Column editable="false" title="Tipo" type="java.lang.Object"/>
                                 <Column editable="false" title="Precio" type="java.lang.Object"/>
                                 <Column editable="false" title="Cantidad" type="java.lang.Object"/>

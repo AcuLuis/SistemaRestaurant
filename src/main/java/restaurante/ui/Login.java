@@ -1,25 +1,56 @@
-
 package restaurante.ui;
 
+import java.awt.Cursor;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingWorker;
+import restaurante.dao.LocalDao;
+import restaurante.dao.UsuarioDao;
+import restaurante.datos.DatosException;
+import restaurante.modelo.LocalR;
 import restaurante.seguridad.Sesion;
 import restaurante.ui.util.Dialogos;
 
-import restaurante.modelo.*;
-import restaurante.dao.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Vector;
-import javax.swing.JOptionPane;
-
+/**
+ * Inicio de sesión.
+ */
 public class Login extends javax.swing.JFrame {
-    
-    UsuarioDao usuarioDao = new UsuarioDao();
+
+    private static final Logger LOG = Logger.getLogger(Login.class.getName());
+
+    private final UsuarioDao usuarioDao = new UsuarioDao();
+
     public Login() {
-        
         initComponents();
-        this.setLocationRelativeTo(null); // posicion
+        this.setTitle("Iniciar sesión - Sistema Restaurant");
+        this.setLocationRelativeTo(null);
+        this.getRootPane().setDefaultButton(this.btnEntrar);
+        this.txtIdLocal.setToolTipText("Código del local al que pertenece su usuario");
+        this.precargarLocal();
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                (txtIdLocal.getText().isEmpty() ? txtIdLocal : txtUsuario).requestFocusInWindow();
+            }
+        });
+    }
+
+    /** Si solo hay un local registrado, se rellena su código para ahorrar un paso. */
+    private void precargarLocal() {
+        try {
+            List<LocalR> locales = new LocalDao().listaLocal();
+            if (locales.size() == 1) {
+                this.txtIdLocal.setText(String.valueOf(locales.get(0).getIdLocalR()));
+            }
+        } catch (DatosException e) {
+            LOG.log(Level.WARNING, "No se pudieron cargar los locales", e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -189,122 +220,93 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
-
+        this.passContraseña.requestFocusInWindow();
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_btnCerrarActionPerformed
- 
-    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        
 
-            if(!valida()){
-                return;
-            }
-            int idLocal;
-            try{
-                idLocal = Integer.parseInt(this.txtIdLocal.getText().trim());
-            }catch(NumberFormatException e){
-                Dialogos.aviso(this, "El ID del local debe ser un número.");
-                this.txtIdLocal.requestFocusInWindow();
-                return;
-            }
-            char[] contrasena = this.passContraseña.getPassword();
-            Optional<Sesion> sesion;
-            try{
-                sesion = usuarioDao.autenticar(this.txtUsuario.getText().trim(), contrasena, idLocal);
-            }finally{
-                Arrays.fill(contrasena, '\0');
-            }
-            if(sesion.isPresent()){
-                Sesion.iniciar(sesion.get());
-                MdiEscritorio mdi = new MdiEscritorio(sesion.get().getTipo().getCodigo());
-                mdi.setVisible(true);
-                dispose();
-            }else{
-                this.passContraseña.setText("");
-                Dialogos.aviso(this, "ID de local, usuario o contraseña incorrectos.");
-                this.passContraseña.requestFocusInWindow();
-            }
+    private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
+        this.entrar();
     }//GEN-LAST:event_btnEntrarActionPerformed
-    
-    
+
     private void txtIdLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdLocalActionPerformed
-        // TODO add your handling code here:
+        this.txtUsuario.requestFocusInWindow();
     }//GEN-LAST:event_txtIdLocalActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         this.limpia();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    public boolean valida(){
-        
-        String Pass = new String(this.passContraseña.getPassword());
-    
-        if (this.txtIdLocal.getText().isEmpty() && this.txtUsuario.getText().isEmpty() && Pass.isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR TODOS LOS DATOS...");
-        }else if(this.txtIdLocal.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR EL IDLOCAL...");
-        }else if(this.txtUsuario.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR EL USUARIO...");
-        }else if(Pass.isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LA CONTRASEÑA...");
-        }else{
-        
-            return true;
+    private void entrar() {
+        if (!valida()) {
+            return;
         }
-    
-        return false;
-    }
-    
-    private void limpia(){
-    
-        this.txtIdLocal.setText("");
-        this.txtUsuario.setText("");
-        this.passContraseña.setText("");
-    
-    }
-    
-    
-    
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        int idLocal;
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            idLocal = Integer.parseInt(this.txtIdLocal.getText().trim());
+        } catch (NumberFormatException e) {
+            Dialogos.aviso(this, "El ID del local debe ser un número.");
+            this.txtIdLocal.requestFocusInWindow();
+            return;
+        }
+        String usuario = this.txtUsuario.getText().trim();
+        char[] contrasena = this.passContraseña.getPassword();
+        this.btnEntrar.setEnabled(false);
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        new SwingWorker<Optional<Sesion>, Void>() {
+            @Override
+            protected Optional<Sesion> doInBackground() {
+                return usuarioDao.autenticar(usuario, contrasena, idLocal);
+            }
+
+            @Override
+            protected void done() {
+                Arrays.fill(contrasena, '\0');
+                setCursor(Cursor.getDefaultCursor());
+                btnEntrar.setEnabled(true);
+                try {
+                    Optional<Sesion> sesion = get();
+                    if (sesion.isPresent()) {
+                        Sesion.iniciar(sesion.get());
+                        new MdiEscritorio().setVisible(true);
+                        dispose();
+                    } else {
+                        passContraseña.setText("");
+                        Dialogos.aviso(Login.this, "ID de local, usuario o contraseña incorrectos.");
+                        passContraseña.requestFocusInWindow();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    Dialogos.error(Login.this, e.getCause());
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        }.execute();
+    }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-            
-                    new Login().setVisible(true);
-                
-            }
-        });
+    public boolean valida() {
+        if (this.txtIdLocal.getText().trim().isEmpty()) {
+            Dialogos.aviso(this, "Indique el ID del local.");
+            this.txtIdLocal.requestFocusInWindow();
+        } else if (this.txtUsuario.getText().trim().isEmpty()) {
+            Dialogos.aviso(this, "Indique el usuario.");
+            this.txtUsuario.requestFocusInWindow();
+        } else if (this.passContraseña.getPassword().length == 0) {
+            Dialogos.aviso(this, "Indique la contraseña.");
+            this.passContraseña.requestFocusInWindow();
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    private void limpia() {
+        this.txtUsuario.setText("");
+        this.passContraseña.setText("");
+        this.txtUsuario.requestFocusInWindow();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

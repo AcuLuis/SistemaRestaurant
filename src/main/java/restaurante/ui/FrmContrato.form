@@ -95,12 +95,12 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="8" rowCount="0">
-                <Column editable="false" title="ContratoID" type="java.lang.Object"/>
-                <Column editable="false" title="EmpleadoID" type="java.lang.Object"/>
+                <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
+                <Column editable="false" title="Empleado" type="java.lang.Object"/>
                 <Column editable="false" title="Rol" type="java.lang.Object"/>
-                <Column editable="false" title="Area" type="java.lang.Object"/>
-                <Column editable="false" title="FechaInicio" type="java.lang.Object"/>
-                <Column editable="false" title="FechaFin" type="java.lang.Object"/>
+                <Column editable="false" title="&#xc1;rea" type="java.lang.Object"/>
+                <Column editable="false" title="Inicio" type="java.lang.Object"/>
+                <Column editable="false" title="Fin" type="java.lang.Object"/>
                 <Column editable="false" title="Estado" type="java.lang.Object"/>
                 <Column editable="false" title="Sueldo" type="java.lang.Object"/>
               </Table>
@@ -136,8 +136,8 @@
         <Container class="javax.swing.JPanel" name="panelEmpleadoGeneral">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Empleados General">
-                <Property name="tabTitle" type="java.lang.String" value="Empleados General"/>
+              <JTabbedPaneConstraints tabName="Todos los empleados">
+                <Property name="tabTitle" type="java.lang.String" value="Todos los empleados"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -189,13 +189,13 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="0">
-                        <Column editable="false" title="EmpleadoID" type="java.lang.Object"/>
+                        <Column editable="false" title="Empleado" type="java.lang.Object"/>
                         <Column editable="false" title="Nombres" type="java.lang.Object"/>
                         <Column editable="false" title="Apellidos" type="java.lang.Object"/>
-                        <Column editable="false" title="FechaNacimiento" type="java.lang.Object"/>
-                        <Column editable="false" title="Genero" type="java.lang.Object"/>
+                        <Column editable="false" title="Nacimiento" type="java.lang.Object"/>
+                        <Column editable="false" title="G&#xe9;nero" type="java.lang.Object"/>
                         <Column editable="false" title="DNI" type="java.lang.Object"/>
-                        <Column editable="false" title="EstadoCivil" type="java.lang.Object"/>
+                        <Column editable="false" title="Estado civil" type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>
@@ -217,8 +217,8 @@
         <Container class="javax.swing.JPanel" name="panelEmpleadoSinContrato">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Buscar Empleado Sin Contrato">
-                <Property name="tabTitle" type="java.lang.String" value="Buscar Empleado Sin Contrato"/>
+              <JTabbedPaneConstraints tabName="Empleados sin contrato">
+                <Property name="tabTitle" type="java.lang.String" value="Empleados sin contrato"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -280,13 +280,13 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="0">
-                        <Column editable="false" title="EmpleadoID" type="java.lang.Object"/>
+                        <Column editable="false" title="Empleado" type="java.lang.Object"/>
                         <Column editable="false" title="Nombres" type="java.lang.Object"/>
                         <Column editable="false" title="Apellidos" type="java.lang.Object"/>
-                        <Column editable="false" title="FechaNacimiento" type="java.lang.Object"/>
-                        <Column editable="false" title="Genero" type="java.lang.Object"/>
+                        <Column editable="false" title="Nacimiento" type="java.lang.Object"/>
+                        <Column editable="false" title="G&#xe9;nero" type="java.lang.Object"/>
                         <Column editable="false" title="DNI" type="java.lang.Object"/>
-                        <Column editable="false" title="EstadoCivil" type="java.lang.Object"/>
+                        <Column editable="false" title="Estado civil" type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>
@@ -471,7 +471,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EmpleadoID"/>
+                <Property name="text" type="java.lang.String" value="Empleado"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
@@ -481,7 +481,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Area"/>
+                <Property name="text" type="java.lang.String" value="&#xc1;rea"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtEmpleadoID">
@@ -517,7 +517,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
-                <Property name="text" type="java.lang.String" value="ContratoID"/>
+                <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtContratoID">
@@ -554,7 +554,7 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="33" red="33" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="CERRAR"/>
+        <Property name="text" type="java.lang.String" value="Cerrar"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCerrarActionPerformed"/>

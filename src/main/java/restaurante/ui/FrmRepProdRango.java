@@ -27,7 +27,7 @@ public class FrmRepProdRango extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Hasta");
 
-        btnReportar.setText("Reportar");
+        btnReportar.setText("Generar reporte");
         btnReportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReportarActionPerformed(evt);
@@ -38,7 +38,7 @@ public class FrmRepProdRango extends javax.swing.JInternalFrame {
         jLabel3.setText("REPORTE DE PRODUCTOS POR RANGO");
         jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        btnCerrar.setText("cerrar");
+        btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarActionPerformed(evt);

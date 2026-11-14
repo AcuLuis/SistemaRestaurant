@@ -34,7 +34,7 @@ public class FrmInsumoPorPrecioUnitario extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Hasta");
 
-        btnReporte.setText("Producir Reporte");
+        btnReporte.setText("Generar reporte");
         btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReporteActionPerformed(evt);
@@ -42,7 +42,7 @@ public class FrmInsumoPorPrecioUnitario extends javax.swing.JInternalFrame {
         });
 
         btnCerrar.setBackground(new java.awt.Color(51, 51, 51));
-        btnCerrar.setText("cerrar");
+        btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarActionPerformed(evt);

@@ -84,7 +84,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnReportar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Reportar"/>
+        <Property name="text" type="java.lang.String" value="Generar reporte"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReportarActionPerformed"/>
@@ -105,7 +105,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnCerrar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="cerrar"/>
+        <Property name="text" type="java.lang.String" value="Cerrar"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCerrarActionPerformed"/>

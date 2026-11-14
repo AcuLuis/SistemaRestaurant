@@ -84,7 +84,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "InsumoID", "IdTipoInsumo", "UnidadMedida", "Descripcion", "PrecioxUnidad", "Cantidad"
+                "Código", "Tipo", "Unidad", "Descripción", "Precio", "Cantidad"
             }
         ));
         jScrollPane1.setViewportView(tblInsumos);
@@ -94,7 +94,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ProductoID", "IdTipoProducto", "Descripcion", "PrecioxUnidad", "Cantidad"
+                "Código", "Tipo", "Descripción", "Precio", "Cantidad"
             }
         ));
         jScrollPane2.setViewportView(tblProductos);
@@ -171,7 +171,7 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("ControlInventarios", jPanel1);
+        jTabbedPane1.addTab("Control de inventario", jPanel1);
 
         jButton1.setBackground(new java.awt.Color(51, 51, 51));
         jButton1.setText("Cerrar");

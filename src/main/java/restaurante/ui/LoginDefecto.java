@@ -1,4 +1,3 @@
-
 package restaurante.ui;
 
 import java.awt.Cursor;
@@ -206,7 +205,7 @@ public class LoginDefecto extends javax.swing.JFrame {
 
         jLabel7.setText("Fecha de Nacimiento");
 
-        jLabel8.setText("Genero");
+        jLabel8.setText("Género");
 
         jLabel9.setText("DNI");
 
@@ -216,11 +215,11 @@ public class LoginDefecto extends javax.swing.JFrame {
 
         jLabel12.setText("LOCAL:");
 
-        jLabel13.setText("Capacidad max");
+        jLabel13.setText("Capacidad máx.");
 
         jLabel14.setText("Pisos");
 
-        jLabel17.setText("Ubicacion");
+        jLabel17.setText("Ubicación");
 
         btnGrabar.setText("Grabar");
         btnGrabar.addActionListener(new java.awt.event.ActionListener() {
@@ -376,45 +375,12 @@ public class LoginDefecto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtIDLOCALDEFECTOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDLOCALDEFECTOActionPerformed
-        // TODO add your handling code here:
+        this.txtNOMBREUSERDEFECTO.requestFocusInWindow();
     }//GEN-LAST:event_txtIDLOCALDEFECTOActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        
         this.crearBD();
     }//GEN-LAST:event_btnGrabarActionPerformed
-
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginDefecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginDefecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginDefecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginDefecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginDefecto().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGrabar;

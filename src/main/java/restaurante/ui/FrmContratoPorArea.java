@@ -52,7 +52,7 @@ public class FrmContratoPorArea extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Área");
 
-        btnReporte.setText("Producir Reporte");
+        btnReporte.setText("Generar reporte");
         btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReporteActionPerformed(evt);

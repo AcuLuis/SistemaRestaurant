@@ -110,12 +110,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Fechas: a&#xf1;o - mes - dia"/>
+        <Property name="text" type="java.lang.String" value="Formato de fecha: aaaa-mm-dd"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnReporte">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Producir Reporte"/>
+        <Property name="text" type="java.lang.String" value="Generar reporte"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReporteActionPerformed"/>
@@ -126,7 +126,7 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="33" red="33" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="CERRAR"/>
+        <Property name="text" type="java.lang.String" value="Cerrar"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCerrarActionPerformed"/>

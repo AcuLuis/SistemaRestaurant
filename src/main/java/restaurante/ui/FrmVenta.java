@@ -212,7 +212,7 @@ public class FrmVenta extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("Registro Venta");
+        jLabel1.setText("Registro de venta");
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
 
@@ -234,7 +234,7 @@ public class FrmVenta extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Apellidos", "Estado"
+                "Código", "Nombre", "Apellidos", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -276,14 +276,14 @@ public class FrmVenta extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Compras Cliente"));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Compras del cliente"));
 
         tblCompraClie.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "IdVenta", "IdCliente", "Mesa", "Fecha", "Metodo Pago", "Tipo Entrega"
+                "N.º venta", "Cliente", "Mesa", "Fecha", "Método de pago", "Tipo de entrega"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -318,14 +318,14 @@ public class FrmVenta extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle Compras"));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle de la compra"));
 
         tblDetCompraClie.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "IdProducto", "Descripcion", "Tipo", "Precio"
+                "Código", "Descripción", "Tipo", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -380,9 +380,9 @@ public class FrmVenta extends javax.swing.JFrame {
                 .addContainerGap(77, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Buscar Ventas", jPanel1);
+        jTabbedPane1.addTab("Historial de ventas", jPanel1);
 
-        jLabel2.setText("Tipo Entrega");
+        jLabel2.setText("Tipo de entrega");
 
         buttonGroup1.add(rbtnDelivery);
         rbtnDelivery.setText("Delivery");
@@ -396,15 +396,15 @@ public class FrmVenta extends javax.swing.JFrame {
         rbtnParaLlevar.setText("Para llevar");
 
         buttonGroup1.add(rbtnComerEnLocal);
-        rbtnComerEnLocal.setText("Comer en Local");
+        rbtnComerEnLocal.setText("Comer en el local");
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Cliente"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del cliente"));
 
         jLabel3.setText("Nombre:");
 
         jLabel4.setText("Apellidos:");
 
-        jLabel5.setText("IdCliente:");
+        jLabel5.setText("Código:");
 
         txtNombreClie.setEnabled(false);
 
@@ -417,26 +417,24 @@ public class FrmVenta extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarCliente.setText("Buscar Cliente");
+        btnBuscarCliente.setText("Buscar cliente");
         btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarClienteActionPerformed(evt);
             }
         });
 
-        jLabel6.setText("Direccion:");
+        jLabel6.setText("Dirección:");
 
-        txtDireccionClie.setEnabled(false);
-
-        jLabel7.setText("Telefono:");
+        jLabel7.setText("Teléfono:");
 
         txtTelefonoClie.setEnabled(false);
 
         jLabel13.setText("Mesa:");
 
-        jLabel14.setText("Metodo pago:");
+        jLabel14.setText("Método de pago:");
 
-        btnCrearCliente.setText("Crear Nuevo Cliente");
+        btnCrearCliente.setText("Nuevo cliente");
         btnCrearCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCrearClienteActionPerformed(evt);
@@ -551,9 +549,9 @@ public class FrmVenta extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Producto"));
 
-        jLabel8.setText("IdProducto:");
+        jLabel8.setText("Código:");
 
-        jLabel9.setText("Descripcion:");
+        jLabel9.setText("Descripción:");
 
         jLabel10.setText("Tipo:");
 
@@ -580,14 +578,14 @@ public class FrmVenta extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarProducto.setText("Buscar Producto");
+        btnBuscarProducto.setText("Buscar producto");
         btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarProductoActionPerformed(evt);
             }
         });
 
-        btnAgregarProducto.setText("Agregar Producto");
+        btnAgregarProducto.setText("Agregar producto");
         btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarProductoActionPerformed(evt);
@@ -606,7 +604,7 @@ public class FrmVenta extends javax.swing.JFrame {
 
             },
             new String [] {
-                "IdProducto", "Descripcion", "Tipo", "Precio", "Cantidad"
+                "Código", "Descripción", "Tipo", "Precio", "Cantidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {

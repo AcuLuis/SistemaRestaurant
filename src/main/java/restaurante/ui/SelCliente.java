@@ -71,7 +71,7 @@ public class SelCliente extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Buscar Cliente");
+        jLabel1.setText("Buscar cliente");
 
         jLabel2.setText("Cliente:");
 
@@ -91,7 +91,7 @@ public class SelCliente extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Apellidos", "Nombres", "Direccion", "Telefono", "Estado"
+                "Código", "Apellidos", "Nombres", "Dirección", "Teléfono", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {

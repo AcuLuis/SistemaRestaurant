@@ -49,7 +49,7 @@ public class FrmContratoPorRol extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Rol");
 
-        btnProducirReporte.setText("Producir Reporte");
+        btnProducirReporte.setText("Generar reporte");
         btnProducirReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProducirReporteActionPerformed(evt);

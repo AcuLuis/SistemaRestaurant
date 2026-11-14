@@ -84,7 +84,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
         jLabel1.setText("FORMULARIO INSUMO");
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
-        jLabel2.setText("InsumoID: ");
+        jLabel2.setText("Código:");
 
         jLabel3.setFont(new java.awt.Font("Trebuchet MS", 0, 11)); // NOI18N
         jLabel3.setText("Unidad de Medida:");
@@ -134,7 +134,7 @@ public class FrmInsumo extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "InsumoID", "TipInsumo", "unidadMedida", "descripInsumo", "precioUnit", "cantidad"
+                "Código", "Tipo", "Unidad", "Descripción", "Precio", "Cantidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {

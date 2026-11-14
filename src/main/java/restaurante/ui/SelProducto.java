@@ -75,7 +75,7 @@ public class SelProducto extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Buscar Producto");
+        jLabel1.setText("Buscar producto");
 
         jLabel2.setText("Producto:");
 
@@ -90,7 +90,7 @@ public class SelProducto extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Descripción", "Tipo", "Precio", "Stock"
+                "Código", "Descripción", "Tipo", "Precio", "Stock"
             }
         ) {
             boolean[] canEdit = new boolean [] {

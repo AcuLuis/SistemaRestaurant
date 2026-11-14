@@ -19,7 +19,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/admin.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Administrador     |"/>
+            <Property name="text" type="java.lang.String" value="Administrador"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemAgregaUsuarios">
@@ -27,7 +27,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/anadirUsuario.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Agregar Usuarios"/>
+                <Property name="text" type="java.lang.String" value="Usuarios"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemAgregaUsuariosActionPerformed"/>
@@ -56,7 +56,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/mantenimiento.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Mantenimiento     |"/>
+            <Property name="text" type="java.lang.String" value="Mantenimiento"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuMantenimientoActionPerformed"/>
@@ -129,7 +129,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/reportes.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Reportes     |"/>
+            <Property name="text" type="java.lang.String" value="Reportes"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemReporteContrato">
@@ -137,7 +137,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/contrato.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="ReporteContrato"/>
+                <Property name="text" type="java.lang.String" value="Contratos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemReporteContratoActionPerformed"/>
@@ -148,7 +148,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/espacioTrabajo.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Reporte&#xc1;rea"/>
+                <Property name="text" type="java.lang.String" value="&#xc1;reas"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemReporteSimpleAreaActionPerformed"/>
@@ -159,7 +159,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/rol.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="ReporteRol"/>
+                <Property name="text" type="java.lang.String" value="Roles"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemSimpleRolActionPerformed"/>
@@ -170,7 +170,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/caja.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="ReporteProducto"/>
+                <Property name="text" type="java.lang.String" value="Productos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemSimpleProductoActionPerformed"/>
@@ -181,7 +181,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/herramienta.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="ReporteInsumo"/>
+                <Property name="text" type="java.lang.String" value="Insumos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemReporteInsumoActionPerformed"/>
@@ -199,7 +199,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/repParametros.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Reporte con Parametros     |"/>
+            <Property name="text" type="java.lang.String" value="Reportes con par&#xe1;metros"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reportesPorParametrosActionPerformed"/>
@@ -210,7 +210,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/tiempo.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Contrato por Fechas"/>
+                <Property name="text" type="java.lang.String" value="Contratos por fechas"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemContratoPorFechasActionPerformed"/>
@@ -221,7 +221,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/espacioTrabajo.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Contrato por &#xc1;rea"/>
+                <Property name="text" type="java.lang.String" value="Contratos por &#xe1;rea"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemPorAreaActionPerformed"/>
@@ -232,7 +232,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/rol.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Contrato por Rol"/>
+                <Property name="text" type="java.lang.String" value="Contratos por rol"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemContratoPorRolActionPerformed"/>
@@ -243,7 +243,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/caja.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Producto por Precio"/>
+                <Property name="text" type="java.lang.String" value="Productos por precio"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemProductoPorPrecioActionPerformed"/>
@@ -254,7 +254,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/herramienta.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Insumo por Precio"/>
+                <Property name="text" type="java.lang.String" value="Insumos por precio"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemInsumoPorPrecioActionPerformed"/>
@@ -272,7 +272,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/tablacruzada.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Tablas Cruzadas     |"/>
+            <Property name="text" type="java.lang.String" value="Tablas cruzadas"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="ProductoTipPlatoCruzado">
@@ -280,7 +280,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/plato.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Producto - Tipo de Plato"/>
+                <Property name="text" type="java.lang.String" value="Productos por tipo de plato"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ProductoTipPlatoCruzadoActionPerformed"/>
@@ -291,7 +291,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/contrato.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Contratos - &#xc1;rea"/>
+                <Property name="text" type="java.lang.String" value="Contratos por &#xe1;rea"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Contrato&#xc1;reaCruzadoActionPerformed"/>
@@ -302,7 +302,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/descarga.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="TipoUsuario - Ubicaci&#xf3;n"/>
+                <Property name="text" type="java.lang.String" value="Usuarios por tipo y ubicaci&#xf3;n"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TipoUsuarioUbicacionCruzadoActionPerformed"/>
@@ -315,7 +315,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/correo.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Correo General     |"/>
+            <Property name="text" type="java.lang.String" value="Correo"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemGmail">
@@ -323,7 +323,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/gmail.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Gmail"/>
+                <Property name="text" type="java.lang.String" value="Enviar correo..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemGmailActionPerformed"/>
@@ -336,7 +336,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/redes.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Redes     |"/>
+            <Property name="text" type="java.lang.String" value="Redes"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="facebook">
@@ -379,7 +379,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/imagenes/transaccion.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Transacciones    Y Control |"/>
+            <Property name="text" type="java.lang.String" value="Transacciones"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuItemVenta">
@@ -398,7 +398,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/inventario.jpg"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Control De inventario"/>
+                <Property name="text" type="java.lang.String" value="Control de inventario"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemOrdenDeVentaActionPerformed"/>

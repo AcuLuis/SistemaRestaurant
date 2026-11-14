@@ -60,9 +60,9 @@ public class CrearCliente extends javax.swing.JFrame {
 
         jLabel3.setText("Apellidos:");
 
-        jLabel4.setText("Direccion:");
+        jLabel4.setText("Dirección:");
 
-        jLabel5.setText("Telefono:");
+        jLabel5.setText("Teléfono:");
 
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -132,7 +132,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "EmpleadoID", "Nombres", "Apellidos", "Dni"
+                "Empleado", "Nombres", "Apellidos", "DNI"
             }
         ));
         tblEmpleado.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -176,21 +176,21 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
                 .addGap(15, 15, 15))
         );
 
-        panel1.addTab("BuscaEmpleado", panelEmpleado);
+        panel1.addTab("Empleados sin usuario", panelEmpleado);
 
-        jLabel2.setText("usuarioID");
+        jLabel2.setText("Código");
 
         txtUsuarioId.setEnabled(false);
 
-        jLabel3.setText("idLocal");
+        jLabel3.setText("Local");
 
         txtIdLocal.setEnabled(false);
 
-        jLabel4.setText("usuario");
+        jLabel4.setText("Usuario");
 
         jLabel5.setText("Tipo Usuario");
 
-        jLabel6.setText("empleadoID");
+        jLabel6.setText("Empleado");
 
         txtEmpleadoID.setEnabled(false);
 
@@ -293,7 +293,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "UsuarioID", "IdLocal", "Usuario", "TipoUsuario", "EmpleadoID"
+                "Código", "Local", "Usuario", "Tipo de usuario", "Empleado"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -97,9 +97,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Producto ID");
+        jLabel1.setText("Código");
 
-        jLabel2.setText("Descripcion");
+        jLabel2.setText("Descripción");
 
         jLabel3.setText("Cantidad");
 
@@ -111,7 +111,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         txtProductoID.setEditable(false);
 
-        btnLimpia.setText("Limpia");
+        btnLimpia.setText("Limpiar");
         btnLimpia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiaActionPerformed(evt);
@@ -123,7 +123,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Producto ID", "Descripcion", "Cantidad", "Precio Unitario", "Plato", "Tipo de Producto"
+                "Código", "Descripción", "Cantidad", "Precio Unitario", "Plato", "Tipo de Producto"
             }
         ));
         tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -158,7 +158,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ContratoID", "EmpleadoID", "Rol", "Area", "FechaInicio", "FechaFin", "Estado", "Sueldo"
+                "Código", "Empleado", "Rol", "Área", "Inicio", "Fin", "Estado", "Sueldo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -191,7 +191,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "EmpleadoID", "Nombres", "Apellidos", "FechaNacimiento", "Genero", "DNI", "EstadoCivil"
+                "Empleado", "Nombres", "Apellidos", "Nacimiento", "Género", "DNI", "Estado civil"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -240,7 +240,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
                 .addGap(26, 26, 26))
         );
 
-        tabPBuscaEmpleado.addTab("Empleados General", panelEmpleadoGeneral);
+        tabPBuscaEmpleado.addTab("Todos los empleados", panelEmpleadoGeneral);
 
         jLabel22.setText("Buscar");
 
@@ -255,7 +255,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "EmpleadoID", "Nombres", "Apellidos", "FechaNacimiento", "Genero", "DNI", "EstadoCivil"
+                "Empleado", "Nombres", "Apellidos", "Nacimiento", "Género", "DNI", "Estado civil"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -301,7 +301,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        tabPBuscaEmpleado.addTab("Buscar Empleado Sin Contrato", panelEmpleadoSinContrato);
+        tabPBuscaEmpleado.addTab("Empleados sin contrato", panelEmpleadoSinContrato);
 
         jLabel10.setText("Fecha Inicio");
 
@@ -318,11 +318,11 @@ public class FrmContrato extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel2.setText("EmpleadoID");
+        jLabel2.setText("Empleado");
 
         jLabel3.setText("Rol");
 
-        jLabel4.setText("Area");
+        jLabel4.setText("Área");
 
         txtEmpleadoID.setEnabled(false);
 
@@ -343,7 +343,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel14.setText("ContratoID");
+        jLabel14.setText("Código");
 
         txtContratoID.setEnabled(false);
 
@@ -443,7 +443,7 @@ public class FrmContrato extends javax.swing.JInternalFrame {
         tabPBuscaEmpleado.addTab("Contrato", panelContrato);
 
         btnCerrar.setBackground(new java.awt.Color(51, 51, 51));
-        btnCerrar.setText("CERRAR");
+        btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarActionPerformed(evt);

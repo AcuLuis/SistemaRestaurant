@@ -64,7 +64,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("FORMULARIO ROL");
 
-        jLabel2.setText("Rol ID");
+        jLabel2.setText("Código");
 
         jLabel3.setText("Descripción");
 
@@ -75,7 +75,7 @@ public class FrmRol extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Rol_ID", "Descripción"
+                "Código", "Descripción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
