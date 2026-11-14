@@ -1,147 +1,110 @@
-
 package restaurante.ui;
 
-
+import java.time.LocalDate;
 import java.util.List;
-import restaurante.modelo.*;
-import restaurante.dao.*;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
+import java.util.Optional;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.AreaDao;
+import restaurante.dao.ContratoDao;
+import restaurante.dao.EmpleadoDao;
+import restaurante.dao.RolDao;
+import restaurante.modelo.Area;
+import restaurante.modelo.Contrato;
+import restaurante.modelo.Empleado;
+import restaurante.modelo.Rol;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
+import restaurante.ui.util.Validaciones;
 
+/**
+ * Gestión de contratos: se elige un empleado sin contrato para crear uno
+ * nuevo, o un contrato existente para modificarlo.
+ */
 public class FrmContrato extends javax.swing.JInternalFrame {
 
-    DefaultTableModel dtmEmpleado;
-    DefaultTableModel dtmEmpleadoSinContrato;
-    DefaultTableModel dtmContratos;
-    
-    EmpleadoDao empDao = new EmpleadoDao();
-    RolDao rolDao = new RolDao();
-    AreaDao areaDao = new AreaDao();
-    ContratoDao contratoDao = new ContratoDao();
-    Util u = new Util();
-    
-    int idEmpleado = 0;
-    
+    private static final int PESTANA_SIN_CONTRATO = 1;
+    private static final int PESTANA_CONTRATO = 2;
+    private static final String ACTIVO = "Activo";
+    private static final String NO_ACTIVO = "No Activo";
+
+    private final EmpleadoDao empDao = new EmpleadoDao();
+    private final ContratoDao contratoDao = new ContratoDao();
+    private final List<Rol> roles;
+    private final List<Area> areas;
+    private final BusquedaDiferida busquedaEmpleados;
+    private final BusquedaDiferida busquedaSinContrato;
+    private final BusquedaDiferida busquedaContratos;
+    private List<Empleado> sinContrato = List.of();
+    private List<Contrato> contratos = List.of();
+    private Contrato seleccionado;
+
     public FrmContrato() {
         initComponents();
-        
-        
-        dtmEmpleado = (DefaultTableModel)this.tblBuscarEmpleado.getModel();
-        dtmEmpleadoSinContrato = (DefaultTableModel) this.tblBuscarEmpleadoSinContrato.getModel();
-        dtmContratos = (DefaultTableModel) this.tblContratos.getModel();
-        
-        this.llenaTblEmpleado(false, "");
-        this.llenaTblEmpleadoSinContrato(false, "");
-        this.llenaTblContratos(false, "");
-        this.llenaCmbEstado();
-        
-        
-        if(this.idEmpleado == 0){
-        
-            this.tabPBuscaEmpleado.setEnabledAt(2, false);
-        }else if(this.idEmpleado != 0){
-            this.tabPBuscaEmpleado.setEnabledAt(2, true);
-        }
-        
-        this.llenaCmbRol();
-        this.llenaCmbArea();
-    }
-    
-    public void llenaCmbEstado(){
-    
+        this.roles = new RolDao().llenaRol();
+        this.areas = new AreaDao().llenaArea();
+        this.cmbRol.addItem("");
+        this.roles.forEach(r -> this.cmbRol.addItem(r.getDescripRol()));
+        this.cmbArea.addItem("");
+        this.areas.forEach(a -> this.cmbArea.addItem(a.getDescripArea()));
         this.cmbEstado.addItem("");
-        this.cmbEstado.addItem("Activo");
-        this.cmbEstado.addItem("No Activo");
-    
+        this.cmbEstado.addItem(ACTIVO);
+        this.cmbEstado.addItem(NO_ACTIVO);
+        for (JTable tabla : new JTable[] {tblBuscarEmpleado, tblBuscarEmpleadoSinContrato, tblContratos}) {
+            Tablas.configurar(tabla);
+        }
+        Tablas.alSeleccionar(this.tblBuscarEmpleadoSinContrato, this::nuevoContrato);
+        Tablas.alSeleccionar(this.tblContratos, this::cargarContrato);
+        this.txtContratoID.setEditable(false);
+        this.txtEmpleadoID.setEditable(false);
+        String formato = "Formato " + Validaciones.FORMATO_FECHA + " (por ejemplo, 2024-01-31)";
+        this.txtFechaInicio.setToolTipText(formato);
+        this.txtFechaFin.setToolTipText(formato);
+        this.busquedaEmpleados = new BusquedaDiferida(this.txtBuscarEmpleado, this::llenaTblEmpleado);
+        this.busquedaSinContrato = new BusquedaDiferida(this.txtBuscarEmpleadoSinContrato, this::llenaTblEmpleadoSinContrato);
+        this.busquedaContratos = new BusquedaDiferida(this.txtContratos, this::llenaTblContratos);
+        this.llenaTblEmpleado("");
+        this.llenaTblEmpleadoSinContrato("");
+        this.llenaTblContratos("");
+        this.limpia();
     }
-    
-    public void llenaTblEmpleado(boolean valida, String cadena){
-    
-        List<Empleado> listaEmp;
-        
-        listaEmp = empDao.listaEmpleado(valida, cadena);     
-        dtmEmpleado.setRowCount(0);
-        
-        for(int i=0;i<listaEmp.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaEmp.get(i).getEmpleadoID());
-            vector.addElement(listaEmp.get(i).getNombres());
-            vector.addElement(listaEmp.get(i).getApellidos());
-            vector.addElement(listaEmp.get(i).getFechaNacimiento());
-            if(listaEmp.get(i).getGenero() == 1){
-                vector.addElement("masculino");
-            }else if (listaEmp.get(i).getGenero() == 0){
-                vector.addElement("femenino");
-            }
-            vector.addElement(listaEmp.get(i).getDni());
-            vector.addElement(listaEmp.get(i).getEstadoCivil());
-            
-            dtmEmpleado.addRow(vector);
+
+    private void llenaTblEmpleado(String texto) {
+        llenarEmpleados(this.tblBuscarEmpleado, empDao.listaEmpleado(!texto.isEmpty(), texto));
+    }
+
+    private void llenaTblEmpleadoSinContrato(String texto) {
+        sinContrato = empDao.sinContrato(!texto.isEmpty(), texto);
+        llenarEmpleados(this.tblBuscarEmpleadoSinContrato, sinContrato);
+    }
+
+    private static void llenarEmpleados(JTable tabla, List<Empleado> empleados) {
+        DefaultTableModel modelo = Tablas.vaciar(tabla);
+        for (Empleado e : empleados) {
+            modelo.addRow(new Object[] {e.getEmpleadoID(), e.getNombres(), e.getApellidos(), e.getFechaNacimiento(),
+                e.getGenero() == 1 ? "Masculino" : "Femenino", e.getDni(), e.getEstadoCivil()});
         }
     }
-    
-    
-    public void llenaTblEmpleadoSinContrato(boolean valida, String cadena){
-    
-        List<Empleado> listaEmp;
-        
-        listaEmp = empDao.sinContrato(valida, cadena);     
-        this.dtmEmpleadoSinContrato.setRowCount(0);
-        
-        for(int i=0;i<listaEmp.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaEmp.get(i).getEmpleadoID());
-            vector.addElement(listaEmp.get(i).getNombres());
-            vector.addElement(listaEmp.get(i).getApellidos());
-            vector.addElement(listaEmp.get(i).getFechaNacimiento());
-            if(listaEmp.get(i).getGenero() == 1){
-                vector.addElement("masculino");
-            }else if (listaEmp.get(i).getGenero() == 0){
-                vector.addElement("femenino");
-            }
-            vector.addElement(listaEmp.get(i).getDni());
-            vector.addElement(listaEmp.get(i).getEstadoCivil());
-            
-            this.dtmEmpleadoSinContrato.addRow(vector);
-        }
-       
-        
-    }
-    
-    public void llenaTblContratos(boolean valida, String cadena){
-    
-        List<Contrato> listaContrato;
-        Util u = new Util();
-        
-        listaContrato = contratoDao.ListaItem(valida, cadena);
-        this.dtmContratos.setRowCount(0);
-        
-        for(int i=0; i<listaContrato.size(); i++){
-        
-            Vector vector = new Vector();
-            
-            vector.addElement(listaContrato.get(i).getContratoID());
-            vector.addElement(listaContrato.get(i).getEmpleadoID());
-            vector.addElement(this.rolDao.devRol(listaContrato.get(i).getRolID()));
-            vector.addElement(this.areaDao.devArea(listaContrato.get(i).getAreaID()));
-            vector.addElement(listaContrato.get(i).getFechaIni());
-            vector.addElement(listaContrato.get(i).getFechaFin());
-            if(listaContrato.get(i).getEstado() == 1){
-                vector.addElement("Activo");
-            }else{
-                vector.addElement("No Activo");
-            }
-            vector.addElement(listaContrato.get(i).getSueldo());
-            
-            this.dtmContratos.addRow(vector);
-        
+
+    private void llenaTblContratos(String texto) {
+        contratos = contratoDao.ListaItem(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblContratos);
+        for (Contrato c : contratos) {
+            modelo.addRow(new Object[] {c.getContratoID(), c.getEmpleadoID(), descripcionRol(c.getRolID()),
+                descripcionArea(c.getAreaID()), c.getFechaIni(), c.getFechaFin(),
+                c.getEstado() == 1 ? ACTIVO : NO_ACTIVO, Tablas.importe(c.getSueldo())});
         }
     }
-    
+
+    private String descripcionRol(int id) {
+        return roles.stream().filter(r -> r.getRolID() == id).map(Rol::getDescripRol).findFirst().orElse("");
+    }
+
+    private String descripcionArea(int id) {
+        return areas.stream().filter(a -> a.getAreaID() == id).map(Area::getDescripArea).findFirst().orElse("");
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -535,222 +498,170 @@ public class FrmContrato extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarEmpleadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoKeyReleased
-        if(this.txtBuscarEmpleado.getText().isEmpty()){
-            this.llenaTblEmpleado(false,"");
-        }else{
-            this.llenaTblEmpleado(true,this.txtBuscarEmpleado.getText());
-        }
+        busquedaEmpleados.reiniciar();
     }//GEN-LAST:event_txtBuscarEmpleadoKeyReleased
 
     private void txtBuscarEmpleadoSinContratoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoSinContratoKeyReleased
-        if(this.txtBuscarEmpleadoSinContrato.getText().isEmpty()){
-            this.llenaTblEmpleadoSinContrato(false,"");
-        }else{
-            this.llenaTblEmpleadoSinContrato(true,this.txtBuscarEmpleadoSinContrato.getText());
-        }
-        
+        busquedaSinContrato.reiniciar();
     }//GEN-LAST:event_txtBuscarEmpleadoSinContratoKeyReleased
 
     private void txtContratosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContratosKeyReleased
-        if(this.txtContratos.getText().isEmpty()){
-            this.llenaTblContratos(false,"");
-        }else{
-            this.llenaTblContratos(true,this.txtContratos.getText());
-        }
+        busquedaContratos.reiniciar();
     }//GEN-LAST:event_txtContratosKeyReleased
 
     private void tblBuscarEmpleadoSinContratoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBuscarEmpleadoSinContratoMouseClicked
-        
-        int posiFilEmpSinCon = this.tblBuscarEmpleadoSinContrato.getSelectedRow();
-        
-        idEmpleado = (int) this.tblBuscarEmpleadoSinContrato.getValueAt(posiFilEmpSinCon, 0);
-        this.tabPBuscaEmpleado.setEnabledAt(2, true);
-        
-        this.tabPBuscaEmpleado.setSelectedIndex(2);
-        
-        this.txtContratoID.setText(Integer.toString(u.idNext("Contrato", "contratoID")));
-        this.txtEmpleadoID.setText(Integer.toString(idEmpleado));
-        this.tabPBuscaEmpleado.setEnabledAt(1, false);
+        this.nuevoContrato();
     }//GEN-LAST:event_tblBuscarEmpleadoSinContratoMouseClicked
 
-    private void llenaCmbRol(){
-        
-        List<Rol> listaRol;
-        
-        this.cmbRol.addItem("");
-        
-        listaRol = this.rolDao.llenaRol();
-        
-        for(int i=0; i<listaRol.size();i++){
-        
-            this.cmbRol.addItem(listaRol.get(i).getDescripRol());
-        }
-    }
-
-    private void llenaCmbArea(){
-        
-        List<Area> listaArea;
-        
-        this.cmbArea.addItem("");
-        
-        listaArea = this.areaDao.llenaArea();
-        
-        for(int i=0; i<listaArea.size();i++){
-        
-            this.cmbArea.addItem(listaArea.get(i).getDescripArea());
-        }
-    }
-    
-    
-    
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        
         this.limpia();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void limpia(){
-        this.txtEmpleadoID.setText("");
-        this.cmbRol.setSelectedItem("");
-        this.cmbArea.setSelectedItem("");
-        this.txtFechaInicio.setText("");
-        this.txtFechaFin.setText("");
-        this.txtSueldo.setText("");
-        this.cmbEstado.setSelectedItem("");
-        this.btnGrabar.setText("Grabar");
-        this.tabPBuscaEmpleado.setEnabledAt(2, false);
-        this.tabPBuscaEmpleado.setEnabledAt(1, true);
-        
-        this.tabPBuscaEmpleado.setSelectedIndex(1);
-    }
-    
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        
-        if(this.valida() == true){
-        
-            if(this.btnGrabar.getText().equals("Grabar")){
-                Contrato contrato = new Contrato();
-
-                contrato.setContratoID(Integer.parseInt(this.txtContratoID.getText()));
-                contrato.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
-
-                contrato.setRolID(this.rolDao.devIDRol(this.cmbRol.getSelectedItem().toString()));
-                contrato.setAreaID(this.areaDao.devIDArea(this.cmbArea.getSelectedItem().toString()));
-                
-                contrato.setFechaIni(this.txtFechaInicio.getText());
-                contrato.setFechaFin(this.txtFechaFin.getText());
-
-                if(this.cmbEstado.getSelectedItem().equals("Activo")){
-                    contrato.setEstado(1);
-                }else{
-                    contrato.setEstado(0);
-                }
-
-                contrato.setSueldo(Double.parseDouble(this.txtSueldo.getText()));
-
-                this.contratoDao.insertaContrato(contrato);
-                this.limpia();
-                this.llenaTblContratos(false, "");
-            }else{
-                
-                Contrato contrato = new Contrato();
-                contrato.setContratoID(Integer.parseInt(this.txtContratoID.getText()));
-                contrato.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
-
-                contrato.setRolID(this.rolDao.devIDRol(this.cmbRol.getSelectedItem().toString()));
-                contrato.setAreaID(this.areaDao.devIDArea(this.cmbArea.getSelectedItem().toString()));
-                
-                contrato.setFechaIni(this.txtFechaInicio.getText());
-                contrato.setFechaFin(this.txtFechaFin.getText());
-
-                if(this.cmbEstado.getSelectedItem().equals("Activo")){
-                    contrato.setEstado(1);
-                }else{
-                    contrato.setEstado(0);
-                }
-                contrato.setSueldo(Double.parseDouble(this.txtSueldo.getText()));
-                
-                this.contratoDao.actualizarContrato(contrato);
-                this.llenaTblContratos(false, "");
-                this.limpia();
-            
-            }
-            this.btnGrabar.setText("Grabar");
-            this.tabPBuscaEmpleado.setEnabledAt(1, true);
-            this.llenaTblEmpleado(false, "");
-            this.llenaTblEmpleadoSinContrato(false, "");
-        }
-        
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void tblContratosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblContratosMouseClicked
-        
-        this.tabPBuscaEmpleado.setEnabledAt(2, true);
-        this.tabPBuscaEmpleado.setSelectedIndex(2);
-        int idx = this.tblContratos.getSelectedRow();
-        
-        this.txtContratoID.setText(this.dtmContratos.getValueAt(idx, 0).toString());
-        this.txtEmpleadoID.setText(this.dtmContratos.getValueAt(idx, 1).toString());
-        this.cmbRol.setSelectedItem(this.dtmContratos.getValueAt(idx, 2).toString());
-        this.cmbArea.setSelectedItem(this.dtmContratos.getValueAt(idx, 3).toString());
-        this.txtFechaInicio.setText(this.dtmContratos.getValueAt(idx, 4).toString());
-        this.txtFechaFin.setText(this.dtmContratos.getValueAt(idx, 5).toString());
-        this.cmbEstado.setSelectedItem(this.dtmContratos.getValueAt(idx, 6).toString());
-        this.txtSueldo.setText(this.dtmContratos.getValueAt(idx, 7).toString());
-        
-        this.tabPBuscaEmpleado.setEnabledAt(1, false);
-        this.btnGrabar.setText("Actualizar");
-   
+        this.cargarContrato();
     }//GEN-LAST:event_tblContratosMouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        
-        if(this.valida()== true){
-        
-            Contrato contrato = new Contrato();
-            
-            contrato.setContratoID(Integer.parseInt(this.txtContratoID.getText()));
-        
-            this.contratoDao.eliminarContrato(contrato);
-            
-            this.llenaTblContratos(false, "");
-            this.llenaTblEmpleado(false, "");
-            this.llenaTblEmpleadoSinContrato(false, "");
-            this.limpia();
-        
-        }
-        
-        
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         this.dispose();
-                
     }//GEN-LAST:event_btnCerrarActionPerformed
 
-    private boolean valida(){
-    
-        if (this.txtFechaInicio.getText().isEmpty() && this.cmbEstado.getSelectedItem().equals("") && this.txtFechaFin.getText().isEmpty()  && this.txtSueldo.getText().isEmpty()
-                && this.cmbRol.getSelectedItem().equals("") && this.cmbArea.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LOS CAMPOS...");
-        }else if (this.txtFechaInicio.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LA FECHA DE INICIO...");
-        }else if(this.txtFechaFin.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LA FECHA DE FIN...");
-        }else if(this.cmbEstado.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA SELECCIONAR EL ESTADO...");
-        }else if(this.txtSueldo.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR EL SUELDO...");
-        }else if(this.cmbRol.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR EL ROL...");
-        }else if(this.cmbArea.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR EL AREA...");
-        }else{
-            return true;
+    /** Prepara el alta de un contrato para el empleado elegido. */
+    private void nuevoContrato() {
+        int fila = Tablas.filaSeleccionada(this.tblBuscarEmpleadoSinContrato);
+        if (fila < 0) {
+            return;
         }
-        return false;
+        limpiarCampos();
+        seleccionado = null;
+        this.txtContratoID.setText(String.valueOf(contratoDao.siguienteId()));
+        this.txtEmpleadoID.setText(String.valueOf(sinContrato.get(fila).getEmpleadoID()));
+        this.btnGrabar.setText("Grabar");
+        abrirPestanaContrato();
     }
-    
 
+    private void cargarContrato() {
+        int fila = Tablas.filaSeleccionada(this.tblContratos);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = contratos.get(fila);
+        this.txtContratoID.setText(String.valueOf(seleccionado.getContratoID()));
+        this.txtEmpleadoID.setText(String.valueOf(seleccionado.getEmpleadoID()));
+        this.cmbRol.setSelectedItem(descripcionRol(seleccionado.getRolID()));
+        this.cmbArea.setSelectedItem(descripcionArea(seleccionado.getAreaID()));
+        this.txtFechaInicio.setText(seleccionado.getFechaIni());
+        this.txtFechaFin.setText(seleccionado.getFechaFin());
+        this.cmbEstado.setSelectedItem(seleccionado.getEstado() == 1 ? ACTIVO : NO_ACTIVO);
+        this.txtSueldo.setText(Tablas.importe(seleccionado.getSueldo()));
+        this.btnGrabar.setText("Actualizar");
+        abrirPestanaContrato();
+    }
+
+    private void abrirPestanaContrato() {
+        this.tabPBuscaEmpleado.setEnabledAt(PESTANA_CONTRATO, true);
+        this.tabPBuscaEmpleado.setSelectedIndex(PESTANA_CONTRATO);
+        this.tabPBuscaEmpleado.setEnabledAt(PESTANA_SIN_CONTRATO, false);
+        this.cmbRol.requestFocusInWindow();
+    }
+
+    private void grabar() {
+        if (this.txtEmpleadoID.getText().isEmpty()) {
+            Dialogos.aviso(this, "Seleccione un empleado sin contrato o un contrato existente.");
+            return;
+        }
+        Optional<LocalDate> inicio = Validaciones.fecha(this.txtFechaInicio.getText());
+        Optional<LocalDate> fin = Validaciones.fecha(this.txtFechaFin.getText());
+        Optional<Double> sueldo = Validaciones.decimalNoNegativo(this.txtSueldo.getText());
+        if (this.cmbRol.getSelectedIndex() <= 0) {
+            invalido(this.cmbRol, "Seleccione el rol.");
+        } else if (this.cmbArea.getSelectedIndex() <= 0) {
+            invalido(this.cmbArea, "Seleccione el área.");
+        } else if (inicio.isEmpty()) {
+            invalido(this.txtFechaInicio, "Indique una fecha de inicio válida (" + Validaciones.FORMATO_FECHA + ").");
+        } else if (fin.isEmpty()) {
+            invalido(this.txtFechaFin, "Indique una fecha de fin válida (" + Validaciones.FORMATO_FECHA + ").");
+        } else if (fin.get().isBefore(inicio.get())) {
+            invalido(this.txtFechaFin, "La fecha de fin no puede ser anterior a la de inicio.");
+        } else if (this.cmbEstado.getSelectedIndex() <= 0) {
+            invalido(this.cmbEstado, "Seleccione el estado del contrato.");
+        } else if (sueldo.isEmpty() || sueldo.get() <= 0) {
+            invalido(this.txtSueldo, "El sueldo debe ser un número mayor que cero.");
+        } else {
+            Contrato contrato = new Contrato();
+            contrato.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
+            contrato.setRolID(roles.get(this.cmbRol.getSelectedIndex() - 1).getRolID());
+            contrato.setAreaID(areas.get(this.cmbArea.getSelectedIndex() - 1).getAreaID());
+            contrato.setFechaIni(inicio.get().toString());
+            contrato.setFechaFin(fin.get().toString());
+            contrato.setEstado(ACTIVO.equals(this.cmbEstado.getSelectedItem()) ? 1 : 0);
+            contrato.setSueldo(sueldo.get());
+            if (seleccionado == null) {
+                this.contratoDao.insertaContrato(contrato);
+                Dialogos.info(this, "Contrato registrado con el código " + contrato.getContratoID() + ".");
+            } else {
+                contrato.setContratoID(seleccionado.getContratoID());
+                this.contratoDao.actualizarContrato(contrato);
+                Dialogos.info(this, "Contrato actualizado.");
+            }
+            refrescar();
+            this.limpia();
+        }
+    }
+
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla de contratos el contrato que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar el contrato " + seleccionado.getContratoID()
+                + " del empleado " + seleccionado.getEmpleadoID() + "?")) {
+            return;
+        }
+        this.contratoDao.eliminarContrato(seleccionado);
+        refrescar();
+        this.limpia();
+    }
+
+    private void refrescar() {
+        this.llenaTblContratos(this.txtContratos.getText().trim());
+        this.llenaTblEmpleado(this.txtBuscarEmpleado.getText().trim());
+        this.llenaTblEmpleadoSinContrato(this.txtBuscarEmpleadoSinContrato.getText().trim());
+    }
+
+    private void invalido(javax.swing.JComponent campo, String mensaje) {
+        Dialogos.aviso(this, mensaje);
+        campo.requestFocusInWindow();
+    }
+
+    private void limpiarCampos() {
+        this.txtContratoID.setText("");
+        this.txtEmpleadoID.setText("");
+        this.cmbRol.setSelectedIndex(0);
+        this.cmbArea.setSelectedIndex(0);
+        this.txtFechaInicio.setText("");
+        this.txtFechaFin.setText("");
+        this.txtSueldo.setText("");
+        this.cmbEstado.setSelectedIndex(0);
+    }
+
+    private void limpia() {
+        seleccionado = null;
+        limpiarCampos();
+        this.tblContratos.clearSelection();
+        this.tblBuscarEmpleadoSinContrato.clearSelection();
+        this.btnGrabar.setText("Grabar");
+        this.tabPBuscaEmpleado.setEnabledAt(PESTANA_CONTRATO, false);
+        this.tabPBuscaEmpleado.setEnabledAt(PESTANA_SIN_CONTRATO, true);
+        this.tabPBuscaEmpleado.setSelectedIndex(PESTANA_SIN_CONTRATO);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;

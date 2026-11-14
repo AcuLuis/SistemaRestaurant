@@ -107,6 +107,10 @@ public class UsuarioDao {
         });
     }
 
+    public int siguienteId() {
+        return Jdbc.siguienteIdSugerido("Usuario", "usuarioID");
+    }
+
     public void cambiarContrasena(int usuarioID, char[] nueva) {
         Jdbc.actualizar("UPDATE Usuario SET contraseña = ? WHERE usuarioID = ?", Contrasenas.hash(nueva), usuarioID);
     }

@@ -1,107 +1,73 @@
-
 package restaurante.ui;
 
 import java.util.Arrays;
-import restaurante.seguridad.Contrasenas;
-import restaurante.ui.util.Dialogos;
-
-
 import java.util.List;
-import restaurante.modelo.Empleado;
-import restaurante.modelo.LocalR;
-import restaurante.modelo.Usuario;
+import javax.swing.table.DefaultTableModel;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.UsuarioDao;
-import restaurante.dao.LocalDao;
-import restaurante.util.Util;
-import java.sql.ResultSet;
-import java.util.Vector;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import restaurante.modelo.Empleado;
+import restaurante.modelo.Usuario;
+import restaurante.seguridad.Contrasenas;
+import restaurante.seguridad.Sesion;
+import restaurante.seguridad.TipoUsuario;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
 
+/**
+ * Gestión de usuarios del sistema. Cada usuario está asociado a un empleado.
+ */
 public class FrmUsuario extends javax.swing.JInternalFrame {
 
-    DefaultTableModel dtmUsuario;
-    DefaultTableModel dtmEmpleado;
-    UsuarioDao uDao = new UsuarioDao();
-    LocalDao lDao = new LocalDao();
-    EmpleadoDao empDao = new EmpleadoDao();
-    int idEmpleado = 0;
-    
+    private static final int PESTANA_EMPLEADOS = 0;
+    private static final int PESTANA_USUARIO = 1;
+    private static final int LONGITUD_MAXIMA_USUARIO = 25;
+
+    private final UsuarioDao uDao = new UsuarioDao();
+    private final EmpleadoDao empDao = new EmpleadoDao();
+    private final BusquedaDiferida busquedaUsuarios;
+    private final BusquedaDiferida busquedaEmpleados;
+    private List<Usuario> usuarios = List.of();
+    private List<Empleado> empleados = List.of();
+    private Usuario seleccionado;
+
     public FrmUsuario() {
         initComponents();
-        dtmUsuario = (DefaultTableModel) this.tblUsuario.getModel();
-        dtmEmpleado = (DefaultTableModel) this.tblEmpleado.getModel();
-        this.llenaCmbTipoUsuario();
-        this.llenaTblUsuario(false, "");
-        this.llenaTblEmpleado(false, "");
-        if(this.idEmpleado == 0){
-        
-            this.panel1.setEnabledAt(1, false);
-        }else if(this.idEmpleado != 0){
-            this.panel1.setEnabledAt(1, true);
-        }
-    }
-    
-    private void llenaTblUsuario(boolean valida, String cadena){
-    
-        List<Usuario> listaUsuario;
-        
-        listaUsuario = uDao.listaUsuario(valida, cadena);
-        dtmUsuario.setRowCount(0);
-        
-        for(int i=0;i<listaUsuario.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaUsuario.get(i).getUsuarioID());
-            vector.addElement(listaUsuario.get(i).getIdLocalR());
-            vector.addElement(listaUsuario.get(i).getUsuario());
-            
-            if(listaUsuario.get(i).getTipUsuaruario()==1){
-                vector.addElement("Administrador");
-            }else if(listaUsuario.get(i).getTipUsuaruario()==2){
-                vector.addElement("Mantenimiento");
-            }else if(listaUsuario.get(i).getTipUsuaruario()==3){
-                vector.addElement("Reportes");
-            }else{
-                vector.addElement("Transacciones");
-            }
-            vector.addElement(listaUsuario.get(i).getEmpleadoID());
-            
-            dtmUsuario.addRow(vector);
-        }
-        
-    
-    }
-   private void llenaTblEmpleado(boolean valida, String cadena){
-    
-        List<Empleado> listaEmp;
-        
-        
-        listaEmp = empDao.listaEmpleadoNoUsers(valida, cadena);
-        dtmEmpleado.setRowCount(0);
-        
-        for(int i=0;i<listaEmp.size();i++){
-            
-            Vector vector = new Vector();
-            vector.addElement(listaEmp.get(i).getEmpleadoID());
-            vector.addElement(listaEmp.get(i).getNombres());
-            vector.addElement(listaEmp.get(i).getApellidos());
-            vector.addElement(listaEmp.get(i).getDni());
-            
-            dtmEmpleado.addRow(vector);
-        }
-    
-    }
-    private void llenaCmbTipoUsuario(){
-    
         this.cmbTipoUsuario.addItem("");
-        this.cmbTipoUsuario.addItem("Administrador");
-        this.cmbTipoUsuario.addItem("Mantenimiento");
-        this.cmbTipoUsuario.addItem("Reportes");
-        this.cmbTipoUsuario.addItem("Transacciones");
+        for (TipoUsuario tipo : TipoUsuario.values()) {
+            this.cmbTipoUsuario.addItem(tipo.getDescripcion());
+        }
+        Tablas.configurar(this.tblUsuario);
+        Tablas.configurar(this.tblEmpleado);
+        Tablas.alSeleccionar(this.tblEmpleado, this::nuevoUsuario);
+        Tablas.alSeleccionar(this.tblUsuario, this::cargarUsuario);
+        this.txtUsuarioId.setEditable(false);
+        this.txtIdLocal.setEditable(false);
+        this.txtEmpleadoID.setEditable(false);
+        this.busquedaUsuarios = new BusquedaDiferida(this.txtBuscarUsuario, this::llenaTblUsuario);
+        this.busquedaEmpleados = new BusquedaDiferida(this.txtBuscarEmpleado, this::llenaTblEmpleado);
+        this.llenaTblUsuario("");
+        this.llenaTblEmpleado("");
+        this.limpiar();
     }
-    
+
+    private void llenaTblUsuario(String texto) {
+        usuarios = uDao.listaUsuario(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblUsuario);
+        for (Usuario u : usuarios) {
+            modelo.addRow(new Object[] {u.getUsuarioID(), u.getIdLocalR(), u.getUsuario(),
+                TipoUsuario.deCodigo(u.getTipUsuaruario()).getDescripcion(), u.getEmpleadoID()});
+        }
+    }
+
+    private void llenaTblEmpleado(String texto) {
+        empleados = empDao.listaEmpleadoNoUsers(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblEmpleado);
+        for (Empleado e : empleados) {
+            modelo.addRow(new Object[] {e.getEmpleadoID(), e.getNombres(), e.getApellidos(), e.getDni()});
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -397,12 +363,7 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioKeyReleased
-        
-        if(this.txtBuscarUsuario.getText().isEmpty()){
-            this.llenaTblUsuario(false, "");
-        }else{
-            this.llenaTblUsuario(true, this.txtBuscarUsuario.getText());
-        }
+        busquedaUsuarios.reiniciar();
     }//GEN-LAST:event_txtBuscarUsuarioKeyReleased
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
@@ -410,42 +371,15 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void txtBuscarEmpleadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoKeyReleased
-        
-        if(this.txtBuscarEmpleado.getText().isEmpty()){
-            this.llenaTblEmpleado(false, "");
-        }else{
-            this.llenaTblEmpleado(true, this.txtBuscarEmpleado.getText());
-        }
+        busquedaEmpleados.reiniciar();
     }//GEN-LAST:event_txtBuscarEmpleadoKeyReleased
 
     private void txtBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioActionPerformed
-        if(this.txtBuscarUsuario.getText().isEmpty()){
-            this.llenaTblUsuario(false, "");
-        }else{
-            this.llenaTblUsuario(true, this.txtBuscarUsuario.getText());
-        }
+        this.llenaTblUsuario(this.txtBuscarUsuario.getText().trim());
     }//GEN-LAST:event_txtBuscarUsuarioActionPerformed
 
     private void tblEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmpleadoMouseClicked
-        
-        int idx = this.tblEmpleado.getSelectedRow();
-        
-        idEmpleado  = (int) this.dtmEmpleado.getValueAt(idx, 0);
-        
-        this.panel1.setEnabledAt(1, true);
-        this.panel1.setSelectedIndex(1);
-                List<LocalR> listaLocal;
-        listaLocal = lDao.listaLocal();
-        int id=0;
-        for (int i =0; i<listaLocal.size();i++){
-            id = listaLocal.get(i).getIdLocalR();
-        }
-        
-        Util u = new Util();
-        this.txtUsuarioId.setText(Integer.toString(u.idNext("Usuario", "usuarioID")));
-        this.txtIdLocal.setText(Integer.toString(id));
-        this.txtEmpleadoID.setText(Integer.toString(idEmpleado));
-        this.panel1.setEnabledAt(0, false);
+        this.nuevoUsuario();
     }//GEN-LAST:event_tblEmpleadoMouseClicked
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -453,143 +387,139 @@ public class FrmUsuario extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
-        
-        if(this.valida()==true){
-        
-            if(this.btnGrabar.getText().equals("Grabar")){
-            
-                Usuario user = new Usuario();
-                
-                user.setUsuarioID(Integer.parseInt(this.txtUsuarioId.getText()));
-                user.setIdLocalR(Integer.parseInt(this.txtIdLocal.getText()));
-                user.setUsuario(this.txtUsuario.getText());
-                if(this.cmbTipoUsuario.getSelectedItem().equals("Administrador")){
-                    user.setTipUsuaruario(1);
-                }else if(this.cmbTipoUsuario.getSelectedItem().equals("Mantenimiento")){
-                    user.setTipUsuaruario(2);
-                }else if(this.cmbTipoUsuario.getSelectedItem().equals("Reportes")){
-                    user.setTipUsuaruario(3);
-                }else{
-                    user.setTipUsuaruario(4);
-                }
-                user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
-                
-                char[] contrasena = this.txtPassWord.getPassword();
-                String errorContrasena = Contrasenas.validarNueva(contrasena);
-                if(errorContrasena != null){
-                    Dialogos.aviso(this, errorContrasena);
-                    this.txtPassWord.requestFocusInWindow();
-                    return;
-                }
-                this.uDao.insertaUsuario(user, contrasena);
-                Arrays.fill(contrasena, '\0');
-                this.limpiar();
-                this.llenaTblUsuario(false, "");
-                this.llenaTblEmpleado(false, "");
-                
-            }else{
-                Usuario user = new Usuario();
-                
-                user.setUsuarioID(Integer.parseInt(this.txtUsuarioId.getText()));
-                user.setIdLocalR(Integer.parseInt(this.txtIdLocal.getText()));
-                user.setUsuario(this.txtUsuario.getText());
-                if(this.cmbTipoUsuario.getSelectedItem().equals("Administrador")){
-                    user.setTipUsuaruario(1);
-                }else if(this.cmbTipoUsuario.getSelectedItem().equals("Mantenimiento")){
-                    user.setTipUsuaruario(2);
-                }else if(this.cmbTipoUsuario.getSelectedItem().equals("Reportes")){
-                    user.setTipUsuaruario(3);
-                }else{
-                    user.setTipUsuaruario(4);
-                }
-                user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
-                
-                char[] nueva = this.txtPassWord.getPassword();
-                if(nueva.length > 0){
-                    String errorContrasena = Contrasenas.validarNueva(nueva);
-                    if(errorContrasena != null){
-                        Dialogos.aviso(this, errorContrasena);
-                        this.txtPassWord.requestFocusInWindow();
-                        return;
-                    }
-                }
-                this.uDao.actualizarUsuario(user);
-                if(nueva.length > 0){
-                    this.uDao.cambiarContrasena(user.getUsuarioID(), nueva);
-                    Arrays.fill(nueva, '\0');
-                }
-                this.llenaTblUsuario(false, "");
-                this.limpiar();
-                
-            }
-        
-        }
-        
-        
+        this.grabar();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void tblUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuarioMouseClicked
-        
-        this.btnGrabar.setText("Actualizar");
-        this.panel1.setSelectedIndex(1);
-        this.panel1.setEnabledAt(1, true);
-        int idx = this.tblUsuario.getSelectedRow();
-        
-        this.txtUsuarioId.setText(this.dtmUsuario.getValueAt(idx,0).toString());
-        this.txtIdLocal.setText(this.dtmUsuario.getValueAt(idx, 1).toString());
-        this.txtUsuario.setText(this.dtmUsuario.getValueAt(idx, 2).toString());
-        this.cmbTipoUsuario.setSelectedItem(this.dtmUsuario.getValueAt(idx, 3).toString());
-        this.txtEmpleadoID.setText(this.dtmUsuario.getValueAt(idx, 4).toString());
-        this.txtPassWord.setText("");
-        this.txtPassWord.setToolTipText("Déjela vacía para conservar la contraseña actual");
-        this.panel1.setEnabledAt(0, false);
+        this.cargarUsuario();
     }//GEN-LAST:event_tblUsuarioMouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        
-        int idx = this.tblUsuario.getSelectedRow();
-        Usuario user = new Usuario();
-        
-        user.setUsuarioID(Integer.parseInt(this.dtmUsuario.getValueAt(idx, 0).toString()));
-        
-        this.uDao.eliminarUsuario(user);
-        this.llenaTblUsuario(false, "");
-        this.llenaTblEmpleado(false, "");
-        this.limpiar();
-        
+        this.eliminar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private boolean valida(){
-    
-        if (this.txtUsuario.getText().isEmpty() && this.cmbTipoUsuario.getSelectedItem().equals("")){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR LOS CAMPOS");
-            
-        }else if(this.txtUsuario.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "FALTA LLENAR USUARIO");
-        }else if(this.cmbTipoUsuario.getSelectedItem().equals("")){
-        
-            JOptionPane.showMessageDialog(null, "FALTA SELECCIONAR TIPO USUARIO");
-        }else {
-            return true;
+    /** Prepara el alta de un usuario para el empleado elegido, en el local de la sesión actual. */
+    private void nuevoUsuario() {
+        int fila = Tablas.filaSeleccionada(this.tblEmpleado);
+        if (fila < 0) {
+            return;
         }
-        return false;
-    }
-    
-    
-    private void limpiar(){
-    
+        seleccionado = null;
+        this.tblUsuario.clearSelection();
+        this.txtUsuarioId.setText(String.valueOf(uDao.siguienteId()));
+        this.txtIdLocal.setText(String.valueOf(Sesion.actual().map(Sesion::getIdLocal).orElse(0)));
+        this.txtEmpleadoID.setText(String.valueOf(empleados.get(fila).getEmpleadoID()));
         this.txtUsuario.setText("");
-        this.cmbTipoUsuario.setSelectedItem("");
-        this.panel1.setSelectedIndex(0);
-        idEmpleado =0;
-        this.panel1.setEnabledAt(1, false);
-        this.panel1.setEnabledAt(0, true);
-        this.btnGrabar.setText("Grabar");
         this.txtPassWord.setText("");
-        this.txtPassWord.setToolTipText(null);
+        this.txtPassWord.setToolTipText("Mínimo " + Contrasenas.LONGITUD_MINIMA + " caracteres, con letras y números");
+        this.cmbTipoUsuario.setSelectedIndex(0);
+        this.btnGrabar.setText("Grabar");
+        abrirPestanaUsuario();
     }
-    
-    
+
+    private void cargarUsuario() {
+        int fila = Tablas.filaSeleccionada(this.tblUsuario);
+        if (fila < 0) {
+            return;
+        }
+        seleccionado = usuarios.get(fila);
+        this.txtUsuarioId.setText(String.valueOf(seleccionado.getUsuarioID()));
+        this.txtIdLocal.setText(String.valueOf(seleccionado.getIdLocalR()));
+        this.txtUsuario.setText(seleccionado.getUsuario());
+        this.cmbTipoUsuario.setSelectedItem(TipoUsuario.deCodigo(seleccionado.getTipUsuaruario()).getDescripcion());
+        this.txtEmpleadoID.setText(String.valueOf(seleccionado.getEmpleadoID()));
+        this.txtPassWord.setText("");
+        this.txtPassWord.setToolTipText("Déjela vacía para conservar la contraseña actual");
+        this.btnGrabar.setText("Actualizar");
+        abrirPestanaUsuario();
+    }
+
+    private void abrirPestanaUsuario() {
+        this.panel1.setEnabledAt(PESTANA_USUARIO, true);
+        this.panel1.setSelectedIndex(PESTANA_USUARIO);
+        this.panel1.setEnabledAt(PESTANA_EMPLEADOS, false);
+        this.txtUsuario.requestFocusInWindow();
+    }
+
+    private void grabar() {
+        String nombre = this.txtUsuario.getText().trim();
+        if (this.txtEmpleadoID.getText().isEmpty()) {
+            Dialogos.aviso(this, "Seleccione un empleado sin usuario o un usuario existente.");
+            return;
+        }
+        if (nombre.isEmpty() || nombre.length() > LONGITUD_MAXIMA_USUARIO || nombre.contains(" ")) {
+            Dialogos.aviso(this, "Indique el nombre de usuario (sin espacios, máximo " + LONGITUD_MAXIMA_USUARIO
+                    + " caracteres).");
+            this.txtUsuario.requestFocusInWindow();
+            return;
+        }
+        if (this.cmbTipoUsuario.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el tipo de usuario.");
+            this.cmbTipoUsuario.requestFocusInWindow();
+            return;
+        }
+        char[] contrasena = this.txtPassWord.getPassword();
+        try {
+            boolean cambiarContrasena = seleccionado == null || contrasena.length > 0;
+            String error = cambiarContrasena ? Contrasenas.validarNueva(contrasena) : null;
+            if (error != null) {
+                Dialogos.aviso(this, error);
+                this.txtPassWord.requestFocusInWindow();
+                return;
+            }
+            Usuario user = new Usuario();
+            user.setIdLocalR(Integer.parseInt(this.txtIdLocal.getText()));
+            user.setUsuario(nombre);
+            user.setTipUsuaruario(TipoUsuario.deDescripcion(this.cmbTipoUsuario.getSelectedItem().toString()).getCodigo());
+            user.setEmpleadoID(Integer.parseInt(this.txtEmpleadoID.getText()));
+            if (seleccionado == null) {
+                this.uDao.insertaUsuario(user, contrasena);
+                Dialogos.info(this, "Usuario \"" + nombre + "\" creado.");
+            } else {
+                user.setUsuarioID(seleccionado.getUsuarioID());
+                this.uDao.actualizarUsuario(user);
+                if (cambiarContrasena) {
+                    this.uDao.cambiarContrasena(user.getUsuarioID(), contrasena);
+                }
+                Dialogos.info(this, "Usuario actualizado" + (cambiarContrasena ? " (contraseña cambiada)." : "."));
+            }
+        } finally {
+            Arrays.fill(contrasena, '\0');
+        }
+        this.llenaTblUsuario(this.txtBuscarUsuario.getText().trim());
+        this.llenaTblEmpleado(this.txtBuscarEmpleado.getText().trim());
+        this.limpiar();
+    }
+
+    private void eliminar() {
+        if (seleccionado == null) {
+            Dialogos.aviso(this, "Seleccione en la tabla de usuarios el usuario que desea eliminar.");
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Desea eliminar el usuario \"" + seleccionado.getUsuario() + "\"?")) {
+            return;
+        }
+        this.uDao.eliminarUsuario(seleccionado);
+        this.llenaTblUsuario(this.txtBuscarUsuario.getText().trim());
+        this.llenaTblEmpleado(this.txtBuscarEmpleado.getText().trim());
+        this.limpiar();
+    }
+
+    private void limpiar() {
+        seleccionado = null;
+        this.tblUsuario.clearSelection();
+        this.tblEmpleado.clearSelection();
+        this.txtUsuarioId.setText("");
+        this.txtIdLocal.setText("");
+        this.txtEmpleadoID.setText("");
+        this.txtUsuario.setText("");
+        this.txtPassWord.setText("");
+        this.cmbTipoUsuario.setSelectedIndex(0);
+        this.btnGrabar.setText("Grabar");
+        this.panel1.setEnabledAt(PESTANA_EMPLEADOS, true);
+        this.panel1.setSelectedIndex(PESTANA_EMPLEADOS);
+        this.panel1.setEnabledAt(PESTANA_USUARIO, false);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrar;
