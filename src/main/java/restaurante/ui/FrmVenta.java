@@ -1,148 +1,151 @@
 package restaurante.ui;
 
-
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import restaurante.modelo.CabOrdenDeVenta;
-import restaurante.modelo.Cliente;
-import restaurante.modelo.DetOrdenDeVenta;
-import restaurante.modelo.Empleado;
-import restaurante.modelo.Mesa;
-import restaurante.modelo.Pedidos;
-import restaurante.modelo.Producto;
+import java.util.Optional;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.table.DefaultTableModel;
 import restaurante.dao.CabOrdenDeVentaDao;
 import restaurante.dao.ClienteDao;
 import restaurante.dao.EmpleadoDao;
 import restaurante.dao.MesaDao;
 import restaurante.dao.ProductoDao;
+import restaurante.dao.TipProductoDao;
+import restaurante.modelo.CabOrdenDeVenta;
+import restaurante.modelo.Cliente;
+import restaurante.modelo.DetOrdenDeVenta;
+import restaurante.modelo.Empleado;
+import restaurante.modelo.Mesa;
+import restaurante.modelo.Producto;
+import restaurante.modelo.TipProducto;
+import restaurante.seguridad.Sesion;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Tablas;
+import restaurante.ui.util.Validaciones;
 
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
+/**
+ * Registro de ventas e historial de compras por cliente.
+ */
 public class FrmVenta extends javax.swing.JFrame {
-    
-    CabOrdenDeVentaDao CabOrdenDeVentaDao= new CabOrdenDeVentaDao();
-    DefaultTableModel dtm1;
-    DefaultTableModel dtm2;
-    DefaultTableModel dtm3;
-    DefaultTableModel dtm4;
-    ClienteDao clieDao= new ClienteDao();
-    MesaDao mesaDao= new MesaDao();
-    EmpleadoDao empleadoDao= new EmpleadoDao();
-    ProductoDao productoDao= new ProductoDao();
-    
+
+    private static final String EFECTIVO = "Efectivo";
+    private static final String CREDITO = "Crédito";
+    private static final String COMER_EN_LOCAL = "ComerEnLocal";
+    private static final String DELIVERY = "Delivery";
+    private static final String PARA_LLEVAR = "ParaLlevar";
+
+    private final CabOrdenDeVentaDao ventaDao = new CabOrdenDeVentaDao();
+    private final ClienteDao clienteDao = new ClienteDao();
+    private final ProductoDao productoDao = new ProductoDao();
+    private final List<Empleado> empleados;
+    private final List<Mesa> mesas;
+    private final List<TipProducto> tipos;
+    private final List<LineaVenta> carrito = new ArrayList<>();
+    private final BusquedaDiferida busqueda;
+    private List<Cliente> clientesConCompras = List.of();
+    private List<CabOrdenDeVenta> ventasCliente = List.of();
+    private Cliente cliente;
+    private Producto producto;
+
+    /** Producto añadido a la venta, con el precio vigente al añadirlo. */
+    private static final class LineaVenta {
+        private final Producto producto;
+        private int cantidad;
+
+        LineaVenta(Producto producto, int cantidad) {
+            this.producto = producto;
+            this.cantidad = cantidad;
+        }
+
+        double subtotal() {
+            return producto.getPrecioUnit() * cantidad;
+        }
+    }
+
     public FrmVenta() {
-        
         initComponents();
-        dtm1 = (DefaultTableModel)this.tblClientes.getModel();
-        dtm2 = (DefaultTableModel)this.tblCompraClie.getModel();
-        dtm3 = (DefaultTableModel)this.tblDetCompraClie.getModel();
-        dtm4 = (DefaultTableModel)this.tblProducto.getModel();
+        this.setTitle("Ventas - Sistema Restaurant");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.empleados = new EmpleadoDao().listaEmpleado(false, "");
+        this.mesas = new MesaDao().ListaMesa();
+        this.tipos = new TipProductoDao().listaTip();
+        this.cmbEmpleado.addItem("");
+        this.empleados.forEach(e -> this.cmbEmpleado.addItem(e.getNombres() + " " + e.getApellidos()));
+        this.cmbMesa.addItem("");
+        this.mesas.forEach(m -> this.cmbMesa.addItem(m.getUbic()));
+        this.cmbMetodoPago.addItem("");
+        this.cmbMetodoPago.addItem(EFECTIVO);
+        this.cmbMetodoPago.addItem(CREDITO);
+        for (JTable tabla : new JTable[] {tblClientes, tblCompraClie, tblDetCompraClie, tblProducto}) {
+            Tablas.configurar(tabla);
+        }
+        Tablas.alSeleccionar(this.tblClientes, this::cargarVentasCliente);
+        Tablas.alSeleccionar(this.tblCompraClie, this::cargarDetalleVenta);
+        for (JTextField campo : new JTextField[] {txtIdCliente, txtNombreClie, txtApellidosClie, txtTelefonoClie,
+            txtIdProducto, txtDescripProd, txtTipProd, txtPrecio}) {
+            campo.setEditable(false);
+        }
+        this.txtDireccionClie.setToolTipText("Dirección de entrega (se puede modificar para este pedido)");
+        this.txtCantProd.setToolTipText("Pulse Intro para agregar el producto");
+        this.rbtnComerEnLocal.addItemListener(e -> actualizarMesa());
+        this.rbtnDelivery.addItemListener(e -> actualizarMesa());
+        this.rbtnParaLlevar.addItemListener(e -> actualizarMesa());
+        configurarCarrito();
+        this.busqueda = new BusquedaDiferida(this.txtBuscaCliente, this::llenaTblCliente);
         this.jTabbedPane1.setSelectedIndex(1);
         this.setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        llenaCmbMesa();
-        llenaCmbEmpleado();
-        llenaCmbMetodoPago();
-        llenaTblCliente(false, "");
-        
+        this.limpiarVenta();
+        this.llenaTblCliente("");
     }
 
-    private void llenaCompraCliente(int clienteID){
-        List<CabOrdenDeVenta> listCabVenta;
-        listCabVenta = CabOrdenDeVentaDao.ListaCodv(clienteID);
-        
-        dtm2.setRowCount(0);
-        
-        for(int i = 0;i<listCabVenta.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listCabVenta.get(i).getOrdenDeVentaID());
-            vec.addElement(listCabVenta.get(i).getClienteID());
-            vec.addElement(listCabVenta.get(i).getMesaID());
-            vec.addElement(listCabVenta.get(i).getFechaVenta());
-            vec.addElement(listCabVenta.get(i).getMetodoPago());
-            vec.addElement(listCabVenta.get(i).getTipEntrega());
-            dtm2.addRow(vec);
-        }
-    }
-    private void llenaDetCompraCliente(int ordenDeVentaID){
-        List<Producto> listDetVenta;
-        listDetVenta = productoDao.ListaProducto2(ordenDeVentaID);
-        
-        dtm3.setRowCount(0);
-        for(int i = 0;i<listDetVenta.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listDetVenta.get(i).getProductoID());
-            vec.addElement(listDetVenta.get(i).getDescripProducto());
-            vec.addElement(listDetVenta.get(i).getTipo());
-            vec.addElement(listDetVenta.get(i).getPrecioUnit());
-            dtm3.addRow(vec);
-        }
-        
-        
-        
+    private void configurarCarrito() {
+        this.tblProducto.setToolTipText("Seleccione un producto y pulse Supr para quitarlo de la venta");
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem quitar = new JMenuItem("Quitar de la venta");
+        quitar.addActionListener(e -> quitarSeleccionado());
+        menu.add(quitar);
+        this.tblProducto.setComponentPopupMenu(menu);
+        this.tblProducto.getInputMap(JComponent.WHEN_FOCUSED)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "quitar");
+        this.tblProducto.getActionMap().put("quitar", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                quitarSeleccionado();
+            }
+        });
     }
 
-    private void limpiaDet(){
-        this.txtIdProducto.setText("");
-        this.txtDescripProd.setText("");
-        this.txtTipProd.setText("");
-        this.txtPrecio.setText("");
-        this.txtCantProd.setText("");
+    private String descripcionTipo(int id) {
+        return tipos.stream().filter(t -> t.getIdTipProducto() == id).map(TipProducto::getDescripcion)
+                .findFirst().orElse("");
     }
-    private void limpiaCab(){
-        this.txtNombreClie.setText("");
-        this.txtApellidosClie.setText("");
-        this.txtDireccionClie.setText("");
-        this.txtTelefonoClie.setText("");
-        this.txtIdCliente.setText("");
-        this.cmbEmpleado.setSelectedItem("");
-        this.cmbMesa.setSelectedItem("");
-        this.cmbMetodoPago.setSelectedItem("");
-        this.buttonGroup1.clearSelection();
+
+    private String descripcionMesa(int id) {
+        return mesas.stream().filter(m -> m.getMesaID() == id).map(Mesa::getUbic).findFirst().orElse("-");
     }
-    private void llenaTblCliente(boolean sw, String str){
-        List<Cliente> listaClie;
-        listaClie = clieDao.ListaCliente2(sw, str);
-        
-        dtm1.setRowCount(0);
-        
-        for(int i = 0;i<listaClie.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listaClie.get(i).getClienteID());
-            vec.addElement(listaClie.get(i).getApellidos());
-            vec.addElement(listaClie.get(i).getNombres());
-            vec.addElement(listaClie.get(i).getEstado());
-            dtm1.addRow(vec);
+
+    private static String descripcionEntrega(String codigo) {
+        if (COMER_EN_LOCAL.equals(codigo)) {
+            return "Comer en local";
         }
-        
-    }
-    private void llenaCmbMesa(){
-        List<Mesa> listMesa;
-        listMesa = mesaDao.ListaMesa();
-        this.cmbMesa.addItem("");
-        for(int i = 0;i<listMesa.size();i++){
-            this.cmbMesa.addItem(listMesa.get(i).getUbic());
+        if (PARA_LLEVAR.equals(codigo)) {
+            return "Para llevar";
         }
+        return codigo == null ? "" : "Delivery";
     }
-    private void llenaCmbEmpleado(){
-        List<Empleado> listEmp;
-        listEmp = empleadoDao.listaEmpleado(false, "");
-        this.cmbEmpleado.addItem("");
-        for(int i = 0;i<listEmp.size();i++){
-            this.cmbEmpleado.addItem(listEmp.get(i).getNombres());
-        }
-    }
-    private void llenaCmbMetodoPago(){
-        this.cmbMetodoPago.addItem("");
-        this.cmbMetodoPago.addItem("Efectivo");
-        this.cmbMetodoPago.addItem("Credito");
-    }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -802,144 +805,291 @@ public class FrmVenta extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
- 
+
     private void rbtnDeliveryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnDeliveryActionPerformed
-        // TODO add your handling code here:
+        this.actualizarMesa();
     }//GEN-LAST:event_rbtnDeliveryActionPerformed
 
     private void txtIdClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdClienteActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtIdClienteActionPerformed
 
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActionPerformed
 
     private void txtBuscaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscaClienteActionPerformed
-        
+        this.llenaTblCliente(this.txtBuscaCliente.getText().trim());
     }//GEN-LAST:event_txtBuscaClienteActionPerformed
 
     private void btnCrearClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearClienteActionPerformed
-        CrearCliente abrir = new CrearCliente();
-        abrir.setVisible(true);
-
+        CrearCliente ventana = new CrearCliente();
+        ventana.alRegistrar(this::usarCliente);
+        ventana.setVisible(true);
     }//GEN-LAST:event_btnCrearClienteActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        Cliente clie;
-        SelCliente dialog = new SelCliente(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-        clie = dialog.devuelveCliente();
-        
-        this.txtIdCliente.setText(String.valueOf(clie.getClienteID()));
-        this.txtApellidosClie.setText(clie.getApellidos());
-        this.txtNombreClie.setText(clie.getNombres());
-        this.txtDireccionClie.setText(clie.getDireccion());
-        this.txtTelefonoClie.setText(String.valueOf(clie.getTelefono()));
+        SelCliente dialogo = new SelCliente(this, true);
+        dialogo.setVisible(true);
+        Cliente elegido = dialogo.devuelveCliente();
+        if (elegido != null) {
+            this.usarCliente(elegido);
+        }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
-        Producto p;
-        SelProducto dialog = new SelProducto(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-        p = dialog.devProd();
-        this.txtIdProducto.setText(String.valueOf(p.getProductoID()));
-        this.txtDescripProd.setText(p.getDescripProducto());
-        this.txtTipProd.setText(String.valueOf(p.getTipo()));
-        this.txtPrecio.setText(String.valueOf(p.getPrecioUnit()));
+        SelProducto dialogo = new SelProducto(this, true);
+        dialogo.setVisible(true);
+        Producto elegido = dialogo.devProd();
+        if (elegido != null) {
+            this.usarProducto(elegido);
+        }
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
-        if(this.txtIdProducto.getText().isEmpty() || this.txtCantProd.getText().isEmpty() || this.cmbEmpleado.getSelectedItem().toString().isEmpty() || this.cmbMetodoPago.getSelectedItem().toString().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Debe selecionara el producto, registrar la cantidad, seleccionar el empleado y el metodo de pago");
-        }else{    
-            Vector vec = new Vector();
-            
-            vec.addElement(this.txtIdProducto.getText());
-            vec.addElement(this.txtDescripProd.getText());
-            vec.addElement(this.txtTipProd.getText());
-            vec.addElement(this.txtPrecio.getText());
-            vec.addElement(this.txtCantProd.getText());
-            
-            dtm4.addRow(vec);
-            limpiaDet();
-        }
+        this.agregarProducto();
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        if(this.txtIdCliente.getText().isEmpty() || dtm4.getRowCount() == 0 || this.rbtnComerEnLocal.isSelected() == false && this.rbtnDelivery.isSelected() == false && this.rbtnParaLlevar.isSelected() == false){
-            JOptionPane.showMessageDialog(this, "Debe selecionarar el tipo de entrega, un cliente y por lo menos un producto");
-        }else{
-            CabOrdenDeVenta cv = new CabOrdenDeVenta();
-            cv.setEmpleadoID(empleadoDao.devuelveIdEmpleado(this.cmbEmpleado.getSelectedItem().toString()));
-            cv.setClienteID(Integer.parseInt(this.txtIdCliente.getText()));
-            cv.setMesaID(mesaDao.devuelveIdMesa(this.cmbMesa.getSelectedItem().toString()));
-            // Se conserva la codificación original: 1 = efectivo, 0 = crédito.
-            cv.setMetodoPago("Efectivo".equalsIgnoreCase(this.cmbMetodoPago.getSelectedItem().toString()) ? 1 : 0);
-            if(this.rbtnComerEnLocal.isSelected()){
-                cv.setTipEntrega("ComerEnLocal");
-            }else if(this.rbtnDelivery.isSelected()){
-                cv.setTipEntrega("Delivery");
-            }else{
-                cv.setTipEntrega("ParaLlevar");
-            }
-
-            List<DetOrdenDeVenta> detalles = new ArrayList<>();
-            for(int i=0;i<dtm4.getRowCount();i++){
-                DetOrdenDeVenta dv = new DetOrdenDeVenta();
-                dv.setProductoID(Integer.parseInt(this.dtm4.getValueAt(i, 0).toString()));
-                dv.setCantidad(Integer.parseInt(this.dtm4.getValueAt(i, 4).toString()));
-                detalles.add(dv);
-            }
-            this.CabOrdenDeVentaDao.registrarVenta(cv, this.txtDireccionClie.getText(), detalles);
-            this.limpiaCab();
-            this.limpiaDet();
-            this.dtm4.setRowCount(0);
-            
-            //Actualizando en Det_Venta
-            
-        }
+        this.registrar();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtBuscaClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscaClienteKeyReleased
-        if(txtBuscaCliente.getText().isEmpty()){
-            llenaTblCliente(false, "");
-        }else{
-            llenaTblCliente(true, this.txtBuscaCliente.getText());
-        }
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtBuscaClienteKeyReleased
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
-        
-        int idx;
-        String cad;
-        
-        idx = this.tblClientes.getSelectedRow();
-        cad = dtm1.getValueAt(idx, 0).toString();
-        
-        llenaCompraCliente(Integer.parseInt(cad));
+        this.cargarVentasCliente();
     }//GEN-LAST:event_tblClientesMouseClicked
 
     private void tblCompraClieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCompraClieMouseClicked
-        int idx;
-        String cad;
-        
-        idx = this.tblCompraClie.getSelectedRow();
-        cad = dtm2.getValueAt(idx, 0).toString();
-        
-        llenaDetCompraCliente(Integer.parseInt(cad));
+        this.cargarDetalleVenta();
     }//GEN-LAST:event_tblCompraClieMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtCantProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantProdActionPerformed
-        // TODO add your handling code here:
+        this.agregarProducto();
     }//GEN-LAST:event_txtCantProdActionPerformed
-    
-    
+
+    // ------------------------------------------------------------- Venta
+
+    private void usarCliente(Cliente c) {
+        this.cliente = c;
+        this.txtIdCliente.setText(String.valueOf(c.getClienteID()));
+        this.txtNombreClie.setText(c.getNombres());
+        this.txtApellidosClie.setText(c.getApellidos());
+        this.txtDireccionClie.setText(c.getDireccion() == null ? "" : c.getDireccion());
+        this.txtTelefonoClie.setText(c.getTelefono() > 0 ? String.valueOf(c.getTelefono()) : "");
+    }
+
+    private void usarProducto(Producto p) {
+        this.producto = p;
+        this.txtIdProducto.setText(String.valueOf(p.getProductoID()));
+        this.txtDescripProd.setText(p.getDescripProducto());
+        this.txtTipProd.setText(descripcionTipo(p.getTipo()));
+        this.txtPrecio.setText(Tablas.importe(p.getPrecioUnit()));
+        this.txtCantProd.setText("1");
+        this.txtCantProd.requestFocusInWindow();
+        this.txtCantProd.selectAll();
+    }
+
+    private void agregarProducto() {
+        if (producto == null) {
+            Dialogos.aviso(this, "Busque y seleccione un producto.");
+            this.btnBuscarProducto.requestFocusInWindow();
+            return;
+        }
+        Optional<Integer> cantidad = Validaciones.enteroPositivo(this.txtCantProd.getText());
+        if (cantidad.isEmpty()) {
+            Dialogos.aviso(this, "La cantidad debe ser un número entero mayor que cero.");
+            this.txtCantProd.requestFocusInWindow();
+            return;
+        }
+        Optional<LineaVenta> existente = carrito.stream()
+                .filter(l -> l.producto.getProductoID() == producto.getProductoID()).findFirst();
+        if (existente.isPresent()) {
+            existente.get().cantidad += cantidad.get();
+        } else {
+            carrito.add(new LineaVenta(producto, cantidad.get()));
+        }
+        refrescarCarrito();
+        limpiaDet();
+    }
+
+    private void quitarSeleccionado() {
+        int fila = Tablas.filaSeleccionada(this.tblProducto);
+        if (fila >= 0) {
+            carrito.remove(fila);
+            refrescarCarrito();
+        }
+    }
+
+    private void refrescarCarrito() {
+        DefaultTableModel modelo = Tablas.vaciar(this.tblProducto);
+        for (LineaVenta l : carrito) {
+            modelo.addRow(new Object[] {l.producto.getProductoID(), l.producto.getDescripProducto(),
+                descripcionTipo(l.producto.getTipo()), Tablas.importe(l.producto.getPrecioUnit()), l.cantidad});
+        }
+        this.jScrollPane1.setBorder(BorderFactory.createTitledBorder("Productos de la venta   |   Total: "
+                + Tablas.importe(total())));
+    }
+
+    private double total() {
+        return carrito.stream().mapToDouble(LineaVenta::subtotal).sum();
+    }
+
+    private void actualizarMesa() {
+        boolean enLocal = this.rbtnComerEnLocal.isSelected();
+        this.cmbMesa.setEnabled(enLocal);
+        if (!enLocal) {
+            this.cmbMesa.setSelectedIndex(0);
+        }
+    }
+
+    private void registrar() {
+        String direccion = this.txtDireccionClie.getText().trim();
+        if (cliente == null) {
+            Dialogos.aviso(this, "Busque un cliente o registre uno nuevo.");
+            return;
+        }
+        if (carrito.isEmpty()) {
+            Dialogos.aviso(this, "Agregue al menos un producto a la venta.");
+            return;
+        }
+        if (!rbtnComerEnLocal.isSelected() && !rbtnDelivery.isSelected() && !rbtnParaLlevar.isSelected()) {
+            Dialogos.aviso(this, "Seleccione el tipo de entrega.");
+            return;
+        }
+        if (rbtnComerEnLocal.isSelected() && this.cmbMesa.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione la mesa.");
+            this.cmbMesa.requestFocusInWindow();
+            return;
+        }
+        if (rbtnDelivery.isSelected() && direccion.isEmpty()) {
+            Dialogos.aviso(this, "Indique la dirección de entrega.");
+            this.txtDireccionClie.requestFocusInWindow();
+            return;
+        }
+        if (this.cmbEmpleado.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el empleado que atiende la venta.");
+            this.cmbEmpleado.requestFocusInWindow();
+            return;
+        }
+        if (this.cmbMetodoPago.getSelectedIndex() <= 0) {
+            Dialogos.aviso(this, "Seleccione el método de pago.");
+            this.cmbMetodoPago.requestFocusInWindow();
+            return;
+        }
+        if (!Dialogos.confirmar(this, "¿Registrar la venta a " + cliente.getNombres() + " " + cliente.getApellidos()
+                + " por un total de " + Tablas.importe(total()) + "?")) {
+            return;
+        }
+        CabOrdenDeVenta cab = new CabOrdenDeVenta();
+        cab.setEmpleadoID(empleados.get(this.cmbEmpleado.getSelectedIndex() - 1).getEmpleadoID());
+        cab.setClienteID(cliente.getClienteID());
+        // Se conserva la codificación original: 1 = efectivo, 0 = crédito.
+        cab.setMetodoPago(EFECTIVO.equals(this.cmbMetodoPago.getSelectedItem()) ? 1 : 0);
+        String ubicacion;
+        if (rbtnComerEnLocal.isSelected()) {
+            Mesa mesa = mesas.get(this.cmbMesa.getSelectedIndex() - 1);
+            cab.setMesaID(mesa.getMesaID());
+            cab.setTipEntrega(COMER_EN_LOCAL);
+            ubicacion = mesa.getUbic();
+        } else if (rbtnDelivery.isSelected()) {
+            cab.setTipEntrega(DELIVERY);
+            ubicacion = direccion;
+        } else {
+            cab.setTipEntrega(PARA_LLEVAR);
+            ubicacion = "Para llevar";
+        }
+        List<DetOrdenDeVenta> detalles = new ArrayList<>();
+        for (LineaVenta l : carrito) {
+            DetOrdenDeVenta det = new DetOrdenDeVenta();
+            det.setProductoID(l.producto.getProductoID());
+            det.setCantidad(l.cantidad);
+            det.setPrecioUnit(l.producto.getPrecioUnit());
+            detalles.add(det);
+        }
+        double importe = total();
+        int numero = this.ventaDao.registrarVenta(cab, ubicacion, detalles);
+        Dialogos.info(this, "Venta N.º " + numero + " registrada correctamente.\nTotal: " + Tablas.importe(importe));
+        this.limpiarVenta();
+        this.llenaTblCliente(this.txtBuscaCliente.getText().trim());
+    }
+
+    private void limpiaDet() {
+        this.producto = null;
+        this.txtIdProducto.setText("");
+        this.txtDescripProd.setText("");
+        this.txtTipProd.setText("");
+        this.txtPrecio.setText("");
+        this.txtCantProd.setText("");
+    }
+
+    private void limpiarVenta() {
+        this.cliente = null;
+        this.txtIdCliente.setText("");
+        this.txtNombreClie.setText("");
+        this.txtApellidosClie.setText("");
+        this.txtDireccionClie.setText("");
+        this.txtTelefonoClie.setText("");
+        this.buttonGroup1.clearSelection();
+        this.cmbMetodoPago.setSelectedIndex(0);
+        this.cmbEmpleado.setSelectedIndex(0);
+        Integer empleadoSesion = Sesion.actual().map(Sesion::getEmpleadoID).orElse(null);
+        for (int i = 0; empleadoSesion != null && i < empleados.size(); i++) {
+            if (empleados.get(i).getEmpleadoID() == empleadoSesion) {
+                this.cmbEmpleado.setSelectedIndex(i + 1);
+            }
+        }
+        carrito.clear();
+        refrescarCarrito();
+        limpiaDet();
+        actualizarMesa();
+    }
+
+    // ------------------------------------------------------------- Historial
+
+    private void llenaTblCliente(String texto) {
+        clientesConCompras = clienteDao.ListaCliente2(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblClientes);
+        for (Cliente c : clientesConCompras) {
+            modelo.addRow(new Object[] {c.getClienteID(), c.getNombres(), c.getApellidos(),
+                c.getEstado() == ClienteDao.ESTADO_ACTIVO ? "Activo" : "Inactivo"});
+        }
+        Tablas.vaciar(this.tblCompraClie);
+        Tablas.vaciar(this.tblDetCompraClie);
+    }
+
+    private void cargarVentasCliente() {
+        int fila = Tablas.filaSeleccionada(this.tblClientes);
+        if (fila < 0) {
+            return;
+        }
+        ventasCliente = ventaDao.ListaCodv(clientesConCompras.get(fila).getClienteID());
+        DefaultTableModel modelo = Tablas.vaciar(this.tblCompraClie);
+        for (CabOrdenDeVenta v : ventasCliente) {
+            modelo.addRow(new Object[] {v.getOrdenDeVentaID(), v.getClienteID(), descripcionMesa(v.getMesaID()),
+                v.getFechaVenta(), v.getMetodoPago() == 1 ? EFECTIVO : CREDITO, descripcionEntrega(v.getTipEntrega())});
+        }
+        Tablas.vaciar(this.tblDetCompraClie);
+    }
+
+    private void cargarDetalleVenta() {
+        int fila = Tablas.filaSeleccionada(this.tblCompraClie);
+        if (fila < 0) {
+            return;
+        }
+        double totalVenta = 0;
+        DefaultTableModel modelo = Tablas.vaciar(this.tblDetCompraClie);
+        for (Producto p : productoDao.ListaProducto2(ventasCliente.get(fila).getOrdenDeVentaID())) {
+            modelo.addRow(new Object[] {p.getProductoID(), p.getCantidad() + " x " + p.getDescripProducto(),
+                descripcionTipo(p.getTipo()), Tablas.importe(p.getPrecioUnit())});
+            totalVenta += p.getPrecioUnit() * p.getCantidad();
+        }
+        this.jScrollPane4.setBorder(BorderFactory.createTitledBorder("Total de la venta: " + Tablas.importe(totalVenta)));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProducto;

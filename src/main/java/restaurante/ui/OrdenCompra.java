@@ -1,81 +1,59 @@
 package restaurante.ui;
 
-
 import java.util.List;
-import restaurante.modelo.CabOrdenDeProduccionSemanal;
-import restaurante.modelo.DetOrdenDeProduccionSemanal;
-import restaurante.modelo.Empleado;
-import restaurante.modelo.Insumo;
-import restaurante.modelo.Plato;
-import restaurante.modelo.Producto;
-import restaurante.dao.EmpleadoDao;
-import restaurante.dao.InsumoDao;
-import restaurante.dao.PlatoDao;
-import restaurante.dao.ProductoDao;
-import restaurante.util.Util;
-import java.util.Vector;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.InsumoDao;
+import restaurante.dao.ProductoDao;
+import restaurante.dao.TipInsumoDao;
+import restaurante.dao.TipProductoDao;
+import restaurante.modelo.Insumo;
+import restaurante.modelo.Producto;
+import restaurante.modelo.TipInsumo;
+import restaurante.modelo.TipProducto;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Tablas;
 
+/**
+ * Consulta del inventario de insumos y productos.
+ */
 public class OrdenCompra extends javax.swing.JInternalFrame {
-    DefaultTableModel dtm1;
-    DefaultTableModel dtm2;
-    DefaultTableModel dtm3;
-    DefaultTableModel dtm4;
-    ProductoDao productoDao = new ProductoDao();
-    InsumoDao insumoDao= new InsumoDao();
-    PlatoDao platoDao= new PlatoDao();
-    EmpleadoDao empleadoDao= new EmpleadoDao();
+
+    private final ProductoDao productoDao = new ProductoDao();
+    private final InsumoDao insumoDao = new InsumoDao();
+    private final List<TipInsumo> tiposInsumo = new TipInsumoDao().llenaTipInsumo();
+    private final List<TipProducto> tiposProducto = new TipProductoDao().listaTip();
+    private final BusquedaDiferida busquedaInsumos;
+    private final BusquedaDiferida busquedaProductos;
+
     public OrdenCompra() {
         initComponents();
-        
-        dtm1 = (DefaultTableModel)this.tblInsumos.getModel();
-        dtm2 = (DefaultTableModel)this.tblProductos.getModel();
-
-        
-        
-        llenaTblInsumo(false, "");
-        llenaTblProducto(false, "");
-
+        Tablas.configurar(this.tblInsumos);
+        Tablas.configurar(this.tblProductos);
+        this.busquedaInsumos = new BusquedaDiferida(this.txtBuscarInsumo, this::llenaTblInsumo);
+        this.busquedaProductos = new BusquedaDiferida(this.txtBuscarProducto, this::llenaTblProducto);
+        llenaTblInsumo("");
+        llenaTblProducto("");
     }
 
-    private void llenaTblInsumo(boolean sw, String str){
-        List<Insumo> listaInsu;
-        listaInsu = insumoDao.ListaItem(sw, str);
-        
-        dtm1.setRowCount(0);
-        
-        for(int i = 0;i<listaInsu.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listaInsu.get(i).getInsumoID());
-            vec.addElement(listaInsu.get(i).getIdTipInsumo());
-            vec.addElement(listaInsu.get(i).getUnidadMedida());
-            vec.addElement(listaInsu.get(i).getDescripInsumo());
-            vec.addElement(listaInsu.get(i).getPrecioUnit());
-            vec.addElement(listaInsu.get(i).getCantidad());
-            dtm1.addRow(vec);
+    private void llenaTblInsumo(String texto) {
+        DefaultTableModel modelo = Tablas.vaciar(this.tblInsumos);
+        for (Insumo i : insumoDao.ListaItem(!texto.isEmpty(), texto)) {
+            String tipo = tiposInsumo.stream().filter(t -> t.getIdInsumo() == i.getIdTipInsumo())
+                    .map(TipInsumo::getDescripcion).findFirst().orElse("");
+            modelo.addRow(new Object[] {i.getInsumoID(), tipo, i.getUnidadMedida(), i.getDescripInsumo(),
+                Tablas.importe(i.getPrecioUnit()), i.getCantidad()});
         }
-        
     }
-    private void llenaTblProducto(boolean sw, String str){
-        List<Producto> listaProd;
-        listaProd = productoDao.ListaProducto(sw, str);
-        
-        dtm2.setRowCount(0);
-        
-        for(int i = 0;i<listaProd.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listaProd.get(i).getProductoID());
-            vec.addElement(listaProd.get(i).getTipo());
-            vec.addElement(listaProd.get(i).getDescripProducto());
-            vec.addElement(listaProd.get(i).getPrecioUnit());
-            vec.addElement(listaProd.get(i).getCantidad());
-            dtm2.addRow(vec);
+
+    private void llenaTblProducto(String texto) {
+        DefaultTableModel modelo = Tablas.vaciar(this.tblProductos);
+        for (Producto p : productoDao.ListaProducto(!texto.isEmpty(), texto)) {
+            String tipo = tiposProducto.stream().filter(t -> t.getIdTipProducto() == p.getTipo())
+                    .map(TipProducto::getDescripcion).findFirst().orElse("");
+            modelo.addRow(new Object[] {p.getProductoID(), tipo, p.getDescripProducto(),
+                Tablas.importe(p.getPrecioUnit()), p.getCantidad()});
         }
-        
     }
-
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -240,25 +218,16 @@ public class OrdenCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtBuscarProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarProductoKeyReleased
-        if(this.txtBuscarProducto.getText().isEmpty()){
-            llenaTblProducto(false, "");
-        }else{
-            llenaTblProducto(true, this.txtBuscarProducto.getText());
-        }
+        busquedaProductos.reiniciar();
     }//GEN-LAST:event_txtBuscarProductoKeyReleased
 
     private void txtBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarProductoActionPerformed
-        // TODO add your handling code here:
+        llenaTblProducto(this.txtBuscarProducto.getText().trim());
     }//GEN-LAST:event_txtBuscarProductoActionPerformed
 
     private void txtBuscarInsumoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarInsumoKeyReleased
-        if(this.txtBuscarInsumo.getText().isEmpty()){
-            llenaTblInsumo(false, "");
-        }else{
-            llenaTblInsumo(true, this.txtBuscarInsumo.getText());
-        }
+        busquedaInsumos.reiniciar();
     }//GEN-LAST:event_txtBuscarInsumoKeyReleased
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

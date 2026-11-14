@@ -1,45 +1,67 @@
 package restaurante.ui;
 
-
+import java.awt.event.KeyEvent;
 import java.util.List;
-import restaurante.modelo.Producto;
-import restaurante.dao.ProductoDao;
-import java.util.Vector;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import restaurante.dao.ProductoDao;
+import restaurante.dao.TipProductoDao;
+import restaurante.modelo.Producto;
+import restaurante.modelo.TipProducto;
+import restaurante.ui.util.BusquedaDiferida;
+import restaurante.ui.util.Tablas;
 
+/**
+ * Diálogo para elegir un producto (doble clic o Intro sobre la fila).
+ */
 public class SelProducto extends javax.swing.JDialog {
-    ProductoDao productoDao;
-    DefaultTableModel dtm;
-    Producto prod;
+
+    private final ProductoDao productoDao = new ProductoDao();
+    private final List<TipProducto> tipos = new TipProductoDao().listaTip();
+    private final BusquedaDiferida busqueda;
+    private List<Producto> productos = List.of();
+    private Producto elegido;
+
     public SelProducto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setTitle("Seleccionar producto (doble clic o Intro)");
         this.setLocationRelativeTo(parent);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        productoDao = new ProductoDao();
-        prod = new Producto();
-        dtm =(DefaultTableModel)this.tblProducto.getModel();
-        this.llenaTblProducto(false, "");
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        Tablas.configurar(this.tblProducto);
+        Tablas.alElegir(this.tblProducto, this::elegir);
+        this.getRootPane().registerKeyboardAction(e -> dispose(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+        this.busqueda = new BusquedaDiferida(this.txtProducto, this::llenaTblProducto);
+        this.llenaTblProducto("");
     }
 
-    public void llenaTblProducto(boolean sw, String cad){
-        List<Producto> listProducto = productoDao.ListaProducto(sw, cad);
-        dtm.setRowCount(0);
-        for(int i = 0; i<listProducto.size();i++){
-            Vector vec = new Vector();
-            vec.addElement(listProducto.get(i).getProductoID());
-            vec.addElement(listProducto.get(i).getDescripProducto());
-            vec.addElement(listProducto.get(i).getTipo());
-            vec.addElement(listProducto.get(i).getPrecioUnit());
-            dtm.addRow(vec);
-            
-        }  
+    public void llenaTblProducto(String texto) {
+        productos = productoDao.ListaProducto(!texto.isEmpty(), texto);
+        DefaultTableModel modelo = Tablas.vaciar(this.tblProducto);
+        for (Producto p : productos) {
+            String tipo = tipos.stream().filter(t -> t.getIdTipProducto() == p.getTipo())
+                    .map(TipProducto::getDescripcion).findFirst().orElse("");
+            modelo.addRow(new Object[] {p.getProductoID(), p.getDescripProducto(), tipo,
+                Tablas.importe(p.getPrecioUnit()), p.getCantidad()});
+        }
     }
-    public Producto devProd(){
-        return prod;
+
+    /** Producto elegido, o {@code null} si se cerró el diálogo sin elegir. */
+    public Producto devProd() {
+        return elegido;
     }
+
+    private void elegir() {
+        int fila = Tablas.filaSeleccionada(this.tblProducto);
+        if (fila >= 0) {
+            elegido = productos.get(fila);
+            this.dispose();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -68,7 +90,7 @@ public class SelProducto extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Descripccion", "Tipo", "Precio", "Estado"
+                "Codigo", "Descripción", "Tipo", "Precio", "Stock"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -128,27 +150,11 @@ public class SelProducto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductoKeyReleased
-        if(this.txtProducto.getText().isEmpty()){
-            this.llenaTblProducto(false, "");
-        }else{
-            this.llenaTblProducto(true, this.txtProducto.getText());
-        }
+        busqueda.reiniciar();
     }//GEN-LAST:event_txtProductoKeyReleased
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
-        int i;
-        i = this.tblProducto.getSelectedRow();
-        prod.setProductoID(Integer.parseInt(dtm.getValueAt(i,0).toString()));
-        prod.setDescripProducto(dtm.getValueAt(i,1).toString());
-        prod.setTipo(Integer.parseInt(dtm.getValueAt(i,2).toString()));
-        prod.setPrecioUnit(Double.parseDouble(dtm.getValueAt(i,3).toString()));
-        this.dispose();
     }//GEN-LAST:event_tblProductoMouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

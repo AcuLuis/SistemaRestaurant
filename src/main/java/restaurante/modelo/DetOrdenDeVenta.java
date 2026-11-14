@@ -8,6 +8,7 @@ public class DetOrdenDeVenta {
     int cantidad;
     int estado;
     int idPedidos;
+    double precioUnit;
 
     public DetOrdenDeVenta() {
     }
@@ -67,6 +68,15 @@ public class DetOrdenDeVenta {
 
     public void setIdPedidos(int idPedidos) {
         this.idPedidos = idPedidos;
+    }
+
+    /** Precio unitario aplicado en la venta. */
+    public double getPrecioUnit() {
+        return precioUnit;
+    }
+
+    public void setPrecioUnit(double precioUnit) {
+        this.precioUnit = precioUnit;
     }
     
 }

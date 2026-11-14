@@ -47,8 +47,12 @@ public class CabOrdenDeVentaDao {
                     idPedido, cab.getEmpleadoID(), ubicacionPedido, 0);
 
             for (DetOrdenDeVenta det : detalles) {
-                Jdbc.actualizar(c, "INSERT INTO DetOrdenDeVenta (ordenDeVentaID, productoID, idPedidos, cantidad)"
-                        + " VALUES (?, ?, ?, ?)", idVenta, det.getProductoID(), idPedido, det.getCantidad());
+                if (det.getCantidad() <= 0) {
+                    throw new DatosException("La cantidad de cada producto debe ser mayor que cero.");
+                }
+                Jdbc.actualizar(c, "INSERT INTO DetOrdenDeVenta (ordenDeVentaID, productoID, idPedidos, cantidad,"
+                        + " precioUnit) VALUES (?, ?, ?, ?, ?)",
+                        idVenta, det.getProductoID(), idPedido, det.getCantidad(), det.getPrecioUnit());
             }
             cab.setOrdenDeVentaID(idVenta);
             return idVenta;

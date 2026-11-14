@@ -1,21 +1,37 @@
 package restaurante.ui;
 
-import restaurante.modelo.Cliente;
+import java.util.function.Consumer;
 import restaurante.dao.ClienteDao;
-import restaurante.util.Util;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import restaurante.modelo.Cliente;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Validaciones;
 
+/**
+ * Alta rápida de clientes desde la pantalla de ventas.
+ */
 public class CrearCliente extends javax.swing.JFrame {
-    ClienteDao clieDao;
-    int idCliente;
+
+    private static final String SIN_DIRECCION = "Sin dirección";
+
+    private final ClienteDao clieDao = new ClienteDao();
+    private Consumer<Cliente> alRegistrar = c -> { };
+
     public CrearCliente() {
-        clieDao = new ClienteDao();
         initComponents();
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.setTitle("Registrar cliente");
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        
+        this.btnAutoDirecc.setToolTipText("Usar cuando el cliente no indica su dirección");
+        this.btnAutoTelef.setToolTipText("Usar cuando el cliente no indica su teléfono");
+        this.txtTelefono.setToolTipText("Entre 6 y 9 dígitos (opcional)");
+        this.getRootPane().setDefaultButton(this.btnRegistrar);
     }
+
+    /** Acción a ejecutar con el cliente recién registrado (por ejemplo, usarlo en la venta). */
+    public void alRegistrar(Consumer<Cliente> accion) {
+        this.alRegistrar = accion;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -163,20 +179,7 @@ public class CrearCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        if(valida() == true){
-            Util u = new Util();
-            Cliente clie = new Cliente();
-            idCliente = u.idNext("Cliente", "clienteID");
-            clie.setClienteID(idCliente);
-            clie.setNombres(this.txtNombre.getText());
-            clie.setApellidos(this.txtApellido.getText());
-            clie.setDireccion(this.txtDireccion.getText());
-            clie.setTelefono(Integer.parseInt(this.txtTelefono.getText()));
-            this.clieDao.insertaCliente(clie);
-            this.limpia();
-            
-            
-        }
+        this.registrar();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -184,54 +187,64 @@ public class CrearCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void btnAutoDireccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutoDireccActionPerformed
-        this.txtDireccion.setText("NULL");
+        this.txtDireccion.setText(SIN_DIRECCION);
     }//GEN-LAST:event_btnAutoDireccActionPerformed
 
     private void btnAutoTelefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutoTelefActionPerformed
-        this.txtTelefono.setText("000000");
+        this.txtTelefono.setText("");
     }//GEN-LAST:event_btnAutoTelefActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-
         this.dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
-    private boolean valida(){
-        boolean sw = false;
-        String aux = "";
-        if(this.txtNombre.getText().isEmpty()){
-            aux = "Debe registrar el nombre";
+
+    private void registrar() {
+        String nombre = this.txtNombre.getText().trim();
+        String apellido = this.txtApellido.getText().trim();
+        String direccion = this.txtDireccion.getText().trim();
+        String telefono = this.txtTelefono.getText().trim();
+        if (nombre.isEmpty() || nombre.length() > 40) {
+            invalido(this.txtNombre, "Indique el nombre (máximo 40 caracteres).");
+            return;
         }
-        if(this.txtApellido.getText().isEmpty()){
-            aux += "\nDebe registrar el apellido";
+        if (apellido.isEmpty() || apellido.length() > 40) {
+            invalido(this.txtApellido, "Indique los apellidos (máximo 40 caracteres).");
+            return;
         }
-        if(this.txtDireccion.getText().isEmpty()){
-            aux += "\nDebe registrar la direccion";
+        if (direccion.length() > 100) {
+            invalido(this.txtDireccion, "La dirección admite como máximo 100 caracteres.");
+            return;
         }
-        if(this.txtTelefono.getText().isEmpty()){
-            aux += "\nDebe registrar el telefono";
+        if (!telefono.isEmpty() && !Validaciones.esTelefono(telefono)) {
+            invalido(this.txtTelefono, "El teléfono debe tener entre 6 y 9 dígitos.");
+            return;
         }
-        
-        if(aux.isEmpty()){
-            sw = true;
-        }else{
-            JOptionPane.showMessageDialog(this, aux);
-        }
-        return sw;
+        Cliente clie = new Cliente();
+        clie.setNombres(nombre);
+        clie.setApellidos(apellido);
+        clie.setDireccion(SIN_DIRECCION.equals(direccion) ? "" : direccion);
+        clie.setTelefono(telefono.isEmpty() ? 0 : Integer.parseInt(telefono));
+        this.clieDao.insertaCliente(clie);
+        Dialogos.info(this, "Cliente registrado con el código " + clie.getClienteID() + ".");
+        this.alRegistrar.accept(clie);
+        this.dispose();
     }
-    private void limpia(){
+
+    private void invalido(javax.swing.JTextField campo, String mensaje) {
+        Dialogos.aviso(this, mensaje);
+        campo.requestFocusInWindow();
+    }
+
+    private void limpia() {
         this.txtNombre.setText("");
         this.txtApellido.setText("");
         this.txtDireccion.setText("");
         this.txtTelefono.setText("");
+        this.txtNombre.requestFocusInWindow();
     }
-    /**
-     * @param args the command line arguments
-     */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnAutoDirecc;
