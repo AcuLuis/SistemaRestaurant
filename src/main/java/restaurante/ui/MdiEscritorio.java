@@ -5,12 +5,12 @@ package restaurante.ui;
 import java.util.List;
 import restaurante.modelo.LocalR;
 import restaurante.dao.UsuarioDao;
-import restaurante.dao.IniciaBdDao;
 import restaurante.dao.LocalDao;
 import restaurante.util.DbBean;
 import restaurante.util.Util;
-import restaurante.util.CreaBD;
-import static com.itextpdf.text.pdf.PdfName.URI;
+import restaurante.datos.InstaladorBD;
+import restaurante.seguridad.Sesion;
+import restaurante.ui.util.Dialogos;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -146,7 +146,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         mnuAdmin.add(menuItemAgregaUsuarios);
 
         menuItemBDPorDefecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bd.jpg"))); // NOI18N
-        menuItemBDPorDefecto.setText("Completar BD Por Defecto");
+        menuItemBDPorDefecto.setText("Cargar datos de ejemplo");
         menuItemBDPorDefecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemBDPorDefectoActionPerformed(evt);
@@ -709,19 +709,14 @@ public class MdiEscritorio extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemVentaActionPerformed
 
     private void menuItemBDPorDefectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemBDPorDefectoActionPerformed
-        
-        IniciaBdDao ini = new IniciaBdDao();
-        List<LocalR> listaLocal;
-        listaLocal = lDao.listaLocal();
-        int id=0;
-        for (int i =0; i<listaLocal.size();i++){
-            id = listaLocal.get(i).getIdLocalR();
+        if (!Dialogos.confirmar(this, "Se cargarán datos ficticios de prueba (empleados, productos, clientes,\n"
+                + "contratos y usuarios de demostración con la contraseña Demo2024).\n\n"
+                + "Solo se permite en una base de datos recién creada. ¿Desea continuar?")) {
+            return;
         }
-        
-        ini.completaBD(id);
-        
-        JOptionPane.showMessageDialog(null, "BD CORRECTAMENTE COMPLETADA...");
-        
+        int idLocal = Sesion.actual().map(Sesion::getIdLocal).orElseThrow();
+        InstaladorBD.cargarDatosEjemplo(idLocal);
+        Dialogos.info(this, "Datos de ejemplo cargados correctamente.");
     }//GEN-LAST:event_menuItemBDPorDefectoActionPerformed
 
     private void menuItemOrdenDeVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOrdenDeVentaActionPerformed

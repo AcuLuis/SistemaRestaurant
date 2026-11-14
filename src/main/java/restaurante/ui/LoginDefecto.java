@@ -1,437 +1,159 @@
 
 package restaurante.ui;
 
+import java.awt.Cursor;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Optional;
+import javax.swing.JComponent;
+import javax.swing.SwingWorker;
+import restaurante.datos.ConexionBD;
+import restaurante.datos.InstaladorBD;
+import restaurante.modelo.Empleado;
+import restaurante.modelo.LocalR;
 import restaurante.seguridad.Contrasenas;
+import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.Validaciones;
 
-import restaurante.modelo.*;
-import restaurante.dao.*;
-import restaurante.util.*;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
-import java.awt.HeadlessException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
+/**
+ * Configuración inicial: crea la base de datos con el local y el usuario
+ * administrador. Se muestra cuando el servidor responde pero la base de
+ * datos todavía no existe.
+ */
 public class LoginDefecto extends javax.swing.JFrame {
-    
-    Empleado empleado = new Empleado();
-    Usuario usuario = new Usuario();
-    LocalR local = new LocalR();
-    Util util = new Util();
-    Login login = new Login();
-    public int idLocal;
-    
-    IniciaBdDao inicia = new IniciaBdDao();
 
     public LoginDefecto() {
-        
         initComponents();
+        this.setTitle("Configuración inicial - Sistema Restaurant");
         this.setLocationRelativeTo(null);
         this.llenaCmbGenero();
         this.llenaCmbEstadoCivil();
+        this.txtNACIMIENTO.setToolTipText("Formato " + Validaciones.FORMATO_FECHA + " (por ejemplo, 1990-05-31)");
+        this.txtDNI.setToolTipText("8 dígitos");
+        this.txtCONTRADEFECTO.setToolTipText("Mínimo " + Contrasenas.LONGITUD_MINIMA
+                + " caracteres, combinando letras y números");
+        this.getRootPane().setDefaultButton(this.btnGrabar);
     }
-    
+
     public void llenaCmbGenero(){
-    
         this.cmbGenero.addItem("");
         this.cmbGenero.addItem("MASCULINO");
         this.cmbGenero.addItem("FEMENINO");
-    
     }
-    
+
     public void llenaCmbEstadoCivil(){
-    
         this.cmbEstadoCivil.addItem("");
         this.cmbEstadoCivil.addItem("SOLTERO");
         this.cmbEstadoCivil.addItem("CASADO");
         this.cmbEstadoCivil.addItem("DIVORCIADO");
-    
     }
-    
+
     public void crearBD(){
-    
-        if (this.valida()==true){
-        
-            empleado.setEmpleadoID(1001);
-            empleado.setUsuarioModifID(1001);
-            empleado.setUsuarioCreaID(1001);
-            empleado.setNombres(this.txtNOMBREUSERDEFECTO.getText());
-            empleado.setApellidos(this.txtAPELLIDOS.getText());
-            empleado.setFechaNacimiento(this.txtNACIMIENTO.getText());
-            empleado.setFechCrea("2002-01-13");
-            if(this.cmbGenero.getSelectedItem().equals("MASCULINO")){
-                empleado.setGenero(1);
-            }else if(this.cmbGenero.getSelectedItem().equals("FEMENINO")){
-                empleado.setGenero(0);
-            }
-            empleado.setFechModif("2002-01-13");
-            empleado.setDni(this.txtDNI.getText());
-            empleado.setEstadoCivil(this.cmbEstadoCivil.getSelectedItem().toString());
-        
-            idLocal = Integer.parseInt(this.txtIDLOCALDEFECTO.getText());
-            local.setIdLocalR(Integer.parseInt(this.txtIDLOCALDEFECTO.getText()));
-            local.setUbicacion(this.txtUBICACION.getText());
-            local.setCapacidadMax(Integer.parseInt(this.txtCAPACIDAD.getText()));
-            local.setPisos(Integer.parseInt(this.txtPISOS.getText()));
-            local.setHoraApertura("23:59:59.9999999");
-            local.setHoraCerrado("23:59:59.9999999");
-            
-            usuario.setUsuarioID(101);
-            usuario.setIdLocalR(Integer.parseInt(this.txtIDLOCALDEFECTO.getText()));
-            usuario.setUsuario(this.txtNOMBREUSERDEFECTO.getText());
-            usuario.setContraseña(Contrasenas.hash(this.txtCONTRADEFECTO.getPassword()));
-            usuario.setTipUsuaruario(1);
-            usuario.setEmpleadoID(1001);
-            
-            this.inicia.creacionBD(empleado, usuario, local);
-            
-            try {
-                this.creaPDF();
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(LoginDefecto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            JOptionPane.showMessageDialog(null, "PDF DE REFERENCIA DE LA BD CREADA en DESCARGAS...");
-            login.setVisible(true);
-            this.dispose();
+        if (!this.valida()){
+            return;
         }
+        Empleado empleado = new Empleado();
+        empleado.setNombres(this.txtNOMBREUSERDEFECTO.getText().trim());
+        empleado.setApellidos(this.txtAPELLIDOS.getText().trim());
+        empleado.setFechaNacimiento(this.txtNACIMIENTO.getText().trim());
+        // Se conserva la codificación original: 1 = masculino, 0 = femenino.
+        empleado.setGenero("MASCULINO".equals(this.cmbGenero.getSelectedItem()) ? 1 : 0);
+        empleado.setDni(this.txtDNI.getText().trim());
+        empleado.setEstadoCivil(this.cmbEstadoCivil.getSelectedItem().toString());
+
+        LocalR local = new LocalR();
+        local.setIdLocalR(Integer.parseInt(this.txtIDLOCALDEFECTO.getText().trim()));
+        local.setUbicacion(this.txtUBICACION.getText().trim());
+        local.setCapacidadMax(Integer.parseInt(this.txtCAPACIDAD.getText().trim()));
+        local.setPisos(Integer.parseInt(this.txtPISOS.getText().trim()));
+
+        String usuario = this.txtNOMBREUSERDEFECTO.getText().trim();
+        char[] contrasena = this.txtCONTRADEFECTO.getPassword();
+        this.btnGrabar.setEnabled(false);
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                InstaladorBD.crearBaseDatos(empleado, local, usuario, contrasena);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                Arrays.fill(contrasena, '\0');
+                setCursor(Cursor.getDefaultCursor());
+                btnGrabar.setEnabled(true);
+                try {
+                    get();
+                    Dialogos.info(LoginDefecto.this, "Base de datos \"" + ConexionBD.nombreBaseDatos()
+                            + "\" creada correctamente.\n\nInicie sesión con el ID de local "
+                            + local.getIdLocalR() + " y el usuario \"" + usuario + "\".");
+                    new Login().setVisible(true);
+                    dispose();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (java.util.concurrent.ExecutionException e) {
+                    Dialogos.error(LoginDefecto.this, e.getCause());
+                }
+            }
+        }.execute();
     }
-    
-    
+
+    /** Comprueba todos los campos y señala el primero incorrecto. */
     public boolean valida(){
-    
-        if(this.txtIDLOCALDEFECTO.getText().isEmpty() && this.txtNOMBREUSERDEFECTO.getText().isEmpty() && 
-           this.txtCONTRADEFECTO.getPassword().length == 0 && 
-           this.txtAPELLIDOS.getText().isEmpty() && this.txtNACIMIENTO.getText().isEmpty() &&
-           this.cmbGenero.getSelectedItem().toString().isEmpty() && this.txtDNI.getText().isEmpty() &&
-           this.cmbEstadoCivil.getSelectedItem().toString().isEmpty() && this.txtUBICACION.getText().isEmpty() &&
-           this.txtCAPACIDAD.getText().isEmpty() && this.txtPISOS.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta llenar los campos...");
-        }else if(this.txtIDLOCALDEFECTO.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Falta el IDLOCAL...");
-        }else if(this.txtNOMBREUSERDEFECTO.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta el NOMBRE USUARIO...");
-        }else if(Contrasenas.validarNueva(this.txtCONTRADEFECTO.getPassword()) != null){
-            JOptionPane.showMessageDialog(this, Contrasenas.validarNueva(this.txtCONTRADEFECTO.getPassword()));
-        }else  if(this.txtAPELLIDOS.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta el APELLIDO...");
-        }else if(this.txtNACIMIENTO.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta FECHA DE NACIMIENTO...");
-        }else if(this.cmbGenero.getSelectedItem().toString().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta GENERO...");
-        }else if(this.txtDNI.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta DNI...");
-        }else if(this.cmbEstadoCivil.getSelectedItem().toString().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta ESTADO CIVIL...");
-        }else if(this.txtUBICACION.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta UBICACION...");
-        }else if(this.txtCAPACIDAD.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta CAPACIDAD MAX...");
-        }else if(this.txtPISOS.getText().isEmpty()){
-        
-            JOptionPane.showMessageDialog(null, "Falta NUMERO DE PISOS...");
-        }else {
-            
+        if (vacio(txtIDLOCALDEFECTO, "el ID del local") || vacio(txtNOMBREUSERDEFECTO, "el nombre de usuario")
+                || vacio(txtAPELLIDOS, "los apellidos") || vacio(txtNACIMIENTO, "la fecha de nacimiento")
+                || vacio(txtDNI, "el DNI") || vacio(txtUBICACION, "la ubicación del local")
+                || vacio(txtCAPACIDAD, "la capacidad máxima") || vacio(txtPISOS, "el número de pisos")) {
+            return false;
+        }
+        if (Validaciones.enteroPositivo(txtIDLOCALDEFECTO.getText()).isEmpty()) {
+            return invalido(txtIDLOCALDEFECTO, "El ID del local debe ser un número entero mayor que cero.");
+        }
+        if (txtNOMBREUSERDEFECTO.getText().trim().length() > 25) {
+            return invalido(txtNOMBREUSERDEFECTO, "El nombre de usuario admite como máximo 25 caracteres.");
+        }
+        String errorContrasena = Contrasenas.validarNueva(txtCONTRADEFECTO.getPassword());
+        if (errorContrasena != null) {
+            return invalido(txtCONTRADEFECTO, errorContrasena);
+        }
+        Optional<LocalDate> nacimiento = Validaciones.fecha(txtNACIMIENTO.getText());
+        if (nacimiento.isEmpty() || !nacimiento.get().isBefore(LocalDate.now().minusYears(14))) {
+            return invalido(txtNACIMIENTO, "Indique una fecha de nacimiento válida con el formato "
+                    + Validaciones.FORMATO_FECHA + ".");
+        }
+        if ("".equals(cmbGenero.getSelectedItem())) {
+            return invalido(cmbGenero, "Seleccione el género.");
+        }
+        if (!Validaciones.esDni(txtDNI.getText())) {
+            return invalido(txtDNI, "El DNI debe tener 8 dígitos.");
+        }
+        if ("".equals(cmbEstadoCivil.getSelectedItem())) {
+            return invalido(cmbEstadoCivil, "Seleccione el estado civil.");
+        }
+        if (Validaciones.enteroPositivo(txtCAPACIDAD.getText()).isEmpty()) {
+            return invalido(txtCAPACIDAD, "La capacidad máxima debe ser un número entero mayor que cero.");
+        }
+        if (Validaciones.enteroPositivo(txtPISOS.getText()).isEmpty()) {
+            return invalido(txtPISOS, "El número de pisos debe ser un número entero mayor que cero.");
+        }
+        return true;
+    }
+
+    private boolean vacio(javax.swing.JTextField campo, String descripcion) {
+        if (Validaciones.vacio(campo.getText())) {
+            invalido(campo, "Falta indicar " + descripcion + ".");
             return true;
         }
-        
         return false;
     }
-    
-        public void creaPDF() throws FileNotFoundException{
-        
-        com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
-        String sql;
-        String ruta = System.getProperty("user.home");
-        String nombreArchivo = "BD_Restaurant.pdf";
-        String rutaCompleta = ruta + "/downloads/" + nombreArchivo;
 
-        try{
-
-            File archivo = new File(rutaCompleta);
-            int contador = 1;
-
-            while (archivo.exists()) {
-                nombreArchivo = "BD_Restaurant(" + contador + ").pdf";
-                rutaCompleta = ruta + "/downloads/" + nombreArchivo;
-                archivo = new File(rutaCompleta);
-                contador++;
-        }
-
-        PdfWriter.getInstance(documento, new FileOutputStream(rutaCompleta));
-        documento.open();
-        
-        Paragraph titulo = new Paragraph("'BD_RESTAURANT'", new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD));
-        titulo.setAlignment(Element.ALIGN_CENTER);
-        titulo.setSpacingAfter(20);
-        documento.add(titulo);    
-        
-        Paragraph subtitulo = new Paragraph("\nALGUNOS INSERTS IMPORTANTES: ", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
-        subtitulo.setAlignment(Element.ALIGN_CENTER);
-        subtitulo.setSpacingAfter(20);
-        documento.add(subtitulo); 
-        
-        String inserts = "insert into empleado values (empleadoID,usuarioModifID,usuarioCreaID,'nombres','apellidos','fechaNacimiento','fechaCrea',genero,\n'fechaModif','dni','estadoCivil')" + 
-                          "\ninsert into localR values(idLocalR,'Ubicacion',capacidadMax,pisos,'horaApertura','horaCerrado')"+
-                          "\ninsert into usuario values(usuarioID,idLocalR,'usuario','contraseña',tipoUsuario,empleadoID)\n"+
-                          "\ninsert into servidor values(servidorID,nomServidor)\n";
-        
-        Paragraph primero = new Paragraph(inserts, new Font(Font.FontFamily.TIMES_ROMAN, 12));
-        documento.add(primero);
-       
-        Paragraph subtitulo2 = new Paragraph("\nCUERPO DE LA BD: \n", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
-        subtitulo2.setAlignment(Element.ALIGN_CENTER);
-        subtitulo2.setSpacingAfter(20);
-        documento.add(subtitulo2);
-        
-        String texto = "\nuse master\n" +
-                        "go\n" +
-                        "create database restaurante\n" +
-                        "go\n" +
-                        "use restaurante\n" +
-                        "go\n"+
-                    "create table Area(\n" +
-                    "areaID int constraint pkareaID primary key,\n" +
-                    "descripArea varchar(40)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table CabOrdenDeProduccionSemanal(\n" +
-                    "ordenProduccionID int constraint pkOrdenProduccionID primary key,\n" +
-                    "empleadoID int,\n" +
-                    "descripArea varchar(40),\n" +
-                    "fechaxSem date\n" +
-                    ")\n" +
-                    "go\n"+
-                "create table CabOrdenDeVenta(\n" +
-                    "ordenDeVentaID int constraint pkOrdenDeVentaID primary key,\n" +
-                    "empleadoID int,\n" +
-                    "clienteID int,\n" +
-                    "mesaID int,\n" +
-                    "fechaVenta datetime,\n" +
-                    "metodoPago int,\n" +
-                    "tipEntrega varchar(15)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table CabReceta(\n" +
-                    "recetaID int constraint pkRecetaID primary key,\n" +
-                    "empleadoID int,\n" +
-                    "productoID int,\n" +
-                    "fechaElab date,\n" +
-                    "preparacion varchar(300)\n" +
-                    ")\n" +
-                    "go\n"+
-                "create table Cliente(\n" +
-                    "clienteID int constraint pkClienteID primary key,\n" +
-                    "nombres varchar(40),\n" +
-                    "apellidos varchar(40),\n" +
-                    "dni varchar(8),\n" +
-                    "genero int,\n" +
-                    "estadoCivil varchar(10),\n" +
-                    "telefono int,\n" +
-                    "correo varchar(20),\n" +
-                    "fechNaci date,\n" +
-                    "estado int,\n" +
-                    "direccion varchar(30)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Contrato(\n" +
-                    "contratoID int constraint pkContratoID primary key,\n" +
-                    "empleadoID int,\n" +
-                    "rolID int,\n" +
-                    "areaID int,\n" +
-                    "fechaIni date,\n" +
-                    "fechaFin date,\n" +
-                    "estado int,\n" +
-                    "sueldo float\n" +
-                    ")\n" +
-                    "go\n"+
-                "create table DetOrdenDeProduccionSemanal(\n" +
-                    "ordenProduccionID int,\n" +
-                    "productoID int,\n" +
-                    "cantidad int,\n" +
-                    "estado int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table DetOrdenDeVenta(\n" +
-                    "ordenDeVentaID int,\n" +
-                    "productoID int,\n" +
-                    "idPedidos int,\n" +
-                    "cantidad int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table DetReceta(\n" +
-                    "recetaID int,\n" +
-                    "insumoID int,\n" +
-                    "cantidad int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Empleado(\n" +
-                    "empleadoID int constraint pkEmpleadoID primary key,\n" +
-                    "usuarioModifiID int,\n" +
-                    "usuarioCreaID int,\n" +
-                    "nombres varchar(40),\n" +
-                    "apellidos varchar(40),\n" +
-                    "fechaNacimiento date,\n" +
-                    "fechCrea date,\n" +
-                    "genero int,\n" +
-                    "fechModif date,\n" +
-                    "dni varchar(8),\n" +
-                    "estadoCivil varchar(10)\n" +
-                    ")\n" +
-                    "go\n"+
-                "create table Insumo(\n" +
-                    "insumoID int constraint pkInsumoID primary key,\n" +
-                    "idTipInsumo int,\n" +
-                    "unidadMedida varchar(10),\n" +
-                    "descripInsumo varchar(20),\n" +
-                    "precioUnit float,\n" +
-                    "cantidad int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table LocalR(\n" +
-                    "idLocalR int constraint pkIdLocalR primary key,\n" +
-                    "Ubicacion varchar(30),\n" +
-                    "capcidadMax int,\n" +
-                    "pisos int,\n" +
-                    "horaApertura time,\n" +
-                    "horaCerrado time\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Mesa(\n" +
-                    "mesaID int constraint pkMesaID primary key,\n" +
-                    "ubic varchar(30),\n" +
-                    "numSillas int,\n" +
-                    "estado int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Pedidos(\n" +
-                    "idPedidos int constraint pkIdPedidos primary key,\n" +
-                    "empleadoID int,\n" +
-                    "ubic varchar(30),\n" +
-                    "estado int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Plato(\n" +
-                    "idPlato int constraint pkIdPlato primary key,\n" +
-                    "descPlato varchar(30)\n" +
-                    ")\n" +
-                    "go\n"+
-                "create table Producto(\n" +
-                    "productoID int constraint pkProductoID primary key,\n" +
-                    "idPlato int,\n" +
-                    "idTipProducto int,\n" +
-                    "descripProducto varchar(40),\n" +
-                    "cantidad int,\n" +
-                    "precioUnit float\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Reserva(\n" +
-                    "reservaID int constraint pkReservaID primary key,\n" +
-                    "empleadoID int,\n" +
-                    "clienteID int,\n" +
-                    "fecha date,\n" +
-                    "estado int\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Rol(\n" +
-                    "rolID int constraint pkRolID primary key,\n" +
-                    "descripRol varchar(25)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table TipInsumo(\n" +
-                    "idTipInsumo int constraint pkIdTipInsumo primary key,\n" +
-                    "descripcion varchar(25)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table TipProducto(\n" +
-                    "idTipProducto int constraint pkIdTipProducto primary key,\n" +
-                    "descripcion varchar(15)\n" +
-                    ")\n" +
-                    "go\n" +
-                    "create table Usuario(\n" +
-                    "usuarioID int constraint pkUsuarioID primary key,\n" +
-                    "idLocalR int,\n" +
-                    "usuario varchar(25),\n" +
-                    "contraseña varchar(20),\n" +
-                    "tipoUsuario int\n" +
-                    ")"+ "\ngo"+
-                       
-                    "alter table CabOrdenDeProduccionSemanal\n" +
-                    "add constraint fkEmpleadoID foreign key (empleadoID) references Empleado(empleadoID)\n" +
-                    "go\n" +
-                    "alter table CabOrdenDeVenta\n" +
-                    "add constraint fk1EmpleadoID foreign key (empleadoID) references Empleado(empleadoID),\n" +
-                    "constraint fkClienteID foreign key (clienteID) references Cliente(clienteID),\n" +
-                    "constraint fkMesaID foreign key (mesaID) references Mesa(mesaID)\n" +
-                    "go\n" +
-                    "alter table CabReceta\n" +
-                    "add constraint fk2EmpleadoID foreign key (empleadoID) references Empleado(empleadoID),\n" +
-                    "constraint fkProductoID foreign key (productoID) references Producto(productoID)\n" +
-                    "go\n" +
-                    "alter table Contrato\n" +
-                    "add constraint fk3EmpleadoID foreign key (empleadoID) references Empleado(empleadoID),\n" +
-                    "constraint fkRolID foreign key (rolID) references Rol(rolID),\n" +
-                    "constraint fkAreaID foreign key (areaID) references Area(areaID)\n" +
-                    "go\n" +
-                    "alter table DetOrdenDeProduccionSemanal\n" +
-                    "add constraint fk1ProductoID foreign key (productoID) references Producto(productoID),\n" +
-                    "constraint fkOrdenProduccionID foreign key (ordenProduccionID) references CabOrdenDeProduccionSemanal(ordenProduccionID)\n" +
-                    "go\n" +
-                    "alter table DetOrdenDeVenta\n" +
-                    "add constraint fk2ProductoID foreign key (productoID) references Producto(productoID),\n" +
-                    "constraint fkIdPedidos foreign key (idPedidos) references Pedidos(idPedidos),\n" +
-                    "constraint fkOrdenDeVentaID foreign key (ordenDeVentaID) references CabOrdenDeVenta(ordenDeVentaID)\n" +
-                    "go\n" +
-                    "alter table DetReceta\n" +
-                    "add constraint fkInsumoID foreign key (insumoID) references Insumo(insumoID),\n" +
-                    "constraint fkRecetaID foreign key (recetaID) references CabReceta(recetaID)\n" +
-                    "go\n" +
-                    "alter table Insumo\n" +
-                    "add constraint fkIdTipInsumo foreign key (idTipInsumo) references TipInsumo(idTipInsumo)\n" +
-                    "go\n" +
-                    "alter table Usuario\n" +
-                    "add constraint fkIdLocalR foreign key (idLocalR) references LocalR(idLocalR),\n" +
-                    "empleadoID int FOREIGN KEY REFERENCES Empleado(empleadoID),\n" +
-                    "CONSTRAINT FK_Usuario_Empleado UNIQUE(empleadoID)\n" +
-                    "go\n" +
-                    "alter table Pedidos\n" +
-                    "add constraint fk4EmpleadoID foreign key (empleadoID) references Empleado(empleadoID)\n" +
-                    "go\n" +
-                    "alter table Producto\n" +
-                    "add constraint fkIdPlato foreign key (idPlato) references Plato(idPlato),\n" +
-                    "constraint fkIdTipProducto foreign key (idTipProducto) references TipProducto(idTipProducto)\n" +
-                    "go\n" +
-                    "alter table Reserva\n" +
-                    "add constraint fk5EmpleadoID foreign key (empleadoID) references Empleado(empleadoID),\n" +
-                    "constraint fk1ClienteID foreign key (clienteID) references Cliente(clienteID)\n";
-
-        Paragraph parrafo = new Paragraph(texto, new Font(Font.FontFamily.TIMES_ROMAN, 12));
-        documento.add(parrafo);        
-        
-    
-        documento.close();
-    
-        }catch(DocumentException | HeadlessException | FileNotFoundException e){
-        
-            e.printStackTrace();  
-        }
+    private boolean invalido(JComponent campo, String mensaje) {
+        Dialogos.aviso(this, mensaje);
+        campo.requestFocusInWindow();
+        return false;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

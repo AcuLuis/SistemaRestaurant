@@ -3,15 +3,20 @@ package restaurante.ui;
 
 import restaurante.ui.util.Dialogos;
 
-import restaurante.util.DbBean;
-import javax.swing.JOptionPane;
+import java.awt.Cursor;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
+import restaurante.config.Configuracion;
+import restaurante.datos.ConexionBD;
+import restaurante.datos.MigradorBD;
 
 public class Entrada extends javax.swing.JFrame {
-    DbBean con = new DbBean();
 
     public Entrada() {
         initComponents();
+        this.setTitle("Sistema Restaurant");
         this.setLocationRelativeTo(null);
+        this.getRootPane().setDefaultButton(this.btnEntra);
     }
 
     @SuppressWarnings("unchecked")
@@ -57,23 +62,63 @@ public class Entrada extends javax.swing.JFrame {
         
         this.validaConexion();
     }//GEN-LAST:event_btnEntraActionPerformed
+    /**
+     * Comprueba la conexión en segundo plano (puede tardar varios segundos si
+     * el servidor no responde) y continúa según el resultado.
+     */
     public void validaConexion(){
-    
-        if (con.databaseExiste() == true){
-            Login login = new Login();
-            
-            JOptionPane.showMessageDialog(null, "Conexión Exitosa...");
-            login.setVisible(true);
-            this.dispose();
-        }else{
-            LoginDefecto log = new LoginDefecto();
-            JOptionPane.showMessageDialog(null,"NO EXISTE LA BD NECESARIA..." );
-            JOptionPane.showMessageDialog(null,"INGRESE DATOS PARA GENERAR LA BD..." );
-            
-            log.setVisible(true); 
-            this.dispose();
+        this.btnEntra.setEnabled(false);
+        this.btnEntra.setText("CONECTANDO...");
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        new SwingWorker<ConexionBD.Estado, Void>() {
+            @Override
+            protected ConexionBD.Estado doInBackground() {
+                ConexionBD.Estado estado = ConexionBD.verificar();
+                if (estado == ConexionBD.Estado.DISPONIBLE) {
+                    MigradorBD.actualizar();
+                }
+                return estado;
+            }
+
+            @Override
+            protected void done() {
+                setCursor(Cursor.getDefaultCursor());
+                btnEntra.setEnabled(true);
+                btnEntra.setText("ENTRAR AL SISTEMA");
+                try {
+                    continuar(get());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    Dialogos.error(Entrada.this, e.getCause());
+                }
+            }
+        }.execute();
+    }
+
+    private void continuar(ConexionBD.Estado estado) {
+        switch (estado) {
+            case DISPONIBLE:
+                new Login().setVisible(true);
+                this.dispose();
+                break;
+            case SIN_BASE_DATOS:
+                if (Dialogos.confirmar(this, "El servidor de base de datos está disponible, pero no existe la base de datos \""
+                        + ConexionBD.nombreBaseDatos() + "\".\n\n¿Desea crearla ahora con un usuario administrador?")) {
+                    new LoginDefecto().setVisible(true);
+                    this.dispose();
+                }
+                break;
+            default:
+                String archivo = Configuracion.get().origen().map(Object::toString)
+                        .orElse("no encontrado (copie config/app.properties.example como config/app.properties)");
+                Dialogos.error(this, "No se pudo conectar con SQL Server.\n\n"
+                        + "Compruebe que el servidor está en marcha y que los datos de conexión son correctos.\n"
+                        + "Archivo de configuración: " + archivo + "\n\nDetalle: " + ConexionBD.ultimoError());
+                break;
         }
     }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
