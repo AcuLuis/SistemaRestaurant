@@ -41,14 +41,6 @@ public class RolDao {
         Jdbc.actualizar("DELETE FROM Rol WHERE rolID = ?", rol.getRolID());
     }
 
-    public String devRol(int idRol) {
-        return Jdbc.uno("SELECT descripRol FROM Rol WHERE rolID = ?", rs -> rs.getString(1), idRol).orElse("");
-    }
-
-    public int devIDRol(String rol) {
-        return Jdbc.uno("SELECT rolID FROM Rol WHERE descripRol = ?", rs -> rs.getInt(1), rol).orElse(0);
-    }
-
     public int siguienteId() {
         return Jdbc.siguienteIdSugerido("Rol", "rolID");
     }

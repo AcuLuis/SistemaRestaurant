@@ -14,11 +14,6 @@ public class EmpleadoDao {
             + " OR e.apellidos LIKE ?)";
     private static final String ORDEN = " ORDER BY e.apellidos, e.nombres";
 
-    /** Identificador del empleado con ese nombre (0 si no existe). */
-    public int devuelveIdEmpleado(String nombre) {
-        return Jdbc.uno("SELECT empleadoID FROM Empleado WHERE nombres = ?", rs -> rs.getInt(1), nombre).orElse(0);
-    }
-
     /** Empleados que todavía no tienen contrato. */
     public List<Empleado> sinContrato(boolean filtrar, String texto) {
         String sql = "SELECT " + COLUMNAS + " FROM Empleado e"

@@ -14,14 +14,4 @@ public class TipInsumoDao {
             return tipo;
         });
     }
-
-    public String devTipInsumo(int idTipInsumo) {
-        return Jdbc.uno("SELECT descripcion FROM TipInsumo WHERE idTipInsumo = ?",
-                rs -> rs.getString(1), idTipInsumo).orElse("");
-    }
-
-    public int devIDTipInsumo(String descripcion) {
-        return Jdbc.uno("SELECT idTipInsumo FROM TipInsumo WHERE descripcion = ?",
-                rs -> rs.getInt(1), descripcion).orElse(0);
-    }
 }

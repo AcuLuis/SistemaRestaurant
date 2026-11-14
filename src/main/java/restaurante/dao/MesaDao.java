@@ -16,8 +16,4 @@ public class MesaDao {
             return mesa;
         });
     }
-
-    public int devuelveIdMesa(String ubicacion) {
-        return Jdbc.uno("SELECT mesaID FROM Mesa WHERE ubic = ?", rs -> rs.getInt(1), ubicacion).orElse(0);
-    }
 }

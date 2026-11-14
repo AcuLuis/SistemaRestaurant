@@ -41,14 +41,6 @@ public class AreaDao {
         Jdbc.actualizar("DELETE FROM Area WHERE areaID = ?", area.getAreaID());
     }
 
-    public String devArea(int idArea) {
-        return Jdbc.uno("SELECT descripArea FROM Area WHERE areaID = ?", rs -> rs.getString(1), idArea).orElse("");
-    }
-
-    public int devIDArea(String area) {
-        return Jdbc.uno("SELECT areaID FROM Area WHERE descripArea = ?", rs -> rs.getInt(1), area).orElse(0);
-    }
-
     public int siguienteId() {
         return Jdbc.siguienteIdSugerido("Area", "areaID");
     }
