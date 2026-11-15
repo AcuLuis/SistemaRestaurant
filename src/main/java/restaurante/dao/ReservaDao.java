@@ -30,10 +30,10 @@ public class ReservaDao {
                 + " OR CONVERT(varchar(10), r.fecha, 23) LIKE ?" + ORDEN, ReservaDao::mapear, patron, patron, patron);
     }
 
-    /** Reservas pendientes de un día, por hora. */
-    public List<Reserva> listarPendientesDelDia(java.time.LocalDate dia) {
-        return Jdbc.lista(SELECT + " WHERE r.fecha = ? AND r.estado = ? ORDER BY r.hora", ReservaDao::mapear,
-                Date.valueOf(dia), Reserva.PENDIENTE);
+    /** Reservas pendientes de hoy (según la fecha del servidor), por hora. */
+    public List<Reserva> listarPendientesDeHoy() {
+        return Jdbc.lista(SELECT + " WHERE r.fecha = CAST(GETDATE() AS date) AND r.estado = ? ORDER BY r.hora",
+                ReservaDao::mapear, Reserva.PENDIENTE);
     }
 
     /** Indica si la mesa ya tiene otra reserva pendiente a una hora cercana del mismo día. */

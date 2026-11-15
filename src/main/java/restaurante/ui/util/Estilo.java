@@ -1,5 +1,7 @@
 package restaurante.ui.util;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -11,6 +13,7 @@ import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
@@ -22,6 +25,7 @@ import javax.swing.plaf.UIResource;
 public final class Estilo {
 
     private static final String ICONO = "/iconos/logotipo-pequeno.png";
+    private static final String CLAVE_TEMA = "temaOscuro.";
 
     private Estilo() {
     }
@@ -53,6 +57,32 @@ public final class Estilo {
                 ajustarContraste(ventana);
             }
         }, AWTEvent.WINDOW_EVENT_MASK);
+    }
+
+    /** Indica si el usuario eligió el tema oscuro (preferencia guardada en este equipo). */
+    public static boolean temaOscuro(String usuario) {
+        return preferencias().getBoolean(CLAVE_TEMA + usuario, false);
+    }
+
+    /** Aplica el tema claro u oscuro a todas las ventanas abiertas y lo recuerda para el usuario. */
+    public static void aplicarTema(String usuario, boolean oscuro) {
+        preferencias().putBoolean(CLAVE_TEMA + usuario, oscuro);
+        if (oscuro == FlatLaf.isLafDark()) {
+            return;
+        }
+        if (oscuro) {
+            FlatDarkLaf.setup();
+        } else {
+            FlatLightLaf.setup();
+        }
+        FlatLaf.updateUI();
+        for (Window ventana : Window.getWindows()) {
+            ajustarContraste(ventana);
+        }
+    }
+
+    private static Preferences preferencias() {
+        return Preferences.userRoot().node("sistema-restaurant");
     }
 
     /**

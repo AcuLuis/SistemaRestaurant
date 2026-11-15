@@ -1,5 +1,8 @@
 package restaurante.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.InputEvent;
@@ -8,11 +11,19 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -66,7 +77,45 @@ public class MdiEscritorio extends javax.swing.JFrame {
                 salir();
             }
         });
+        agregarBarraDeEstado(sesion);
+        if (Estilo.temaOscuro(sesion.getUsuario())) {
+            Estilo.aplicarTema(sesion.getUsuario(), true);
+        }
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        SwingUtilities.invokeLater(this::abrirInicio);
+    }
+
+    private void abrirInicio() {
+        abrir(FrmInicio.class, FrmInicio::new);
+    }
+
+    /** Barra inferior con el usuario, el local, la base de datos y la hora. */
+    private void agregarBarraDeEstado(Sesion sesion) {
+        Container contenido = getContentPane();
+        JPanel nuevo = new JPanel(new BorderLayout());
+        nuevo.add(contenido, BorderLayout.CENTER);
+        JLabel izquierda = new JLabel("  Usuario: " + sesion.getUsuario() + "   |   Perfil: "
+                + sesion.getTipo().getDescripcion() + "   |   Local: " + sesion.getIdLocal());
+        JLabel derecha = new JLabel();
+        Configuracion cfg = Configuracion.get();
+        String servidor = cfg.texto(Claves.DB_HOST, "localhost") + " / " + cfg.texto(Claves.DB_NOMBRE, "BD_Restaurant");
+        Runnable reloj = () -> derecha.setText("Base de datos: " + servidor + "   |   "
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "  ");
+        reloj.run();
+        Timer temporizador = new Timer(30_000, e -> reloj.run());
+        temporizador.start();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                temporizador.stop();
+            }
+        });
+        JPanel barra = new JPanel(new BorderLayout());
+        barra.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+        barra.add(izquierda, BorderLayout.WEST);
+        barra.add(derecha, BorderLayout.EAST);
+        nuevo.add(barra, BorderLayout.SOUTH);
+        setContentPane(nuevo);
     }
 
     /** Abre el formulario o, si ya está abierto, lo trae al frente. */
@@ -78,6 +127,11 @@ public class MdiEscritorio extends javax.swing.JFrame {
             return;
         }
         JInternalFrame ventana = fabrica.get();
+        // Todas las ventanas se pueden cerrar, minimizar, maximizar y redimensionar.
+        ventana.setClosable(true);
+        ventana.setIconifiable(true);
+        ventana.setMaximizable(true);
+        ventana.setResizable(true);
         Estilo.ajustarContraste(ventana);
         this.desktopPane.add(ventana);
         int x = Math.max(0, (this.desktopPane.getWidth() - ventana.getWidth()) / 2);
@@ -151,6 +205,15 @@ public class MdiEscritorio extends javax.swing.JFrame {
     private void agregarMenuSesion() {
         JMenu menuSesion = new JMenu("Sesión");
         menuSesion.setMnemonic(KeyEvent.VK_S);
+        JMenuItem inicio = new JMenuItem("Inicio", Iconos.icono("inicio"));
+        inicio.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
+        inicio.addActionListener(e -> abrirInicio());
+        String usuario = Sesion.actual().map(Sesion::getUsuario).orElse("");
+        JCheckBoxMenuItem tema = new JCheckBoxMenuItem("Tema oscuro", Estilo.temaOscuro(usuario));
+        tema.addActionListener(e -> Estilo.aplicarTema(usuario, tema.isSelected()));
+        menuSesion.add(inicio);
+        menuSesion.add(tema);
+        menuSesion.addSeparator();
         JMenuItem cerrarSesion = new JMenuItem("Cerrar sesión");
         cerrarSesion.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
         cerrarSesion.addActionListener(e -> cerrarSesion());
