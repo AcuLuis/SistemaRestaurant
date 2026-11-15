@@ -17,8 +17,9 @@ import restaurante.modelo.Empleado;
 import restaurante.modelo.Rol;
 import restaurante.ui.util.BusquedaDiferida;
 import restaurante.ui.util.Dialogos;
+import restaurante.ui.util.SelectorFecha;
 import restaurante.ui.util.Tablas;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Gestión de contratos: se elige un empleado sin contrato para crear uno
@@ -66,6 +67,8 @@ public class FrmContrato extends javax.swing.JInternalFrame {
         String formato = "Formato " + Validaciones.FORMATO_FECHA + " (por ejemplo, 2024-01-31)";
         this.txtFechaInicio.setToolTipText(formato);
         this.txtFechaFin.setToolTipText(formato);
+        SelectorFecha.instalar(this.txtFechaInicio);
+        SelectorFecha.instalar(this.txtFechaFin);
         this.busquedaEmpleados = new BusquedaDiferida(this.txtBuscarEmpleado, this::llenaTblEmpleado);
         this.busquedaSinContrato = new BusquedaDiferida(this.txtBuscarEmpleadoSinContrato, this::llenaTblEmpleadoSinContrato);
         this.busquedaContratos = new BusquedaDiferida(this.txtContratos, this::llenaTblContratos);

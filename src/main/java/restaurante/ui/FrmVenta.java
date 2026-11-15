@@ -37,7 +37,7 @@ import restaurante.servicio.VentaServicio;
 import restaurante.ui.util.BusquedaDiferida;
 import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Tablas;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Registro de ventas e historial de compras por cliente.
@@ -83,7 +83,7 @@ public class FrmVenta extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Ventas - Sistema Restaurant");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.empleados = new EmpleadoDao().listar(false, "");
+        this.empleados = new EmpleadoDao().listarActivos();
         this.mesas = new MesaDao().listarDisponibles();
         this.tipos = new TipProductoDao().listar();
         this.cmbEmpleado.addItem("");

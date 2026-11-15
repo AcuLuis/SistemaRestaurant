@@ -140,4 +140,15 @@ public class Empleado {
     public void setDni(String dni) {
         this.dni = dni;
     } 
+
+    /** 1 = activo, 0 = de baja. */
+    private int estado = 1;
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 }

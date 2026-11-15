@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import restaurante.reportes.Reportes;
 import restaurante.ui.util.Dialogos;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 import java.util.HashMap;
 

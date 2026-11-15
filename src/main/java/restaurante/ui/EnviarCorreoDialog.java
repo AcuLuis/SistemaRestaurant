@@ -29,7 +29,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import restaurante.correo.ServicioCorreo;
 import restaurante.ui.util.Dialogos;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Diálogo para enviar un correo con archivos adjuntos (por ejemplo, un

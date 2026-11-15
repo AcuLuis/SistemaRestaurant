@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import restaurante.dao.ClienteDao;
 import restaurante.modelo.Cliente;
 import restaurante.ui.util.Dialogos;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Alta rápida de clientes desde la pantalla de ventas.

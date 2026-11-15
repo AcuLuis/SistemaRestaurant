@@ -12,7 +12,8 @@ import restaurante.modelo.Empleado;
 import restaurante.modelo.LocalR;
 import restaurante.seguridad.Contrasenas;
 import restaurante.ui.util.Dialogos;
-import restaurante.ui.util.Validaciones;
+import restaurante.ui.util.SelectorFecha;
+import restaurante.util.Validaciones;
 
 /**
  * Configuración inicial: crea la base de datos con el local y el usuario
@@ -29,6 +30,7 @@ public class FrmConfiguracionInicial extends javax.swing.JFrame {
         this.llenaCmbEstadoCivil();
         this.txtNACIMIENTO.setToolTipText("Formato " + Validaciones.FORMATO_FECHA + " (por ejemplo, 1990-05-31)");
         this.txtDNI.setToolTipText("8 dígitos");
+        SelectorFecha.instalar(this.txtNACIMIENTO);
         this.txtCONTRADEFECTO.setToolTipText("Mínimo " + Contrasenas.LONGITUD_MINIMA
                 + " caracteres, combinando letras y números");
         this.getRootPane().setDefaultButton(this.btnGrabar);

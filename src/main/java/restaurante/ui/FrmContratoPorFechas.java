@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import restaurante.reportes.Reportes;
 import restaurante.ui.util.Dialogos;
-import restaurante.ui.util.Validaciones;
+import restaurante.ui.util.SelectorFecha;
+import restaurante.util.Validaciones;
 
 import java.util.HashMap;
 
@@ -14,6 +15,8 @@ public class FrmContratoPorFechas extends javax.swing.JInternalFrame {
 
     public FrmContratoPorFechas() {
         initComponents();
+        SelectorFecha.instalar(this.txtFechaIni);
+        SelectorFecha.instalar(this.txtFechaFin);
 
     }
 

@@ -32,7 +32,8 @@ public class UsuarioDao {
      */
     public Optional<Sesion> autenticar(String usuario, char[] contrasena, int idLocal) {
         Optional<Object[]> fila = Jdbc.uno("SELECT usuarioID, contraseña, tipoUsuario, empleadoID FROM Usuario"
-                + " WHERE usuario = ? AND idLocalR = ?", rs -> new Object[] {
+                + " WHERE usuario = ? AND idLocalR = ? AND NOT EXISTS (SELECT 1 FROM Empleado e"
+                + " WHERE e.empleadoID = Usuario.empleadoID AND e.estado = 0)", rs -> new Object[] {
                     rs.getInt("usuarioID"), rs.getString("contraseña"), rs.getInt("tipoUsuario"),
                     Jdbc.enteroONulo(rs, "empleadoID")}, usuario, idLocal);
         if (fila.isEmpty()) {

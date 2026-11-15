@@ -10,6 +10,7 @@ public class ClienteDao {
 
     /** Estado con el que se registran los clientes nuevos. */
     public static final int ESTADO_ACTIVO = 1;
+    public static final int ESTADO_INACTIVO = 0;
 
     private static final String SELECT = "SELECT clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"
             + " correo, fechNaci, estado, direccion FROM Cliente";
@@ -22,6 +23,23 @@ public class ClienteDao {
         String patron = Jdbc.empiezaPor(texto);
         return Jdbc.lista(SELECT + " WHERE apellidos LIKE ? OR nombres LIKE ? ORDER BY apellidos, nombres",
                 ClienteDao::mapear, patron, patron);
+    }
+
+    /** Clientes activos (los que se pueden elegir en una venta o reserva). */
+    public List<Cliente> listarActivos(boolean filtrar, String texto) {
+        if (!filtrar) {
+            return Jdbc.lista(SELECT + " WHERE estado = ? ORDER BY apellidos, nombres", ClienteDao::mapear, ESTADO_ACTIVO);
+        }
+        String patron = Jdbc.empiezaPor(texto);
+        return Jdbc.lista(SELECT + " WHERE estado = ? AND (apellidos LIKE ? OR nombres LIKE ? OR dni LIKE ?)"
+                + " ORDER BY apellidos, nombres", ClienteDao::mapear, ESTADO_ACTIVO, patron, patron, patron);
+    }
+
+    public void actualizar(Cliente c) {
+        Jdbc.actualizar("UPDATE Cliente SET nombres = ?, apellidos = ?, dni = ?, telefono = ?, correo = ?, direccion = ?,"
+                + " estado = ? WHERE clienteID = ?", c.getNombres(), c.getApellidos(), vacioANulo(c.getDni()),
+                vacioANulo(c.getTelefono()), vacioANulo(c.getCorreo()), vacioANulo(c.getDireccion()), c.getEstado(),
+                c.getClienteID());
     }
 
     /** Clientes que tienen al menos una venta registrada. */
@@ -51,10 +69,10 @@ public class ClienteDao {
             Jdbc.actualizar(con, "INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, telefono,"
                     + " correo, fechNaci, estado, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     id, c.getNombres(), c.getApellidos(), vacioANulo(c.getDni()), null, vacioANulo(c.getEstadoCivil()),
-                    vacioANulo(c.getTelefono()), vacioANulo(c.getCorreo()), null, ESTADO_ACTIVO,
+                    vacioANulo(c.getTelefono()), vacioANulo(c.getCorreo()), null, c.getEstado(),
                     vacioANulo(c.getDireccion()));
             c.setClienteID(id);
-            c.setEstado(ESTADO_ACTIVO);
+
             return id;
         });
     }

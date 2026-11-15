@@ -12,7 +12,7 @@ public class Cliente {
     String telefono;
     String correo;
     String fechNaci;
-    int estado;
+    int estado = 1;
     String direccion;
 
     public Cliente() {

@@ -1,4 +1,4 @@
-package restaurante.ui.util;
+package restaurante.util;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

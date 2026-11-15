@@ -26,6 +26,10 @@ import restaurante.seguridad.Sesion;
 import restaurante.seguridad.TipoUsuario;
 import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Estilo;
+import restaurante.ui.util.Iconos;
+import restaurante.ui.mantenimiento.FrmCliente;
+import restaurante.ui.mantenimiento.FrmEmpleado;
+import restaurante.ui.mantenimiento.FrmMesa;
 
 /**
  * Ventana principal. Muestra los menús según el perfil del usuario y abre
@@ -49,6 +53,7 @@ public class MdiEscritorio extends javax.swing.JFrame {
         this.TabCruzadas.setVisible(tipo.puedeVerReportes());
         this.menuTransaccion.setVisible(tipo.puedeRegistrarTransacciones());
         configurarRedes();
+        agregarMenusNuevos();
         agregarMenuSesion();
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
@@ -85,6 +90,20 @@ public class MdiEscritorio extends javax.swing.JFrame {
         } catch (PropertyVetoException e) {
             // La ventana rechazó la selección: no es un error.
         }
+    }
+
+    /** Opciones añadidas a los menús del diseño original. */
+    private void agregarMenusNuevos() {
+        this.mnuMantenimiento.addSeparator();
+        this.mnuMantenimiento.add(opcion("Empleados", "empleado", () -> abrir(FrmEmpleado.class, FrmEmpleado::new)));
+        this.mnuMantenimiento.add(opcion("Clientes", "cliente", () -> abrir(FrmCliente.class, FrmCliente::new)));
+        this.mnuMantenimiento.add(opcion("Mesas", "mesa", () -> abrir(FrmMesa.class, FrmMesa::new)));
+    }
+
+    private static JMenuItem opcion(String texto, String icono, Runnable accion) {
+        JMenuItem item = new JMenuItem(texto, Iconos.icono(icono));
+        item.addActionListener(e -> accion.run());
+        return item;
     }
 
     private void configurarRedes() {

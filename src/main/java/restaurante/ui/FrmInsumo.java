@@ -12,7 +12,7 @@ import restaurante.modelo.TipInsumo;
 import restaurante.ui.util.BusquedaDiferida;
 import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Tablas;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Mantenimiento de insumos (materia prima).

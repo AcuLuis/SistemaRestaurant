@@ -1,4 +1,4 @@
-package restaurante.ui.util;
+package restaurante.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import restaurante.ui.util.Tablas;
 
 class ValidacionesTest {
 

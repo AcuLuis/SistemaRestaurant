@@ -14,7 +14,7 @@ import restaurante.modelo.TipProducto;
 import restaurante.ui.util.BusquedaDiferida;
 import restaurante.ui.util.Dialogos;
 import restaurante.ui.util.Tablas;
-import restaurante.ui.util.Validaciones;
+import restaurante.util.Validaciones;
 
 /**
  * Mantenimiento de productos de la carta.

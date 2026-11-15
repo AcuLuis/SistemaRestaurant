@@ -41,7 +41,7 @@ public class SelCliente extends javax.swing.JDialog {
     }
 
     private void llenaTblClientes(String texto) {
-        clientes = this.clieDao.listar(!texto.isEmpty(), texto);
+        clientes = this.clieDao.listarActivos(!texto.isEmpty(), texto);
         DefaultTableModel modelo = Tablas.vaciar(this.tblCliente);
         for (Cliente c : clientes) {
             modelo.addRow(new Object[] {c.getClienteID(), c.getApellidos(), c.getNombres(),
