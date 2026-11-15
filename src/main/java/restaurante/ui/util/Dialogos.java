@@ -49,8 +49,9 @@ public final class Dialogos {
             return;
         }
         LOG.log(Level.SEVERE, "Error no controlado", t);
+        java.nio.file.Path registro = restaurante.util.Registro.carpeta();
         error(padre, "Se produjo un error inesperado: " + (t.getMessage() == null ? t.getClass().getSimpleName()
-                : t.getMessage()));
+                : t.getMessage()) + (registro == null ? "" : "\n\nEl detalle se guardó en: " + registro));
     }
 
     /**
