@@ -60,6 +60,14 @@ public final class Configuracion {
         return actual;
     }
 
+    /**
+     * Descarta la configuración cargada para que se vuelva a leer en el
+     * siguiente acceso (por ejemplo, tras cambiar -Drestaurante.config).
+     */
+    public static synchronized void recargar() {
+        instancia = null;
+    }
+
     static List<Path> rutasCandidatas() {
         List<Path> rutas = new ArrayList<>();
         String rutaSistema = System.getProperty(PROPIEDAD_RUTA);

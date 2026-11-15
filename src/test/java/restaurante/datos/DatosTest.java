@@ -43,6 +43,8 @@ class DatosTest {
     @Test
     void lasMigracionesSonIdempotentes() {
         assertTrue(MigradorBD.SENTENCIAS.stream().allMatch(s -> s.startsWith("IF ")));
+        assertTrue(MigradorBD.sentenciasSecuencias().stream().allMatch(s -> s.startsWith("IF ") || s.startsWith("BEGIN")));
+        assertEquals(MigradorBD.SECUENCIAS.size() * 2, MigradorBD.sentenciasSecuencias().size());
     }
 
     @Test
