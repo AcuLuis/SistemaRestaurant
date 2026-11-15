@@ -133,7 +133,7 @@ Las claves `redes.facebook`, `redes.instagram` y `redes.twitter` definen los enl
    - Si la base de datos no existe, ofrece crearla.
 2. En la **configuración inicial** indique el código del local, el usuario y la contraseña del administrador (mínimo 8 caracteres con letras y números) y sus datos personales.
 3. Inicie sesión con el código del local, el usuario y la contraseña.
-4. Opcionalmente, en **Administrador > Cargar datos de ejemplo** puede cargar datos ficticios (productos, insumos, recetas, mesas, clientes, empleados, contratos, reservas y una orden de producción). Se crean estos usuarios de demostración, todos con la contraseña `Demo2024`:
+4. Opcionalmente, en **Administrador > Cargar datos de ejemplo** puede cargar datos ficticios para ver y probar el sistema: 14 productos, 15 insumos con sus recetas, 8 mesas, 12 clientes, 10 empleados con contratos, reservas, órdenes de producción y un historial de unas 90 ventas de las últimas cuatro semanas (incluidas ventas del día, para el panel de inicio y los reportes). Se crean estos usuarios de demostración, todos con la contraseña `Demo2024`:
 
    | Usuario | Perfil |
    |---------|--------|
