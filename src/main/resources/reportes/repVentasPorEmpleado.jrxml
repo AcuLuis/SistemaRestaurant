@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repVentasPorEmpleado" language="java" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="30" bottomMargin="30">
+	<parameter name="fechaIni" class="java.lang.String"/>
+	<parameter name="fechaFin" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT ISNULL(e.nombres + ' ' + e.apellidos, 'Sin asignar') AS etiqueta, COUNT(DISTINCT v.ordenDeVentaID) AS cantidad, SUM(d.cantidad * COALESCE(d.precioUnit, p.precioUnit)) AS importe
+FROM CabOrdenDeVenta v
+     INNER JOIN DetOrdenDeVenta d ON d.ordenDeVentaID = v.ordenDeVentaID
+     INNER JOIN Producto p ON p.productoID = d.productoID
+     LEFT JOIN Empleado e ON e.empleadoID = v.empleadoID
+WHERE v.estado = 1
+  AND CAST(v.fechaVenta AS date) BETWEEN CAST($P{fechaIni} AS date) AND CAST($P{fechaFin} AS date)
+GROUP BY e.nombres, e.apellidos
+ORDER BY importe DESC]]>
+	</queryString>
+	<field name="etiqueta" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<variable name="totalCantidad" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<variable name="totalImporte" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="60">
+			<staticText>
+				<reportElement x="0" y="0" width="515" height="26"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VENTAS POR EMPLEADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="30" width="515" height="18"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Del " + $P{fechaIni} + " al " + $P{fechaFin} + " (sin ventas anuladas)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="295" height="20" backcolor="#E9EEF3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Empleado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="0" width="100" height="20" backcolor="#E9EEF3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[N.º ventas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="395" y="0" width="120" height="20" backcolor="#E9EEF3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18">
+			<textField>
+				<reportElement x="0" y="0" width="295" height="18"/>
+				<textFieldExpression><![CDATA[$F{etiqueta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="0" width="100" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="395" y="0" width="120" height="18"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement x="395" y="0" width="120" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="30">
+			<line>
+				<reportElement x="0" y="2" width="515" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="6" width="295" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="295" y="6" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalCantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="395" y="6" width="120" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalImporte}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

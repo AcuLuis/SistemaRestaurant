@@ -32,6 +32,7 @@ import restaurante.ui.mantenimiento.FrmEmpleado;
 import restaurante.ui.mantenimiento.FrmMesa;
 import restaurante.ui.produccion.FrmProduccion;
 import restaurante.ui.produccion.FrmReceta;
+import restaurante.ui.reportes.FrmReporteVentas;
 import restaurante.ui.transacciones.FrmReserva;
 
 /**
@@ -102,6 +103,9 @@ public class MdiEscritorio extends javax.swing.JFrame {
         this.mnuMantenimiento.add(opcion("Clientes", "cliente", () -> abrir(FrmCliente.class, FrmCliente::new)));
         this.mnuMantenimiento.add(opcion("Mesas", "mesa", () -> abrir(FrmMesa.class, FrmMesa::new)));
         this.mnuMantenimiento.add(opcion("Recetas", "receta", () -> abrir(FrmReceta.class, FrmReceta::new)));
+        this.reportesPorParametros.addSeparator();
+        this.reportesPorParametros.add(opcion("Ventas...", "venta",
+                () -> abrir(FrmReporteVentas.class, FrmReporteVentas::new)));
         this.menuTransaccion.addSeparator();
         this.menuTransaccion.add(opcion("Reservas", "reserva", () -> abrir(FrmReserva.class, FrmReserva::new)));
         this.menuTransaccion.add(opcion("Órdenes de producción", "produccion",

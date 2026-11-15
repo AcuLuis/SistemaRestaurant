@@ -15,8 +15,8 @@
      Producto."descripProducto" AS Producto_descripProducto,
      Producto."cantidad" AS Producto_cantidad,
      Producto."precioUnit" AS Producto_precioUnit,
-     Producto."IdPlato" AS Producto_IdPlato,
-     Producto."idTipProducto" AS Producto_idTipProducto
+     (SELECT pl.descPlato FROM Plato pl WHERE pl.idPlato = Producto."idPlato") AS Producto_IdPlato,
+     (SELECT tp.descripcion FROM TipProducto tp WHERE tp.idTipProducto = Producto."idTipProducto") AS Producto_idTipProducto
 FROM
      "dbo"."Producto" Producto
 WHERE
@@ -27,8 +27,8 @@ WHERE
 	<field name="Producto_descripProducto" class="java.lang.String"/>
 	<field name="Producto_cantidad" class="java.lang.Integer"/>
 	<field name="Producto_precioUnit" class="java.math.BigDecimal"/>
-	<field name="Producto_IdPlato" class="java.lang.Integer"/>
-	<field name="Producto_idTipProducto" class="java.lang.Integer"/>
+	<field name="Producto_IdPlato" class="java.lang.String"/>
+	<field name="Producto_idTipProducto" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

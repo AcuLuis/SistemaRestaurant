@@ -6,7 +6,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT
      Contrato."contratoID" AS Contrato_contratoID,
-     Contrato."empleadoID" AS Contrato_empleadoID,
+     (SELECT e.nombres + ' ' + e.apellidos FROM Empleado e WHERE e.empleadoID = Contrato."empleadoID") AS Contrato_empleadoID,
      Rol."descripRol" AS Rol_descripRol,
      Area."descripArea" AS Area_descripArea,
      Contrato."fechaIni" AS Contrato_fechaIni,
@@ -22,7 +22,7 @@ FROM
      INNER JOIN "dbo"."Area" Area ON Contrato."areaID" = Area."areaID"]]>
 	</queryString>
 	<field name="Contrato_contratoID" class="java.lang.Integer"/>
-	<field name="Contrato_empleadoID" class="java.lang.Integer"/>
+	<field name="Contrato_empleadoID" class="java.lang.String"/>
 	<field name="Rol_descripRol" class="java.lang.String"/>
 	<field name="Area_descripArea" class="java.lang.String"/>
 	<field name="Contrato_fechaIni" class="java.sql.Date"/>

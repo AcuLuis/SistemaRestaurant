@@ -9,9 +9,9 @@
 	<queryString>
 		<![CDATA[SELECT
      Contrato."contratoID" AS Contrato_contratoID,
-     Contrato."empleadoID" AS Contrato_empleadoID,
+     (SELECT e.nombres + ' ' + e.apellidos FROM Empleado e WHERE e.empleadoID = Contrato."empleadoID") AS Contrato_empleadoID,
      Rol."descripRol" AS Rol_descripRol,
-     Contrato."areaID" AS Contrato_areaID,
+     (SELECT a.descripArea FROM Area a WHERE a.areaID = Contrato."areaID") AS Contrato_areaID,
      Contrato."fechaIni" AS Contrato_fechaIni,
      Contrato."fechaFin" AS Contrato_fechaFin,
      Contrato."estado" AS Contrato_estado,
@@ -22,9 +22,9 @@ WHERE
      Rol."descripRol" = $P{Descripcion}]]>
 	</queryString>
 	<field name="Contrato_contratoID" class="java.lang.Integer"/>
-	<field name="Contrato_empleadoID" class="java.lang.Integer"/>
+	<field name="Contrato_empleadoID" class="java.lang.String"/>
 	<field name="Rol_descripRol" class="java.lang.String"/>
-	<field name="Contrato_areaID" class="java.lang.Integer"/>
+	<field name="Contrato_areaID" class="java.lang.String"/>
 	<field name="Contrato_fechaIni" class="java.sql.Date"/>
 	<field name="Contrato_fechaFin" class="java.sql.Date"/>
 	<field name="Contrato_estado" class="java.lang.Integer"/>

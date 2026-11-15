@@ -6,7 +6,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT
      Insumo."insumoID" AS Insumo_insumoID,
-     Insumo."idTipInsumo" AS Insumo_idTipInsumo,
+     (SELECT ti.descripcion FROM TipInsumo ti WHERE ti.idTipInsumo = Insumo."idTipInsumo") AS Insumo_idTipInsumo,
      Insumo."unidadMedida" AS Insumo_unidadMedida,
      Insumo."descripInsumo" AS Insumo_descripInsumo,
      Insumo."precioUnit" AS Insumo_precioUnit,
@@ -15,7 +15,7 @@ FROM
      "dbo"."Insumo" Insumo]]>
 	</queryString>
 	<field name="Insumo_insumoID" class="java.lang.Integer"/>
-	<field name="Insumo_idTipInsumo" class="java.lang.Integer"/>
+	<field name="Insumo_idTipInsumo" class="java.lang.String"/>
 	<field name="Insumo_unidadMedida" class="java.lang.String"/>
 	<field name="Insumo_descripInsumo" class="java.lang.String"/>
 	<field name="Insumo_precioUnit" class="java.math.BigDecimal"/>
