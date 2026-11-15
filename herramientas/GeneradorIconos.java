@@ -87,7 +87,7 @@ public class GeneradorIconos {
             }
         }
         ImageIO.write(logotipo(520), "png", new File(carpeta, "logotipo.png"));
-        ImageIO.write(logotipo(200), "png", new File(carpeta, "logotipo-pequeno.png"));
+        ImageIO.write(logotipo(180), "png", new File(carpeta, "logotipo-pequeno.png"));
         ImageIO.write(logotipo(256), "png", new File(carpeta, "logotipo-256.png"));
         escribirIco(logotipo(256), new File(carpeta, "logotipo.ico"));
         System.out.println("Iconos generados en " + carpeta.getAbsolutePath());
