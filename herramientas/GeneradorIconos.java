@@ -88,6 +88,8 @@ public class GeneradorIconos {
         }
         ImageIO.write(logotipo(520), "png", new File(carpeta, "logotipo.png"));
         ImageIO.write(logotipo(200), "png", new File(carpeta, "logotipo-pequeno.png"));
+        ImageIO.write(logotipo(256), "png", new File(carpeta, "logotipo-256.png"));
+        escribirIco(logotipo(256), new File(carpeta, "logotipo.ico"));
         System.out.println("Iconos generados en " + carpeta.getAbsolutePath());
     }
 
@@ -531,6 +533,21 @@ public class GeneradorIconos {
         texto(g, "RESTAURANT", 84, 9f);
         g.dispose();
         return img;
+    }
+
+    /** Escribe un icono .ico de Windows con una imagen PNG de 256 x 256 (formato admitido desde Windows Vista). */
+    private static void escribirIco(BufferedImage imagen, File destino) throws IOException {
+        java.io.ByteArrayOutputStream png = new java.io.ByteArrayOutputStream();
+        ImageIO.write(imagen, "png", png);
+        byte[] datos = png.toByteArray();
+        java.nio.ByteBuffer cabecera = java.nio.ByteBuffer.allocate(22).order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        cabecera.putShort((short) 0).putShort((short) 1).putShort((short) 1);
+        cabecera.put((byte) 0).put((byte) 0).put((byte) 0).put((byte) 0);
+        cabecera.putShort((short) 1).putShort((short) 32).putInt(datos.length).putInt(22);
+        try (java.io.FileOutputStream salida = new java.io.FileOutputStream(destino)) {
+            salida.write(cabecera.array());
+            salida.write(datos);
+        }
     }
 
     private static void texto(Graphics2D g, String texto, float y, float tam) {

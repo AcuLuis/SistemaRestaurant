@@ -168,4 +168,82 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+            Aplicación nativa con jpackage (incluido en el JDK), que no requiere
+            tener Java instalado: mvnw -P instalador package
+            Por defecto genera una carpeta lista para copiar (app-image). Para un
+            instalador use -Djpackage.tipo=msi o exe (Windows, requiere WiX
+            Toolset), deb o rpm (Linux) o dmg (macOS).
+        -->
+        <profile>
+            <id>instalador</id>
+            <properties>
+                <jpackage.tipo>app-image</jpackage.tipo>
+                <jpackage.icono>${project.basedir}/src/main/resources/iconos/logotipo-256.png</jpackage.icono>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <configuration>
+                            <outputFile>${project.build.directory}/jpackage-entrada/${project.build.finalName}.jar</outputFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>jpackage</executable>
+                                    <arguments>
+                                        <argument>--type</argument>
+                                        <argument>${jpackage.tipo}</argument>
+                                        <argument>--name</argument>
+                                        <argument>SistemaRestaurant</argument>
+                                        <argument>--app-version</argument>
+                                        <argument>${project.version}</argument>
+                                        <argument>--description</argument>
+                                        <argument>${project.description}</argument>
+                                        <argument>--input</argument>
+                                        <argument>${project.build.directory}/jpackage-entrada</argument>
+                                        <argument>--main-jar</argument>
+                                        <argument>${project.build.finalName}.jar</argument>
+                                        <argument>--main-class</argument>
+                                        <argument>${main.class}</argument>
+                                        <argument>--icon</argument>
+                                        <argument>${jpackage.icono}</argument>
+                                        <argument>--java-options</argument>
+                                        <argument>--enable-native-access=ALL-UNNAMED</argument>
+                                        <argument>--dest</argument>
+                                        <argument>${project.build.directory}/instalador</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- En Windows el icono del ejecutable debe ser .ico -->
+        <profile>
+            <id>icono-windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <jpackage.icono>${project.basedir}/src/main/resources/iconos/logotipo.ico</jpackage.icono>
+            </properties>
+        </profile>
+    </profiles>
 </project>

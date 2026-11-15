@@ -1,0 +1,9 @@
+#!/bin/sh
+# Verifica el proyecto antes de publicar cambios en el repositorio remoto:
+# compila, ejecuta las pruebas unitarias y, si Docker está disponible, las
+# de integración. Se activa con: git config core.hooksPath .githooks
+echo "Verificando el proyecto antes de publicar (mvnw verify)..."
+if ! ./mvnw -q -B verify; then
+    echo "La verificación falló: corrija los errores antes de publicar."
+    exit 1
+fi
