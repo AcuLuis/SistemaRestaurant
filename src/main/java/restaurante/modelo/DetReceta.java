@@ -1,30 +1,25 @@
-
 package restaurante.modelo;
 
+import java.math.BigDecimal;
+
+/** Insumo y cantidad necesarios para preparar una unidad del producto de la receta. */
 public class DetReceta {
-    
-    int recetaID;
-    int insumoID;
-    int cantidad;
+
+    private int recetaID;
+    private int insumoID;
+    private BigDecimal cantidad;
+    /** Datos del insumo, solo para mostrar. */
+    private String descripInsumo;
+    private String unidadMedida;
 
     public DetReceta() {
     }
 
-    public DetReceta(int recetaID) {
-        this.recetaID = recetaID;
-    }
-
-    public DetReceta(int recetaID, int insumoID) {
-        this.recetaID = recetaID;
-        this.insumoID = insumoID;
-    }
-
-    public DetReceta(int recetaID, int insumoID, int cantidad) {
-        this.recetaID = recetaID;
+    public DetReceta(int insumoID, BigDecimal cantidad) {
         this.insumoID = insumoID;
         this.cantidad = cantidad;
     }
-    
+
     public int getRecetaID() {
         return recetaID;
     }
@@ -41,11 +36,27 @@ public class DetReceta {
         this.insumoID = insumoID;
     }
 
-    public int getCantidad() {
+    public BigDecimal getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getDescripInsumo() {
+        return descripInsumo;
+    }
+
+    public void setDescripInsumo(String descripInsumo) {
+        this.descripInsumo = descripInsumo;
+    }
+
+    public String getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
     }
 }

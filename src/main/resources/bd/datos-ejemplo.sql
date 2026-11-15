@@ -80,3 +80,31 @@ INSERT INTO Cliente (clienteID, nombres, apellidos, dni, genero, estadoCivil, te
     (91, 'Marco', 'Paredes Luna', '70000002', 1, 'CASADO', '987000002', 'marco@example.com', '1987-08-25', 1,
          'Jr. Las Flores 456')
 GO
+
+INSERT INTO CabReceta (recetaID, empleadoID, productoID, fechaElab, preparacion) VALUES
+    (1, 1004, 50, '2024-01-08', 'Rellenar la masa con queso, freír y servir con salsa.'),
+    (2, 1004, 51, '2024-01-08', 'Saltear la carne con cebolla y tomate; servir con arroz.'),
+    (3, 1004, 52, '2024-01-08', 'Cocer el pollo con verduras y fideos.')
+GO
+
+INSERT INTO DetReceta (recetaID, insumoID, cantidad) VALUES
+    (1, 22, 0.050),
+    (2, 24, 0.150),
+    (2, 22, 0.100),
+    (3, 20, 0.120),
+    (3, 25, 0.050)
+GO
+
+INSERT INTO CabOrdenDeProduccionSemanal (ordenProduccionID, empleadoID, descripArea, fechaxSem, estado) VALUES
+    (1, 1004, 'Preparación', CAST(GETDATE() AS date), 0)
+GO
+
+INSERT INTO DetOrdenDeProduccionSemanal (ordenProduccionID, productoID, cantidad, estado) VALUES
+    (1, 51, 10, 0),
+    (1, 52, 8, 0)
+GO
+
+INSERT INTO Reserva (reservaID, empleadoID, clienteID, fecha, estado, hora, personas, mesaID, observacion) VALUES
+    (1, 1002, 90, CAST(DATEADD(day, 1, GETDATE()) AS date), 1, '20:00', 4, 4, 'Cumpleaños'),
+    (2, 1002, 91, CAST(GETDATE() AS date), 1, '13:30', 2, 1, NULL)
+GO

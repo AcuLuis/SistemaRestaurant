@@ -1,33 +1,26 @@
-
 package restaurante.modelo;
 
+/** Reserva de mesa de un cliente. */
 public class Reserva {
-    
-    int reservaID;
-    int empleadoID;
-    int clienteID;
-    String fecha;
-    int estado;
 
-    public Reserva() {
-    }
+    public static final int CANCELADA = 0;
+    public static final int PENDIENTE = 1;
+    public static final int ATENDIDA = 2;
 
-    public Reserva(int reservaID) {
-        this.reservaID = reservaID;
-    }
-
-    public Reserva(int reservaID, int clienteID) {
-        this.reservaID = reservaID;
-        this.clienteID = clienteID;
-    }
-
-    public Reserva(int reservaID, int empleadoID, int clienteID, String fecha, int estado) {
-        this.reservaID = reservaID;
-        this.empleadoID = empleadoID;
-        this.clienteID = clienteID;
-        this.fecha = fecha;
-        this.estado = estado;
-    }
+    private int reservaID;
+    private int empleadoID;
+    private int clienteID;
+    /** Fecha (aaaa-mm-dd). */
+    private String fecha;
+    /** Hora (hh:mm). */
+    private String hora;
+    private int personas;
+    private Integer mesaID;
+    private int estado = PENDIENTE;
+    private String observacion;
+    /** Datos para mostrar. */
+    private String cliente;
+    private String mesa;
 
     public int getReservaID() {
         return reservaID;
@@ -61,11 +54,59 @@ public class Reserva {
         this.fecha = fecha;
     }
 
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
+    public int getPersonas() {
+        return personas;
+    }
+
+    public void setPersonas(int personas) {
+        this.personas = personas;
+    }
+
+    public Integer getMesaID() {
+        return mesaID;
+    }
+
+    public void setMesaID(Integer mesaID) {
+        this.mesaID = mesaID;
+    }
+
     public int getEstado() {
         return estado;
     }
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    public String getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(String mesa) {
+        this.mesa = mesa;
     }
 }

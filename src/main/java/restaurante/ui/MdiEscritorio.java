@@ -30,6 +30,9 @@ import restaurante.ui.util.Iconos;
 import restaurante.ui.mantenimiento.FrmCliente;
 import restaurante.ui.mantenimiento.FrmEmpleado;
 import restaurante.ui.mantenimiento.FrmMesa;
+import restaurante.ui.produccion.FrmProduccion;
+import restaurante.ui.produccion.FrmReceta;
+import restaurante.ui.transacciones.FrmReserva;
 
 /**
  * Ventana principal. Muestra los menús según el perfil del usuario y abre
@@ -98,6 +101,11 @@ public class MdiEscritorio extends javax.swing.JFrame {
         this.mnuMantenimiento.add(opcion("Empleados", "empleado", () -> abrir(FrmEmpleado.class, FrmEmpleado::new)));
         this.mnuMantenimiento.add(opcion("Clientes", "cliente", () -> abrir(FrmCliente.class, FrmCliente::new)));
         this.mnuMantenimiento.add(opcion("Mesas", "mesa", () -> abrir(FrmMesa.class, FrmMesa::new)));
+        this.mnuMantenimiento.add(opcion("Recetas", "receta", () -> abrir(FrmReceta.class, FrmReceta::new)));
+        this.menuTransaccion.addSeparator();
+        this.menuTransaccion.add(opcion("Reservas", "reserva", () -> abrir(FrmReserva.class, FrmReserva::new)));
+        this.menuTransaccion.add(opcion("Órdenes de producción", "produccion",
+                () -> abrir(FrmProduccion.class, FrmProduccion::new)));
     }
 
     private static JMenuItem opcion(String texto, String icono, Runnable accion) {

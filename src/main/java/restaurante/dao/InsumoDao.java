@@ -1,8 +1,11 @@
 package restaurante.dao;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import restaurante.datos.Jdbc;
 import restaurante.modelo.Insumo;
 
@@ -43,6 +46,21 @@ public class InsumoDao {
         Jdbc.actualizar("DELETE FROM Insumo WHERE insumoID = ?", insumoID);
     }
 
+
+    /** Resta la cantidad solo si hay suficiente (comprobación y actualización atómicas). */
+    public boolean descontar(Connection c, int insumoID, BigDecimal cantidad) throws SQLException {
+        return Jdbc.actualizar(c, "UPDATE Insumo SET cantidad = cantidad - ? WHERE insumoID = ? AND cantidad >= ?",
+                cantidad, insumoID, cantidad) == 1;
+    }
+
+    public Optional<Insumo> buscar(Connection c, int insumoID) throws SQLException {
+        return Jdbc.uno(c, SELECT + " WHERE insumoID = ?", InsumoDao::mapear, insumoID);
+    }
+
+    /** Insumos con existencias iguales o inferiores al mínimo indicado. */
+    public List<Insumo> listarConPocasExistencias(BigDecimal minimo) {
+        return Jdbc.lista(SELECT + " WHERE cantidad <= ? ORDER BY cantidad, descripInsumo", InsumoDao::mapear, minimo);
+    }
 
     private static Insumo mapear(ResultSet rs) throws SQLException {
         Insumo insumo = new Insumo();
