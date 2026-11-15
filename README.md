@@ -4,9 +4,12 @@ Aplicación de escritorio para la gestión integral de un restaurante, desarroll
 
 Cubre el día a día del local: ventas con control de existencias y comprobante, reservas de mesa, producción de cocina con recetas e inventario de insumos, personal y contratos, clientes, y reportes que se pueden guardar en PDF o enviar por correo.
 
+![Panel de inicio con el resumen del día](docs/capturas/inicio.png)
+
 ## Contenido
 
 - [Funcionalidades](#funcionalidades)
+- [Capturas](#capturas)
 - [Tecnologías](#tecnologías)
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
@@ -44,6 +47,58 @@ Cubre el día a día del local: ventas con control de existencias y comprobante,
 - Validación de todos los datos con mensajes claros, calendario en los campos de fecha, búsquedas mientras se escribe y tablas ordenables que se recorren con el teclado.
 - Barra de estado con usuario, local y base de datos; menús según el perfil; cierre de sesión.
 - Configuración inicial guiada que crea la base de datos si no existe.
+
+## Capturas
+
+Las capturas muestran la aplicación con los datos de ejemplo incluidos.
+
+### Inicio de sesión
+
+![Inicio de sesión](docs/capturas/login.png)
+
+### Registro de venta
+
+Carrito con total, tipo de entrega, mesa y método de pago.
+
+![Registro de venta](docs/capturas/venta.png)
+
+### Historial de ventas
+
+Compras de cada cliente con su detalle, estado y total.
+
+![Historial de ventas](docs/capturas/historial.png)
+
+### Comprobante de venta
+
+![Comprobante de venta en PDF](docs/capturas/comprobante.png)
+
+### Reportes
+
+Visor con opciones para guardar en PDF y enviar por correo.
+
+![Reporte de ventas por producto](docs/capturas/reporte-ventas.png)
+
+### Recetas
+
+Insumos necesarios para preparar cada producto.
+
+![Recetas](docs/capturas/recetas.png)
+
+### Órdenes de producción
+
+![Órdenes de producción](docs/capturas/produccion.png)
+
+### Reservas
+
+![Reservas](docs/capturas/reservas.png)
+
+### Empleados
+
+![Mantenimiento de empleados](docs/capturas/empleados.png)
+
+### Tema oscuro
+
+![Panel de inicio con el tema oscuro](docs/capturas/tema-oscuro.png)
 
 ## Tecnologías
 
@@ -162,7 +217,8 @@ SistemaRestaurant/
 ├── config/
 │   └── app.properties.example     Plantilla de configuración
 ├── docs/
-│   └── PLAN_DE_MEJORAS.md         Plan de mejoras por fases
+│   ├── PLAN_DE_MEJORAS.md         Plan de mejoras por fases
+│   └── capturas/                  Capturas de pantalla del README
 ├── herramientas/
 │   └── GeneradorIconos.java       Genera los iconos y el logotipo
 ├── src/main/java/restaurante/
